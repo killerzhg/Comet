@@ -54,6 +54,7 @@ namespace Quasar.Server.Forms
             this.passwordRecoveryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyloggerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remoteDesktopToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.remoteWebcamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userSupportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showMessageboxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remoteDesktopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,12 +72,6 @@ namespace Quasar.Server.Forms
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.listenToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.builderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lstClients = new Quasar.Server.Controls.AeroListView();
             this.hIP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hTag = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -87,7 +82,12 @@ namespace Quasar.Server.Forms
             this.hCountry = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hOS = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hAccountType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.remoteWebcamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.builderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.tableLayoutPanel.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -105,7 +105,7 @@ namespace Quasar.Server.Forms
             this.lineToolStripMenuItem,
             this.selectAllToolStripMenuItem});
             this.contextMenuStrip.Name = "ctxtMenu";
-            this.contextMenuStrip.Size = new System.Drawing.Size(226, 168);
+            this.contextMenuStrip.Size = new System.Drawing.Size(226, 140);
             // 
             // systemToolStripMenuItem
             // 
@@ -291,6 +291,14 @@ namespace Quasar.Server.Forms
             this.remoteDesktopToolStripMenuItem2.Size = new System.Drawing.Size(233, 26);
             this.remoteDesktopToolStripMenuItem2.Text = "Remote Desktop";
             this.remoteDesktopToolStripMenuItem2.Click += new System.EventHandler(this.remoteDesktopToolStripMenuItem_Click);
+            // 
+            // remoteWebcamToolStripMenuItem
+            // 
+            this.remoteWebcamToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("remoteWebcamToolStripMenuItem.Image")));
+            this.remoteWebcamToolStripMenuItem.Name = "remoteWebcamToolStripMenuItem";
+            this.remoteWebcamToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
+            this.remoteWebcamToolStripMenuItem.Text = "Remote Webcam";
+            this.remoteWebcamToolStripMenuItem.Click += new System.EventHandler(this.remoteWebcamToolStripMenuItem_Click);
             // 
             // userSupportToolStripMenuItem
             // 
@@ -662,7 +670,7 @@ namespace Quasar.Server.Forms
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
             this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
             this.tableLayoutPanel.RowCount = 3;
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
@@ -689,6 +697,79 @@ namespace Quasar.Server.Forms
             this.listenToolStripStatusLabel.Name = "listenToolStripStatusLabel";
             this.listenToolStripStatusLabel.Size = new System.Drawing.Size(119, 22);
             this.listenToolStripStatusLabel.Text = "Listening: False";
+            // 
+            // lstClients
+            // 
+            this.lstClients.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.hIP,
+            this.hTag,
+            this.hUserPC,
+            this.hVersion,
+            this.hStatus,
+            this.hUserStatus,
+            this.hCountry,
+            this.hOS,
+            this.hAccountType});
+            this.lstClients.ContextMenuStrip = this.contextMenuStrip;
+            this.lstClients.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstClients.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstClients.FullRowSelect = true;
+            this.lstClients.HideSelection = false;
+            this.lstClients.Location = new System.Drawing.Point(4, 35);
+            this.lstClients.Margin = new System.Windows.Forms.Padding(4);
+            this.lstClients.Name = "lstClients";
+            this.lstClients.ShowItemToolTips = true;
+            this.lstClients.Size = new System.Drawing.Size(1270, 505);
+            this.lstClients.SmallImageList = this.imgFlags;
+            this.lstClients.TabIndex = 1;
+            this.lstClients.UseCompatibleStateImageBehavior = false;
+            this.lstClients.View = System.Windows.Forms.View.Details;
+            this.lstClients.SelectedIndexChanged += new System.EventHandler(this.lstClients_SelectedIndexChanged);
+            this.lstClients.DoubleClick += new System.EventHandler(this.lstClients_DoubleClick);
+            // 
+            // hIP
+            // 
+            this.hIP.Text = "IP Address";
+            this.hIP.Width = 112;
+            // 
+            // hTag
+            // 
+            this.hTag.Text = "Tag";
+            // 
+            // hUserPC
+            // 
+            this.hUserPC.Text = "User@PC";
+            this.hUserPC.Width = 175;
+            // 
+            // hVersion
+            // 
+            this.hVersion.Text = "Version";
+            this.hVersion.Width = 66;
+            // 
+            // hStatus
+            // 
+            this.hStatus.Text = "Status";
+            this.hStatus.Width = 78;
+            // 
+            // hUserStatus
+            // 
+            this.hUserStatus.Text = "User Status";
+            this.hUserStatus.Width = 72;
+            // 
+            // hCountry
+            // 
+            this.hCountry.Text = "Country";
+            this.hCountry.Width = 117;
+            // 
+            // hOS
+            // 
+            this.hOS.Text = "Operating System";
+            this.hOS.Width = 222;
+            // 
+            // hAccountType
+            // 
+            this.hAccountType.Text = "Account Type";
+            this.hAccountType.Width = 100;
             // 
             // menuStrip
             // 
@@ -742,85 +823,6 @@ namespace Quasar.Server.Forms
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // lstClients
-            // 
-            this.lstClients.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.hIP,
-            this.hTag,
-            this.hUserPC,
-            this.hVersion,
-            this.hStatus,
-            this.hUserStatus,
-            this.hCountry,
-            this.hOS,
-            this.hAccountType});
-            this.lstClients.ContextMenuStrip = this.contextMenuStrip;
-            this.lstClients.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstClients.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lstClients.FullRowSelect = true;
-            this.lstClients.HideSelection = false;
-            this.lstClients.Location = new System.Drawing.Point(4, 35);
-            this.lstClients.Margin = new System.Windows.Forms.Padding(4);
-            this.lstClients.Name = "lstClients";
-            this.lstClients.ShowItemToolTips = true;
-            this.lstClients.Size = new System.Drawing.Size(1270, 505);
-            this.lstClients.SmallImageList = this.imgFlags;
-            this.lstClients.TabIndex = 1;
-            this.lstClients.UseCompatibleStateImageBehavior = false;
-            this.lstClients.View = System.Windows.Forms.View.Details;
-            this.lstClients.SelectedIndexChanged += new System.EventHandler(this.lstClients_SelectedIndexChanged);
-            // 
-            // hIP
-            // 
-            this.hIP.Text = "IP Address";
-            this.hIP.Width = 112;
-            // 
-            // hTag
-            // 
-            this.hTag.Text = "Tag";
-            // 
-            // hUserPC
-            // 
-            this.hUserPC.Text = "User@PC";
-            this.hUserPC.Width = 175;
-            // 
-            // hVersion
-            // 
-            this.hVersion.Text = "Version";
-            this.hVersion.Width = 66;
-            // 
-            // hStatus
-            // 
-            this.hStatus.Text = "Status";
-            this.hStatus.Width = 78;
-            // 
-            // hUserStatus
-            // 
-            this.hUserStatus.Text = "User Status";
-            this.hUserStatus.Width = 72;
-            // 
-            // hCountry
-            // 
-            this.hCountry.Text = "Country";
-            this.hCountry.Width = 117;
-            // 
-            // hOS
-            // 
-            this.hOS.Text = "Operating System";
-            this.hOS.Width = 222;
-            // 
-            // hAccountType
-            // 
-            this.hAccountType.Text = "Account Type";
-            this.hAccountType.Width = 100;
-            // 
-            // remoteWebcamToolStripMenuItem
-            // 
-            this.remoteWebcamToolStripMenuItem.Name = "remoteWebcamToolStripMenuItem";
-            this.remoteWebcamToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
-            this.remoteWebcamToolStripMenuItem.Text = "Remote Webcam";
-            this.remoteWebcamToolStripMenuItem.Click += new System.EventHandler(this.remoteWebcamToolStripMenuItem_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -830,7 +832,7 @@ namespace Quasar.Server.Forms
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Black;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(846, 507);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

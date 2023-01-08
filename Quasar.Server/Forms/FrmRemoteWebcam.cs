@@ -1,4 +1,5 @@
-﻿using Quasar.Common.Messages;
+﻿using Mono.Cecil.Cil;
+using Quasar.Common.Messages;
 using Quasar.Server.Helper;
 using Quasar.Server.Messages;
 using Quasar.Server.Networking;
@@ -77,7 +78,15 @@ namespace Quasar.Server.Forms
 
         private void FrmRemoteWebcam_Load(object sender, EventArgs e)
         {
+            this.Text = WindowHelper.GetWindowTitle("Remote Webcam", _connectClient);
+            panelTop.Left = (this.Width / 2) - (panelTop.Width / 2);
 
+            btnHide.Left = (panelTop.Width / 2) - (btnHide.Width / 2);
+
+            btnShow.Location = new Point(377, 0);
+            btnShow.Left = (this.Width / 2) - (btnShow.Width / 2);
+
+            _remoteWebcamHandler.RefreshDisplays();
         }
         // <summary>
         /// Holds the opened Webcam form for each client.

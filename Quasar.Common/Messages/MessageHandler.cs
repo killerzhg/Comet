@@ -15,7 +15,7 @@ namespace Quasar.Common.Messages
         private static readonly List<IMessageProcessor> Processors = new List<IMessageProcessor>();
 
         /// <summary>
-        /// Used in lock statements to synchronize access to <see cref="Processors"/> between threads.
+        /// 在锁语句中用于同步线程之间对<see cref="Processors"/>的访问。
         /// </summary>
         private static readonly object SyncLock = new object();
 
@@ -45,7 +45,7 @@ namespace Quasar.Common.Messages
         }
 
         /// <summary>
-        /// Forwards the received <see cref="IMessage"/> to the appropriate <see cref="IMessageProcessor"/>s to execute it.
+        /// 将接收到的<see cref="IMessage"/>转发给相应的<see cref="IMessageProcessor"/>执行。
         /// </summary>
         /// <param name="sender">The sender of the message.</param>
         /// <param name="msg">The received message.</param>

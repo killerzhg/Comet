@@ -168,7 +168,6 @@ namespace Quasar.Server.Forms
                 {
                     _mouseHook.MouseWheel -= OnMouseWheelMove;
                     _mouseHook.Dispose();
-                    int i;
                 }
             }
         }

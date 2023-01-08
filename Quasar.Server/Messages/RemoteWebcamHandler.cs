@@ -20,6 +20,14 @@ namespace Quasar.Server.Messages
         }
 
         /// <summary>
+        /// Refreshes the available displays of the client.
+        /// </summary>
+        public void RefreshDisplays()
+        {
+            _client.Send(new GetWebcams());
+        }
+
+        /// <summary>
         /// Begins receiving frames from the client using the specified quality and display.
         /// </summary>
         /// <param name="quality">The quality of the remote desktop frames.</param>
@@ -31,7 +39,7 @@ namespace Quasar.Server.Messages
                 IsStarted = true;
                 _codec?.Dispose();
                 _codec = null;
-                _client.Send(new GetDesktop { CreateNew = true, Quality = quality, DisplayIndex = display });
+                _client.Send(new GetDesktop { });
             }
         }
 
@@ -72,7 +80,7 @@ namespace Quasar.Server.Messages
         /// <remarks>
         /// Handlers registered with this event will be invoked on the 
         /// <see cref="System.Threading.SynchronizationContext"/> chosen when the instance was constructed.
-        /// </remarks>
+        /// </remarks> 
         public event DisplaysChangedEventHandler DisplaysChanged;
 
         /// <summary>

