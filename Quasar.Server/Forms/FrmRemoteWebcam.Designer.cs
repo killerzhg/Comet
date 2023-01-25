@@ -52,6 +52,7 @@
             this.btnStop.TabStop = false;
             this.btnStop.Text = "Stop";
             this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // btnStart
             // 
@@ -75,6 +76,7 @@
             this.btnHide.TabStop = false;
             this.btnHide.Text = "Hide";
             this.btnHide.UseVisualStyleBackColor = true;
+            this.btnHide.Click += new System.EventHandler(this.btnHide_Click);
             // 
             // cbWebcams
             // 
@@ -86,6 +88,7 @@
             this.cbWebcams.Size = new System.Drawing.Size(185, 23);
             this.cbWebcams.TabIndex = 8;
             this.cbWebcams.TabStop = false;
+            this.cbWebcams.SelectedIndexChanged += new System.EventHandler(this.cbWebcams_SelectedIndexChanged);
             // 
             // cbResolutions
             // 
@@ -106,7 +109,7 @@
             this.panelTop.Controls.Add(this.btnHide);
             this.panelTop.Controls.Add(this.btnStart);
             this.panelTop.Controls.Add(this.btnStop);
-            this.panelTop.Location = new System.Drawing.Point(302, 0);
+            this.panelTop.Location = new System.Drawing.Point(396, 0);
             this.panelTop.Margin = new System.Windows.Forms.Padding(4);
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(226, 136);
@@ -114,7 +117,7 @@
             // 
             // btnShow
             // 
-            this.btnShow.Location = new System.Drawing.Point(375, 144);
+            this.btnShow.Location = new System.Drawing.Point(468, 144);
             this.btnShow.Margin = new System.Windows.Forms.Padding(4);
             this.btnShow.Name = "btnShow";
             this.btnShow.Size = new System.Drawing.Size(68, 24);
@@ -123,6 +126,7 @@
             this.btnShow.Text = "Show";
             this.btnShow.UseVisualStyleBackColor = true;
             this.btnShow.Visible = false;
+            this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
             // 
             // picWebcam
             // 
@@ -132,23 +136,25 @@
             this.picWebcam.Location = new System.Drawing.Point(0, 0);
             this.picWebcam.Name = "picWebcam";
             this.picWebcam.Running = false;
-            this.picWebcam.Size = new System.Drawing.Size(800, 450);
+            this.picWebcam.Size = new System.Drawing.Size(992, 702);
             this.picWebcam.TabIndex = 13;
             this.picWebcam.TabStop = false;
             // 
             // FrmRemoteWebcam
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(992, 702);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.btnShow);
             this.Controls.Add(this.picWebcam);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(596, 388);
             this.Name = "FrmRemoteWebcam";
             this.Text = "FrmRemoteWebcam";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmRemoteWebcam_FormClosing);
             this.Load += new System.EventHandler(this.FrmRemoteWebcam_Load);
+            this.Resize += new System.EventHandler(this.FrmRemoteWebcam_Resize);
             this.panelTop.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picWebcam)).EndInit();
             this.ResumeLayout(false);

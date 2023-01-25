@@ -725,7 +725,7 @@ namespace Quasar.Server.Forms
             this.lstClients.UseCompatibleStateImageBehavior = false;
             this.lstClients.View = System.Windows.Forms.View.Details;
             this.lstClients.SelectedIndexChanged += new System.EventHandler(this.lstClients_SelectedIndexChanged);
-            this.lstClients.DoubleClick += new System.EventHandler(this.lstClients_DoubleClick);
+            this.lstClients.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstClients_MouseDoubleClick);
             // 
             // hIP
             // 

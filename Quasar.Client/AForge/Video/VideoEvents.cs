@@ -8,6 +8,7 @@
 
 namespace AForge.Video
 {
+    using Quasar.Common.Networking;
     using System;
 
     /// <summary>
@@ -17,7 +18,7 @@ namespace AForge.Video
     /// <param name="sender">Sender object.</param>
     /// <param name="eventArgs">Event arguments.</param>
     /// 
-    public delegate void NewFrameEventHandler( object sender, NewFrameEventArgs eventArgs );
+    public delegate void NewFrameEventHandler( object sender, NewFrameEventArgs eventArgs);
 
     /// <summary>
     /// Delegate for video source error event handler.

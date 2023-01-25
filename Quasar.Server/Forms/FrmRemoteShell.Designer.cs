@@ -42,11 +42,12 @@
             this.txtConsoleOutput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtConsoleOutput.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtConsoleOutput.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtConsoleOutput.Location = new System.Drawing.Point(3, 3);
+            this.txtConsoleOutput.Location = new System.Drawing.Point(4, 4);
+            this.txtConsoleOutput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtConsoleOutput.Name = "txtConsoleOutput";
             this.txtConsoleOutput.ReadOnly = true;
             this.txtConsoleOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtConsoleOutput.Size = new System.Drawing.Size(631, 297);
+            this.txtConsoleOutput.Size = new System.Drawing.Size(788, 371);
             this.txtConsoleOutput.TabIndex = 1;
             this.txtConsoleOutput.Text = "";
             this.txtConsoleOutput.TextChanged += new System.EventHandler(this.txtConsoleOutput_TextChanged);
@@ -59,10 +60,11 @@
             this.txtConsoleInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtConsoleInput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtConsoleInput.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtConsoleInput.Location = new System.Drawing.Point(3, 306);
+            this.txtConsoleInput.Location = new System.Drawing.Point(4, 383);
+            this.txtConsoleInput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtConsoleInput.MaxLength = 200;
             this.txtConsoleInput.Name = "txtConsoleInput";
-            this.txtConsoleInput.Size = new System.Drawing.Size(631, 16);
+            this.txtConsoleInput.Size = new System.Drawing.Size(788, 20);
             this.txtConsoleInput.TabIndex = 0;
             this.txtConsoleInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtConsoleInput_KeyDown);
             // 
@@ -75,21 +77,23 @@
             this.tableLayoutPanel.Controls.Add(this.txtConsoleInput, 0, 1);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
             this.tableLayoutPanel.RowCount = 2;
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(637, 323);
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel.Size = new System.Drawing.Size(796, 404);
             this.tableLayoutPanel.TabIndex = 2;
             // 
             // FrmRemoteShell
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(637, 323);
+            this.ClientSize = new System.Drawing.Size(796, 404);
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FrmRemoteShell";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Remote Shell []";
