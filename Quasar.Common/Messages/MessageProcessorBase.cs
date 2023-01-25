@@ -41,7 +41,7 @@ namespace Quasar.Common.Messages
         public event ReportProgressEventHandler ProgressChanged;
 
         /// <summary>
-        /// Reports a progress change.
+        /// 进度更改报告
         /// </summary>
         /// <param name="value">The value of the updated progress.</param>
         protected virtual void OnReport(T value)

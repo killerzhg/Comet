@@ -185,9 +185,7 @@ namespace Quasar.Client.Messages
             client.Send(new GetMonitorsResponse {Number = Screen.AllScreens.Length});
         }
 
-        /// <summary>
-        /// Disposes all managed and unmanaged resources associated with this message processor.
-        /// </summary>
+        //处置与此消息处理程序关联的所有托管和非托管资源。
         public void Dispose()
         {
             Dispose(true);

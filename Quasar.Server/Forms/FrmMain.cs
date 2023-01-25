@@ -790,7 +790,7 @@ namespace Quasar.Server.Forms
             }
         }
 
-        private void lstClients_DoubleClick(object sender, EventArgs e)
+        private void lstClients_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             GetWebcams();
         }

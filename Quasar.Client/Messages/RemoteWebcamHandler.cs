@@ -24,6 +24,7 @@ namespace Quasar.Client.Messages
         public static bool NeedsCapture;
         public static int Webcam;
         public static int Resolution;
+        static ISender _client;
         public static VideoCaptureDevice FinalVideo;
 
         public override bool CanExecute(IMessage message) => message is GetWebcams ||
@@ -46,24 +47,6 @@ namespace Quasar.Client.Messages
                     break;
             }
         }
-
-        private void Execute(ISender client, GetWebcam message)
-        {
-            //Client = client;
-            NeedsCapture = true;
-            Webcam = message.Webcam;
-            Resolution = message.Resolution;
-            if (!WebcamStarted)
-            {
-                var videoCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-                FinalVideo = new VideoCaptureDevice(videoCaptureDevices[message.Webcam].MonikerString);
-                FinalVideo.NewFrame += FinalVideo_NewFrame;
-                FinalVideo.VideoResolution = FinalVideo.VideoCapabilities[message.Resolution];
-                FinalVideo.Start();
-                WebcamStarted = true;
-            }
-        }
-
         private void Execute(ISender client, GetWebcams message)
         {
             var deviceInfo = new Dictionary<string, List<Resolution>>();
@@ -87,11 +70,28 @@ namespace Quasar.Client.Messages
                 client.Send(new GetWebcamsResponse { Webcams = deviceInfo });
         }
 
+        private void Execute(ISender client, GetWebcam message)
+        {
+            _client = client;
+            NeedsCapture = true;
+            Webcam = message.Webcam;
+            Resolution = message.Resolution;
+            if (!WebcamStarted)
+            {
+                var videoCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                FinalVideo = new VideoCaptureDevice(videoCaptureDevices[message.Webcam].MonikerString);
+                FinalVideo.NewFrame += FinalVideo_NewFrame;
+                FinalVideo.VideoResolution = FinalVideo.VideoCapabilities[message.Resolution];
+                FinalVideo.Start();
+                WebcamStarted = true;
+            }
+        }
+
         private void Execute(ISender client, DoWebcamStop message)
         {
             NeedsCapture = false;
             WebcamStarted = false;
-            //Client = null;
+            _client = null;
             if (FinalVideo != null)
             {
                 FinalVideo.NewFrame -= FinalVideo_NewFrame;
@@ -111,8 +111,7 @@ namespace Quasar.Client.Messages
                 using (var stream = new MemoryStream())
                 {
                     image.Save(stream, ImageFormat.Bmp);
-                    ISender i = (ISender)client;
-                    i.Send(new GetWebcamResponse
+                    _client.Send(new GetWebcamResponse
                     {
                         Image = stream.ToArray(),
                         Webcam = Webcam,
@@ -124,6 +123,7 @@ namespace Quasar.Client.Messages
             }
         }
 
+        //处置与此消息处理程序关联的所有托管和非托管资源。
         public void Dispose()
         {
             Dispose(true);

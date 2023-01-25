@@ -82,7 +82,7 @@ namespace Quasar.Server.Messages
         {
             SynchronizationContext.Post(val =>
             {
-                var handler = DisplaysChanged;
+                DisplaysChangedEventHandler handler = DisplaysChanged;
                 handler?.Invoke(this, (int)val);
             }, value);
         }
