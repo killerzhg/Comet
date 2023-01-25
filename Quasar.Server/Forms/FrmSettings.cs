@@ -89,7 +89,7 @@ namespace Quasar.Server.Forms
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        void SaveConfig() 
         {
             ushort port = GetPortSafe();
 
@@ -110,14 +110,6 @@ namespace Quasar.Server.Forms
             Settings.NoIPHost = txtNoIPHost.Text;
             Settings.NoIPUsername = txtNoIPUser.Text;
             Settings.NoIPPassword = txtNoIPPass.Text;
-            this.Close();
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Discard your changes?", "Cancel", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
-                DialogResult.Yes)
-                this.Close();
         }
 
         private void chkNoIPIntegration_CheckedChanged(object sender, EventArgs e)
@@ -153,6 +145,11 @@ namespace Quasar.Server.Forms
         private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
         {
             ShowPassword(chkShowPassword.Checked);
+        }
+
+        private void FrmSettings_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveConfig();
         }
     }
 }

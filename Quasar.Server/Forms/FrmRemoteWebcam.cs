@@ -113,12 +113,12 @@ namespace Quasar.Server.Forms
 
         private void FrmRemoteWebcam_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _connectClient.Send(new DoWebcamStop());
             // all cleanup logic goes here
             if (_remoteWebcamHandler.IsStarted) StopStream();
             UnregisterMessageHandler();
             _remoteWebcamHandler.Dispose();
             picWebcam.Image?.Dispose();
+            _connectClient.Send(new DoWebcamStop());
         }
 
         /// <summary>
@@ -173,6 +173,7 @@ namespace Quasar.Server.Forms
                 Webcam = cbWebcams.SelectedIndex,
                 Resolution = cbResolutions.SelectedIndex
             });
+            HideWin();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -209,6 +210,11 @@ namespace Quasar.Server.Forms
         }
 
         private void btnHide_Click(object sender, EventArgs e)
+        {
+            HideWin();
+        }
+
+        void HideWin() 
         {
             panelTop.Visible = false;
             btnShow.Visible = true;
