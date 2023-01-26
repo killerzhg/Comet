@@ -71,7 +71,10 @@ namespace Quasar.Server.Forms
 
         private void UpdateImage(object sender, Bitmap bmp)
         {
-            picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
+            }
         }
 
         private void ClientDisconnected(Client client, bool connected)
@@ -206,7 +209,7 @@ namespace Quasar.Server.Forms
 
         private void FrmRemoteWebcam_Resize(object sender, EventArgs e)
         {
-            _remoteWebcamHandler.LocalResolution = picWebcam.Size;
+            //_remoteWebcamHandler.LocalResolution = picWebcam.Size;
         }
 
         private void btnHide_Click(object sender, EventArgs e)
