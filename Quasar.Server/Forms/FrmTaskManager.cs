@@ -102,7 +102,7 @@ namespace Quasar.Server.Forms
             foreach (var process in processes)
             {
                 ListViewItem lvi =
-                    new ListViewItem(new[] {process.Name, process.Id.ToString(), process.MainWindowTitle});
+                    new ListViewItem(new[] {process.Name, process.Id.ToString(), process.MainWindowTitle , process.Path});
                 lstTasks.Items.Add(lvi);
             }
 

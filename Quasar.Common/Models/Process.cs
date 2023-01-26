@@ -13,5 +13,8 @@ namespace Quasar.Common.Models
 
         [ProtoMember(3)]
         public string MainWindowTitle { get; set; }
+
+        [ProtoMember(4)]
+        public string Path { get; set; }
     }
 }

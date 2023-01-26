@@ -68,13 +68,22 @@ namespace Quasar.Client.Messages
 
             for (int i = 0; i < pList.Length; i++)
             {
-                var process = new Common.Models.Process
+                try
                 {
-                    Name = pList[i].ProcessName + ".exe",
-                    Id = pList[i].Id,
-                    MainWindowTitle = pList[i].MainWindowTitle
-                };
-                processes[i] = process;
+                    var process = new Common.Models.Process
+                    {
+                        Name = pList[i].ProcessName + ".exe",
+                        Id = pList[i].Id,
+                        MainWindowTitle = pList[i].MainWindowTitle,
+                        Path = pList[i].MainModule.FileName,
+                    };
+                    processes[i] = process;
+                }
+                catch (Exception)
+                {
+                    //throw;
+                }
+                
             }
 
             client.Send(new GetProcessesResponse { Processes = processes });
