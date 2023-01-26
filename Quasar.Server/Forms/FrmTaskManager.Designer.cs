@@ -38,14 +38,16 @@ namespace Quasar.Server.Forms
             this.lineToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.processesToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.lstTasks = new Quasar.Server.Controls.AeroListView();
             this.hProcessname = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hPID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.hTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.hSessionId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.hDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.hTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.processesToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip.SuspendLayout();
             this.tableLayoutPanel.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -104,41 +106,18 @@ namespace Quasar.Server.Forms
             this.tableLayoutPanel.RowCount = 2;
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(1026, 616);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(1182, 633);
             this.tableLayoutPanel.TabIndex = 2;
-            // 
-            // statusStrip
-            // 
-            this.statusStrip.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.processesToolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 588);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 18, 0);
-            this.statusStrip.Size = new System.Drawing.Size(1026, 28);
-            this.statusStrip.TabIndex = 2;
-            this.statusStrip.Text = "statusStrip1";
-            // 
-            // processesToolStripStatusLabel
-            // 
-            this.processesToolStripStatusLabel.Name = "processesToolStripStatusLabel";
-            this.processesToolStripStatusLabel.Size = new System.Drawing.Size(98, 22);
-            this.processesToolStripStatusLabel.Text = "Processes: 0";
-            // 
-            // imageList1
-            // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth16Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // lstTasks
             // 
             this.lstTasks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.hProcessname,
             this.hPID,
-            this.hTitle,
-            this.hPath});
+            this.hSessionId,
+            this.hDescription,
+            this.hPath,
+            this.hTitle});
             this.lstTasks.ContextMenuStrip = this.contextMenuStrip;
             this.lstTasks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstTasks.FullRowSelect = true;
@@ -148,9 +127,12 @@ namespace Quasar.Server.Forms
             this.lstTasks.Location = new System.Drawing.Point(4, 4);
             this.lstTasks.Margin = new System.Windows.Forms.Padding(4);
             this.lstTasks.Name = "lstTasks";
-            this.lstTasks.Size = new System.Drawing.Size(1018, 580);
+            this.lstTasks.ShowGroups = false;
+            this.lstTasks.ShowItemToolTips = true;
+            this.lstTasks.Size = new System.Drawing.Size(1174, 597);
             this.lstTasks.SmallImageList = this.imageList1;
-            this.lstTasks.TabIndex = 1;
+            this.lstTasks.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.lstTasks.TabIndex = 0;
             this.lstTasks.UseCompatibleStateImageBehavior = false;
             this.lstTasks.View = System.Windows.Forms.View.Details;
             // 
@@ -163,21 +145,56 @@ namespace Quasar.Server.Forms
             // 
             this.hPID.Text = "PID";
             // 
-            // hTitle
+            // hSessionId
             // 
-            this.hTitle.Text = "Title";
-            this.hTitle.Width = 200;
+            this.hSessionId.Text = "SessionId";
+            this.hSessionId.Width = 70;
+            // 
+            // hDescription
+            // 
+            this.hDescription.Text = "Description";
+            this.hDescription.Width = 200;
             // 
             // hPath
             // 
             this.hPath.Text = "Path";
             this.hPath.Width = 400;
             // 
+            // hTitle
+            // 
+            this.hTitle.Text = "Title";
+            this.hTitle.Width = 200;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth16Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // statusStrip
+            // 
+            this.statusStrip.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.processesToolStripStatusLabel});
+            this.statusStrip.Location = new System.Drawing.Point(0, 605);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 18, 0);
+            this.statusStrip.Size = new System.Drawing.Size(1182, 28);
+            this.statusStrip.TabIndex = 2;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // processesToolStripStatusLabel
+            // 
+            this.processesToolStripStatusLabel.Name = "processesToolStripStatusLabel";
+            this.processesToolStripStatusLabel.Size = new System.Drawing.Size(98, 22);
+            this.processesToolStripStatusLabel.Text = "Processes: 0";
+            // 
             // FrmTaskManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1026, 616);
+            this.ClientSize = new System.Drawing.Size(1182, 633);
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -213,5 +230,7 @@ namespace Quasar.Server.Forms
         private System.Windows.Forms.ColumnHeader hPath;
         public System.Windows.Forms.ImageList imageList1;
         private AeroListView lstTasks;
+        private System.Windows.Forms.ColumnHeader hDescription;
+        private System.Windows.Forms.ColumnHeader hSessionId;
     }
 }

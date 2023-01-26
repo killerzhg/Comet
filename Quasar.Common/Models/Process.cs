@@ -20,6 +20,12 @@ namespace Quasar.Common.Models
         public string Path { get; set; }
 
         [ProtoMember(5)]
+        public string Description { get; set; }
+
+        [ProtoMember(6)]
         public byte[] Ico { get; set; }
+
+        [ProtoMember(7)]
+        public int SessionId { get; set; }
     }
 }

