@@ -7,6 +7,8 @@ using Quasar.Server.Messages;
 using Quasar.Server.Networking;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Quasar.Server.Forms
@@ -97,16 +99,30 @@ namespace Quasar.Server.Forms
 
         private void TasksChanged(object sender, Process[] processes)
         {
-            lstTasks.Items.Clear();
-
-            foreach (var process in processes)
+            if (processes!=null)
             {
-                ListViewItem lvi =
-                    new ListViewItem(new[] {process.Name, process.Id.ToString(), process.MainWindowTitle , process.Path});
-                lstTasks.Items.Add(lvi);
-            }
+                lstTasks.Items.Clear();
+                imageList1.Images.Clear();
 
-            processesToolStripStatusLabel.Text = $"Processes: {processes.Length}";
+                foreach (var process in processes)
+                {
+                    ListViewItem lvi = new ListViewItem(new[] { process.Name, process.Id.ToString(), process.MainWindowTitle, process.Path });
+
+                    lstTasks.Items.Add(lvi);
+
+                    Image image = Image.FromStream(new MemoryStream(process.Ico));
+                    lvi.ImageKey = process.Id.ToString();
+                    imageList1.Images.Add(process.Id.ToString(), image);
+
+                }
+
+                processesToolStripStatusLabel.Text = $"Processes: {processes.Length}";
+            }
+            else
+            {
+                MessageBox.Show("进程列表为空");
+            }
+            
         }
 
         private void ProcessActionPerformed(object sender, ProcessAction action, bool result)

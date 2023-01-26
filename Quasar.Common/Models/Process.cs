@@ -1,4 +1,6 @@
-﻿using ProtoBuf;
+﻿using System;
+using ProtoBuf;
+using System.Drawing;
 
 namespace Quasar.Common.Models
 {
@@ -16,5 +18,8 @@ namespace Quasar.Common.Models
 
         [ProtoMember(4)]
         public string Path { get; set; }
+
+        [ProtoMember(5)]
+        public byte[] Ico { get; set; }
     }
 }

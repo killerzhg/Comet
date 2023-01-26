@@ -38,12 +38,13 @@ namespace Quasar.Server.Forms
             this.lineToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.processesToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.lstTasks = new Quasar.Server.Controls.AeroListView();
             this.hProcessname = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hPID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.processesToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.hPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip.SuspendLayout();
             this.tableLayoutPanel.SuspendLayout();
@@ -98,47 +99,13 @@ namespace Quasar.Server.Forms
             this.tableLayoutPanel.Controls.Add(this.statusStrip, 0, 1);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
             this.tableLayoutPanel.RowCount = 2;
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel.Size = new System.Drawing.Size(1026, 616);
             this.tableLayoutPanel.TabIndex = 2;
-            // 
-            // lstTasks
-            // 
-            this.lstTasks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.hProcessname,
-            this.hPID,
-            this.hTitle,
-            this.hPath});
-            this.lstTasks.ContextMenuStrip = this.contextMenuStrip;
-            this.lstTasks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstTasks.FullRowSelect = true;
-            this.lstTasks.GridLines = true;
-            this.lstTasks.HideSelection = false;
-            this.lstTasks.Location = new System.Drawing.Point(4, 4);
-            this.lstTasks.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.lstTasks.Name = "lstTasks";
-            this.lstTasks.Size = new System.Drawing.Size(1018, 580);
-            this.lstTasks.TabIndex = 1;
-            this.lstTasks.UseCompatibleStateImageBehavior = false;
-            this.lstTasks.View = System.Windows.Forms.View.Details;
-            // 
-            // hProcessname
-            // 
-            this.hProcessname.Text = "Processname";
-            this.hProcessname.Width = 202;
-            // 
-            // hPID
-            // 
-            this.hPID.Text = "PID";
-            // 
-            // hTitle
-            // 
-            this.hTitle.Text = "Title";
-            this.hTitle.Width = 200;
             // 
             // statusStrip
             // 
@@ -159,6 +126,48 @@ namespace Quasar.Server.Forms
             this.processesToolStripStatusLabel.Size = new System.Drawing.Size(98, 22);
             this.processesToolStripStatusLabel.Text = "Processes: 0";
             // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth16Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // lstTasks
+            // 
+            this.lstTasks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.hProcessname,
+            this.hPID,
+            this.hTitle,
+            this.hPath});
+            this.lstTasks.ContextMenuStrip = this.contextMenuStrip;
+            this.lstTasks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstTasks.FullRowSelect = true;
+            this.lstTasks.GridLines = true;
+            this.lstTasks.HideSelection = false;
+            this.lstTasks.LargeImageList = this.imageList1;
+            this.lstTasks.Location = new System.Drawing.Point(4, 4);
+            this.lstTasks.Margin = new System.Windows.Forms.Padding(4);
+            this.lstTasks.Name = "lstTasks";
+            this.lstTasks.Size = new System.Drawing.Size(1018, 580);
+            this.lstTasks.SmallImageList = this.imageList1;
+            this.lstTasks.TabIndex = 1;
+            this.lstTasks.UseCompatibleStateImageBehavior = false;
+            this.lstTasks.View = System.Windows.Forms.View.Details;
+            // 
+            // hProcessname
+            // 
+            this.hProcessname.Text = "Processname";
+            this.hProcessname.Width = 202;
+            // 
+            // hPID
+            // 
+            this.hPID.Text = "PID";
+            // 
+            // hTitle
+            // 
+            this.hTitle.Text = "Title";
+            this.hTitle.Width = 200;
+            // 
             // hPath
             // 
             this.hPath.Text = "Path";
@@ -172,7 +181,7 @@ namespace Quasar.Server.Forms
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(434, 549);
             this.Name = "FrmTaskManager";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -198,10 +207,11 @@ namespace Quasar.Server.Forms
         private System.Windows.Forms.ColumnHeader hPID;
         private System.Windows.Forms.ColumnHeader hTitle;
         private System.Windows.Forms.ToolStripSeparator lineToolStripMenuItem;
-        private AeroListView lstTasks;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel processesToolStripStatusLabel;
         private System.Windows.Forms.ColumnHeader hPath;
+        public System.Windows.Forms.ImageList imageList1;
+        private AeroListView lstTasks;
     }
 }

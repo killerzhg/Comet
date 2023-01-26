@@ -1,4 +1,5 @@
-﻿using Quasar.Client.Networking;
+﻿using MySystemIcon;
+using Quasar.Client.Networking;
 using Quasar.Client.Setup;
 using Quasar.Common;
 using Quasar.Common.Enums;
@@ -8,8 +9,12 @@ using Quasar.Common.Networking;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace Quasar.Client.Messages
 {
@@ -77,6 +82,13 @@ namespace Quasar.Client.Messages
                         MainWindowTitle = pList[i].MainWindowTitle,
                         Path = pList[i].MainModule.FileName,
                     };
+
+                    Bitmap bmpIcon = GetSystemIconA.GetIconFromFile(pList[i].MainModule.FileName, GetSystemIconA.IMAGELIST_SIZE_FLAG.SHIL_SMALL).ToBitmap();
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        bmpIcon.Save(ms, ImageFormat.Png);
+                        process.Ico = ms.ToArray();
+                    }
                     processes[i] = process;
                 }
                 catch (Exception)
