@@ -13,7 +13,7 @@ namespace Comet.Client
         private static void Main(string[] args)
         {
             // enable TLS 1.2
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
 
             // Set the unhandled exception mode to force all Windows Forms errors to go through our handler
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
