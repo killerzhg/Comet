@@ -120,7 +120,7 @@ namespace Quasar.Server.Forms
             }
             else
             {
-                MessageBox.Show("进程列表为空");
+                MessageBox.Show("进程列表获取失败");
             }
             
         }
