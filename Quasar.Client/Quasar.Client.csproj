@@ -68,7 +68,7 @@
     </PackageReference>
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="protobuf-net">
-      <Version>3.1.26</Version>
+      <Version>2.4.7</Version>
     </PackageReference>
   </ItemGroup>
 </Project>
