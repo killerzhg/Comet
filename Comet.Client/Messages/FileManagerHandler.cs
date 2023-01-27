@@ -10,9 +10,12 @@ using Comet.Common.Networking;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Security;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Comet.Client.Messages
 {
@@ -58,7 +61,8 @@ namespace Comet.Client.Messages
                                                              message is FileTransferCancel ||
                                                              message is FileTransferChunk ||
                                                              message is DoPathDelete ||
-                                                             message is DoPathRename;
+                                                             message is DoPathRename||
+                                                             message is DoZip;
 
         public override bool CanExecuteFrom(ISender sender) => true;
 
@@ -85,6 +89,9 @@ namespace Comet.Client.Messages
                     Execute(sender, msg);
                     break;
                 case DoPathRename msg:
+                    Execute(sender, msg);
+                    break;
+                case DoZip msg:
                     Execute(sender, msg);
                     break;
             }
@@ -281,6 +288,51 @@ namespace Comet.Client.Messages
             }
         }
 
+        private void Execute(ISender client, DoZip message)
+        {
+            try
+            {
+                if (message.Flag == 1)//压缩
+                {
+                    if (Directory.Exists(message.Path))//目录
+                    {
+                        ZipFile.CreateFromDirectory(message.Path, message.Path+".zip");
+                    }
+                    else if (File.Exists(message.Path))//文件
+                    {
+                        ZipEntryFromFile(message.Path, message.Path + ".zip");
+                    }
+                    
+                }
+                else if (message.Flag == 2)//解压
+                {
+                    ZipFile.ExtractToDirectory(message.Path, message.Path.Replace(".zip", ""));
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            
+        }
+
+        /// <summary>
+        /// zip压缩文件
+        /// </summary>
+        /// <param name="sourceFile"></param>
+        /// <param name="targetZip"></param>
+        async void ZipEntryFromFile(string sourceFile, string targetZip)
+        {
+            await Task.Run(() =>
+            {
+                using (ZipArchive archive = ZipFile.Open(targetZip, ZipArchiveMode.Update))
+                {
+                    archive.CreateEntryFromFile(sourceFile, System.IO.Path.GetFileName(sourceFile));
+                }
+                GC.Collect();
+            });
+        }
+
         private void Execute(ISender client, FileTransferChunk message)
         {
             try
@@ -466,7 +518,7 @@ namespace Comet.Client.Messages
         }
 
         /// <summary>
-        /// Disposes all managed and unmanaged resources associated with this message processor.
+        /// 处置与此消息处理程序关联的所有托管和非托管资源。
         /// </summary>
         public void Dispose()
         {

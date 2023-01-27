@@ -547,5 +547,17 @@ namespace Comet.Server.Forms
             _fileManagerHandler.GetDirectoryContents(remotePath);
             SetStatusMessage(this, "Loading directory content...");
         }
+
+        private void zipCompressToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lstDirectory.SelectedItems.Count == 1) 
+                _fileManagerHandler.Zip(_currentDir + "\\" + lstDirectory.SelectedItems[0].Text, 1);
+        }
+
+        private void zipExtractToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lstDirectory.SelectedItems.Count == 1)
+                _fileManagerHandler.Zip(_currentDir + "\\"+lstDirectory.SelectedItems[0].Text, 2);
+        }
     }
 }

@@ -9,6 +9,7 @@ using Comet.Server.Networking;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 
@@ -541,6 +542,15 @@ namespace Comet.Server.Messages
             }
 
             return id;
+        }
+
+        public void Zip(string remotePath,int flag)
+        {
+            _client.Send(new DoZip
+            {
+                Path = remotePath,
+                Flag = flag,
+            });
         }
 
         /// <summary>

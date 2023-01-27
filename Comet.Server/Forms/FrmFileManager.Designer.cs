@@ -98,7 +98,7 @@ namespace Comet.Server.Forms
             this.zipCompressToolStripMenuItem,
             this.zipExtractToolStripMenuItem});
             this.contextMenuStripDirectory.Name = "ctxtMenu";
-            this.contextMenuStripDirectory.Size = new System.Drawing.Size(313, 282);
+            this.contextMenuStripDirectory.Size = new System.Drawing.Size(313, 310);
             // 
             // downloadToolStripMenuItem
             // 
@@ -186,12 +186,14 @@ namespace Comet.Server.Forms
             this.zipCompressToolStripMenuItem.Name = "zipCompressToolStripMenuItem";
             this.zipCompressToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.zipCompressToolStripMenuItem.Text = "Zip Compress";
+            this.zipCompressToolStripMenuItem.Click += new System.EventHandler(this.zipCompressToolStripMenuItem_Click);
             // 
             // zipExtractToolStripMenuItem
             // 
             this.zipExtractToolStripMenuItem.Name = "zipExtractToolStripMenuItem";
             this.zipExtractToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.zipExtractToolStripMenuItem.Text = "Zip Extract";
+            this.zipExtractToolStripMenuItem.Click += new System.EventHandler(this.zipExtractToolStripMenuItem_Click);
             // 
             // imgListDirectory
             // 

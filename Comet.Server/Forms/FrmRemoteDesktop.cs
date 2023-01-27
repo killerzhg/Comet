@@ -424,7 +424,7 @@ namespace Comet.Server.Forms
         {
             if (_enableMouseInput)
             {
-                this.picDesktop.Cursor = Cursors.Default;
+                //this.picDesktop.Cursor = Cursors.Default;
                 btnMouse.Image = Properties.Resources.mouse_delete;
                 toolTipButtons.SetToolTip(btnMouse, "Enable mouse input.");
                 _enableMouseInput = false;
