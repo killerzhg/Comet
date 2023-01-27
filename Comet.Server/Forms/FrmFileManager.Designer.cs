@@ -44,6 +44,8 @@ namespace Comet.Server.Forms
             this.line3ToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDirectoryInShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zipCompressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zipExtractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imgListDirectory = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.stripLblStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -80,6 +82,7 @@ namespace Comet.Server.Forms
             // 
             // contextMenuStripDirectory
             // 
+            this.contextMenuStripDirectory.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripDirectory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.downloadToolStripMenuItem,
             this.uploadToolStripMenuItem,
@@ -91,16 +94,18 @@ namespace Comet.Server.Forms
             this.addToStartupToolStripMenuItem,
             this.line3ToolStripMenuItem,
             this.refreshToolStripMenuItem,
-            this.openDirectoryInShellToolStripMenuItem});
+            this.openDirectoryInShellToolStripMenuItem,
+            this.zipCompressToolStripMenuItem,
+            this.zipExtractToolStripMenuItem});
             this.contextMenuStripDirectory.Name = "ctxtMenu";
-            this.contextMenuStripDirectory.Size = new System.Drawing.Size(240, 198);
+            this.contextMenuStripDirectory.Size = new System.Drawing.Size(313, 282);
             // 
             // downloadToolStripMenuItem
             // 
             this.downloadToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.downloadToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("downloadToolStripMenuItem.Image")));
             this.downloadToolStripMenuItem.Name = "downloadToolStripMenuItem";
-            this.downloadToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.downloadToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.downloadToolStripMenuItem.Text = "Download";
             this.downloadToolStripMenuItem.Click += new System.EventHandler(this.downloadToolStripMenuItem_Click);
             // 
@@ -108,20 +113,20 @@ namespace Comet.Server.Forms
             // 
             this.uploadToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("uploadToolStripMenuItem.Image")));
             this.uploadToolStripMenuItem.Name = "uploadToolStripMenuItem";
-            this.uploadToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.uploadToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.uploadToolStripMenuItem.Text = "Upload";
             this.uploadToolStripMenuItem.Click += new System.EventHandler(this.uploadToolStripMenuItem_Click);
             // 
             // lineToolStripMenuItem
             // 
             this.lineToolStripMenuItem.Name = "lineToolStripMenuItem";
-            this.lineToolStripMenuItem.Size = new System.Drawing.Size(236, 6);
+            this.lineToolStripMenuItem.Size = new System.Drawing.Size(309, 6);
             // 
             // executeToolStripMenuItem
             // 
             this.executeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("executeToolStripMenuItem.Image")));
             this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
-            this.executeToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.executeToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.executeToolStripMenuItem.Text = "Execute";
             this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
@@ -129,7 +134,7 @@ namespace Comet.Server.Forms
             // 
             this.renameToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.textfield_rename;
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.renameToolStripMenuItem.Text = "Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
@@ -137,33 +142,33 @@ namespace Comet.Server.Forms
             // 
             this.deleteToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.delete;
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // line2ToolStripMenuItem
             // 
             this.line2ToolStripMenuItem.Name = "line2ToolStripMenuItem";
-            this.line2ToolStripMenuItem.Size = new System.Drawing.Size(236, 6);
+            this.line2ToolStripMenuItem.Size = new System.Drawing.Size(309, 6);
             // 
             // addToStartupToolStripMenuItem
             // 
             this.addToStartupToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.application_add;
             this.addToStartupToolStripMenuItem.Name = "addToStartupToolStripMenuItem";
-            this.addToStartupToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.addToStartupToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.addToStartupToolStripMenuItem.Text = "Add to Startup";
             this.addToStartupToolStripMenuItem.Click += new System.EventHandler(this.addToStartupToolStripMenuItem_Click);
             // 
             // line3ToolStripMenuItem
             // 
             this.line3ToolStripMenuItem.Name = "line3ToolStripMenuItem";
-            this.line3ToolStripMenuItem.Size = new System.Drawing.Size(236, 6);
+            this.line3ToolStripMenuItem.Size = new System.Drawing.Size(309, 6);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
@@ -171,9 +176,22 @@ namespace Comet.Server.Forms
             // 
             this.openDirectoryInShellToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.terminal;
             this.openDirectoryInShellToolStripMenuItem.Name = "openDirectoryInShellToolStripMenuItem";
-            this.openDirectoryInShellToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.openDirectoryInShellToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
             this.openDirectoryInShellToolStripMenuItem.Text = "Open Directory in Remote Shell";
             this.openDirectoryInShellToolStripMenuItem.Click += new System.EventHandler(this.openDirectoryToolStripMenuItem_Click);
+            // 
+            // zipCompressToolStripMenuItem
+            // 
+            this.zipCompressToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.zip;
+            this.zipCompressToolStripMenuItem.Name = "zipCompressToolStripMenuItem";
+            this.zipCompressToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
+            this.zipCompressToolStripMenuItem.Text = "Zip Compress";
+            // 
+            // zipExtractToolStripMenuItem
+            // 
+            this.zipExtractToolStripMenuItem.Name = "zipExtractToolStripMenuItem";
+            this.zipExtractToolStripMenuItem.Size = new System.Drawing.Size(312, 26);
+            this.zipExtractToolStripMenuItem.Text = "Zip Extract";
             // 
             // imgListDirectory
             // 
@@ -193,47 +211,50 @@ namespace Comet.Server.Forms
             // 
             // statusStrip
             // 
+            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stripLblStatus});
-            this.statusStrip.Location = new System.Drawing.Point(0, 456);
+            this.statusStrip.Location = new System.Drawing.Point(0, 572);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(858, 22);
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 18, 0);
+            this.statusStrip.Size = new System.Drawing.Size(1072, 26);
             this.statusStrip.TabIndex = 3;
             this.statusStrip.Text = "statusStrip1";
             // 
             // stripLblStatus
             // 
             this.stripLblStatus.Name = "stripLblStatus";
-            this.stripLblStatus.Size = new System.Drawing.Size(131, 17);
+            this.stripLblStatus.Size = new System.Drawing.Size(181, 20);
             this.stripLblStatus.Text = "Status: Loading drives...";
             // 
             // contextMenuStripTransfers
             // 
+            this.contextMenuStripTransfers.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripTransfers.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cancelToolStripMenuItem,
             this.toolStripMenuItem1,
             this.clearToolStripMenuItem});
             this.contextMenuStripTransfers.Name = "ctxtMenu2";
-            this.contextMenuStripTransfers.Size = new System.Drawing.Size(150, 54);
+            this.contextMenuStripTransfers.Size = new System.Drawing.Size(187, 62);
             // 
             // cancelToolStripMenuItem
             // 
             this.cancelToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.cancel;
             this.cancelToolStripMenuItem.Name = "cancelToolStripMenuItem";
-            this.cancelToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.cancelToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
             this.cancelToolStripMenuItem.Text = "Cancel";
             this.cancelToolStripMenuItem.Click += new System.EventHandler(this.cancelToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(146, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(183, 6);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.broom;
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
             this.clearToolStripMenuItem.Text = "Clear transfers";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
@@ -252,10 +273,11 @@ namespace Comet.Server.Forms
             this.TabControlFileManager.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControlFileManager.ItemSize = new System.Drawing.Size(44, 136);
             this.TabControlFileManager.Location = new System.Drawing.Point(0, 0);
+            this.TabControlFileManager.Margin = new System.Windows.Forms.Padding(4);
             this.TabControlFileManager.Multiline = true;
             this.TabControlFileManager.Name = "TabControlFileManager";
             this.TabControlFileManager.SelectedIndex = 0;
-            this.TabControlFileManager.Size = new System.Drawing.Size(858, 456);
+            this.TabControlFileManager.Size = new System.Drawing.Size(1072, 572);
             this.TabControlFileManager.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.TabControlFileManager.TabIndex = 5;
             // 
@@ -269,9 +291,10 @@ namespace Comet.Server.Forms
             this.tabFileExplorer.Controls.Add(this.lblDrive);
             this.tabFileExplorer.Controls.Add(this.cmbDrives);
             this.tabFileExplorer.Location = new System.Drawing.Point(140, 4);
+            this.tabFileExplorer.Margin = new System.Windows.Forms.Padding(4);
             this.tabFileExplorer.Name = "tabFileExplorer";
-            this.tabFileExplorer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFileExplorer.Size = new System.Drawing.Size(714, 448);
+            this.tabFileExplorer.Padding = new System.Windows.Forms.Padding(4);
+            this.tabFileExplorer.Size = new System.Drawing.Size(928, 564);
             this.tabFileExplorer.TabIndex = 0;
             this.tabFileExplorer.Text = "File Explorer";
             // 
@@ -281,9 +304,10 @@ namespace Comet.Server.Forms
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnRefresh.Image = global::Comet.Server.Properties.Resources.refresh;
             this.btnRefresh.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRefresh.Location = new System.Drawing.Point(682, 8);
+            this.btnRefresh.Location = new System.Drawing.Point(852, 10);
+            this.btnRefresh.Margin = new System.Windows.Forms.Padding(4);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(22, 22);
+            this.btnRefresh.Size = new System.Drawing.Size(28, 28);
             this.btnRefresh.TabIndex = 5;
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
@@ -291,9 +315,10 @@ namespace Comet.Server.Forms
             // lblPath
             // 
             this.lblPath.AutoSize = true;
-            this.lblPath.Location = new System.Drawing.Point(279, 12);
+            this.lblPath.Location = new System.Drawing.Point(349, 15);
+            this.lblPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPath.Name = "lblPath";
-            this.lblPath.Size = new System.Drawing.Size(75, 13);
+            this.lblPath.Size = new System.Drawing.Size(91, 19);
             this.lblPath.TabIndex = 4;
             this.lblPath.Text = "Remote Path:";
             // 
@@ -302,10 +327,11 @@ namespace Comet.Server.Forms
             this.txtPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPath.Location = new System.Drawing.Point(360, 8);
+            this.txtPath.Location = new System.Drawing.Point(450, 10);
+            this.txtPath.Margin = new System.Windows.Forms.Padding(4);
             this.txtPath.Name = "txtPath";
             this.txtPath.ReadOnly = true;
-            this.txtPath.Size = new System.Drawing.Size(323, 22);
+            this.txtPath.Size = new System.Drawing.Size(403, 26);
             this.txtPath.TabIndex = 3;
             this.txtPath.Text = "\\";
             // 
@@ -322,9 +348,11 @@ namespace Comet.Server.Forms
             this.lstDirectory.ContextMenuStrip = this.contextMenuStripDirectory;
             this.lstDirectory.FullRowSelect = true;
             this.lstDirectory.GridLines = true;
-            this.lstDirectory.Location = new System.Drawing.Point(8, 35);
+            this.lstDirectory.HideSelection = false;
+            this.lstDirectory.Location = new System.Drawing.Point(10, 44);
+            this.lstDirectory.Margin = new System.Windows.Forms.Padding(4);
             this.lstDirectory.Name = "lstDirectory";
-            this.lstDirectory.Size = new System.Drawing.Size(700, 406);
+            this.lstDirectory.Size = new System.Drawing.Size(874, 508);
             this.lstDirectory.SmallImageList = this.imgListDirectory;
             this.lstDirectory.TabIndex = 2;
             this.lstDirectory.UseCompatibleStateImageBehavior = false;
@@ -351,9 +379,10 @@ namespace Comet.Server.Forms
             // lblDrive
             // 
             this.lblDrive.AutoSize = true;
-            this.lblDrive.Location = new System.Drawing.Point(8, 12);
+            this.lblDrive.Location = new System.Drawing.Point(10, 15);
+            this.lblDrive.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDrive.Name = "lblDrive";
-            this.lblDrive.Size = new System.Drawing.Size(36, 13);
+            this.lblDrive.Size = new System.Drawing.Size(44, 19);
             this.lblDrive.TabIndex = 0;
             this.lblDrive.Text = "Drive:";
             // 
@@ -361,9 +390,10 @@ namespace Comet.Server.Forms
             // 
             this.cmbDrives.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDrives.FormattingEnabled = true;
-            this.cmbDrives.Location = new System.Drawing.Point(50, 8);
+            this.cmbDrives.Location = new System.Drawing.Point(62, 10);
+            this.cmbDrives.Margin = new System.Windows.Forms.Padding(4);
             this.cmbDrives.Name = "cmbDrives";
-            this.cmbDrives.Size = new System.Drawing.Size(212, 21);
+            this.cmbDrives.Size = new System.Drawing.Size(264, 27);
             this.cmbDrives.TabIndex = 1;
             this.cmbDrives.SelectedIndexChanged += new System.EventHandler(this.cmbDrives_SelectedIndexChanged);
             // 
@@ -373,17 +403,19 @@ namespace Comet.Server.Forms
             this.tabTransfers.Controls.Add(this.btnOpenDLFolder);
             this.tabTransfers.Controls.Add(this.lstTransfers);
             this.tabTransfers.Location = new System.Drawing.Point(140, 4);
+            this.tabTransfers.Margin = new System.Windows.Forms.Padding(4);
             this.tabTransfers.Name = "tabTransfers";
-            this.tabTransfers.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTransfers.Size = new System.Drawing.Size(714, 448);
+            this.tabTransfers.Padding = new System.Windows.Forms.Padding(4);
+            this.tabTransfers.Size = new System.Drawing.Size(928, 564);
             this.tabTransfers.TabIndex = 1;
             this.tabTransfers.Text = "Transfers";
             // 
             // btnOpenDLFolder
             // 
-            this.btnOpenDLFolder.Location = new System.Drawing.Point(8, 8);
+            this.btnOpenDLFolder.Location = new System.Drawing.Point(10, 10);
+            this.btnOpenDLFolder.Margin = new System.Windows.Forms.Padding(4);
             this.btnOpenDLFolder.Name = "btnOpenDLFolder";
-            this.btnOpenDLFolder.Size = new System.Drawing.Size(145, 21);
+            this.btnOpenDLFolder.Size = new System.Drawing.Size(181, 26);
             this.btnOpenDLFolder.TabIndex = 0;
             this.btnOpenDLFolder.Text = "&Open Download Folder";
             this.btnOpenDLFolder.UseVisualStyleBackColor = true;
@@ -402,9 +434,11 @@ namespace Comet.Server.Forms
             this.lstTransfers.ContextMenuStrip = this.contextMenuStripTransfers;
             this.lstTransfers.FullRowSelect = true;
             this.lstTransfers.GridLines = true;
-            this.lstTransfers.Location = new System.Drawing.Point(8, 35);
+            this.lstTransfers.HideSelection = false;
+            this.lstTransfers.Location = new System.Drawing.Point(10, 44);
+            this.lstTransfers.Margin = new System.Windows.Forms.Padding(4);
             this.lstTransfers.Name = "lstTransfers";
-            this.lstTransfers.Size = new System.Drawing.Size(698, 407);
+            this.lstTransfers.Size = new System.Drawing.Size(872, 508);
             this.lstTransfers.SmallImageList = this.imgListTransfers;
             this.lstTransfers.TabIndex = 1;
             this.lstTransfers.UseCompatibleStateImageBehavior = false;
@@ -432,15 +466,16 @@ namespace Comet.Server.Forms
             // 
             // FrmFileManager
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(858, 478);
+            this.ClientSize = new System.Drawing.Size(1072, 598);
             this.Controls.Add(this.TabControlFileManager);
             this.Controls.Add(this.statusStrip);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(663, 377);
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(824, 459);
             this.Name = "FrmFileManager";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "File Manager []";
@@ -500,5 +535,7 @@ namespace Comet.Server.Forms
         private System.Windows.Forms.ToolStripMenuItem uploadToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader hTransferType;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem zipCompressToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem zipExtractToolStripMenuItem;
     }
 }

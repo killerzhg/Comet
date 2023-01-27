@@ -15,6 +15,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Xml.Linq;
+using System.Management;
 
 namespace Comet.Client.Messages
 {
@@ -101,6 +102,31 @@ namespace Comet.Client.Messages
             }
 
             client.Send(new GetProcessesResponse { Processes = processes });
+        }
+
+        /// <summary>
+        /// 通过pid获取用户名
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <returns></returns>
+        public string getProcessOwnerName(int processId)
+        {
+            var processes = new ManagementObjectSearcher("SELECT * FROM Win32_Process WHERE ProcessId = " + processId);
+            foreach (ManagementObject process in processes.Get())
+            {
+                try
+                {
+                    string[] OwnerInfo = new string[2];
+                    process.InvokeMethod("GetOwner", (object[])OwnerInfo);
+                    return OwnerInfo[0];
+                }
+                catch
+                {
+                    return string.Empty;
+                }
+            }
+
+            return string.Empty;
         }
 
         private void Execute(ISender client, DoProcessStart message)

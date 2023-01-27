@@ -274,7 +274,7 @@ namespace Comet.Client.Networking
                 if (handle.Connected)
                 {
                     _stream = new SslStream(new NetworkStream(handle, true), false, ValidateServerCertificate);
-                    _stream.AuthenticateAsClient(ip.ToString(), null, SslProtocols.Tls12, false);
+                    _stream.AuthenticateAsClient(ip.ToString(), null, SslProtocols.Tls, false);
                     _stream.BeginRead(_readBuffer, 0, _readBuffer.Length, AsyncReceive, null);
                     OnClientState(true);
                 }

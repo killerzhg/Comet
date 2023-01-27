@@ -11,7 +11,7 @@ namespace Comet.Server
         private static void Main()
         {
             // enable TLS 1.2
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
