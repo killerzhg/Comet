@@ -533,6 +533,16 @@ namespace Comet.Server.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap winzip {
+            get {
+                object obj = ResourceManager.GetObject("winzip", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap world_go {
             get {
                 object obj = ResourceManager.GetObject("world_go", resourceCulture);
@@ -553,9 +563,9 @@ namespace Comet.Server.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap zip {
+        internal static System.Drawing.Bitmap zipE2 {
             get {
-                object obj = ResourceManager.GetObject("zip", resourceCulture);
+                object obj = ResourceManager.GetObject("zipE2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

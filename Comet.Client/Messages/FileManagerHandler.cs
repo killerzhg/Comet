@@ -9,6 +9,7 @@ using Comet.Common.Models;
 using Comet.Common.Networking;
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -294,24 +295,32 @@ namespace Comet.Client.Messages
             {
                 if (message.Flag == 1)//压缩
                 {
+                    if (File.Exists(message.Path + ".zip"))
+                    {
+                        client.Send(new GetZipExecuteStatus { Status = Path.GetFileName(message.Path) + ".zip already exists" });
+                        return;
+                    }
+
                     if (Directory.Exists(message.Path))//目录
                     {
                         ZipFile.CreateFromDirectory(message.Path, message.Path+".zip");
+                        client.Send(new GetZipExecuteStatus { Status = "Zip compression completed" });
                     }
                     else if (File.Exists(message.Path))//文件
                     {
-                        ZipEntryFromFile(message.Path, message.Path + ".zip");
+                        ZipEntryFromFile(message.Path, message.Path + ".zip", client);
                     }
                     
                 }
                 else if (message.Flag == 2)//解压
                 {
                     ZipFile.ExtractToDirectory(message.Path, message.Path.Replace(".zip", ""));
+                    client.Send(new GetZipExecuteStatus { Status = "Zip decompression completed" });
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                client.Send(new GetZipExecuteStatus { Status = e.Message });
             }
             
         }
@@ -321,14 +330,15 @@ namespace Comet.Client.Messages
         /// </summary>
         /// <param name="sourceFile"></param>
         /// <param name="targetZip"></param>
-        async void ZipEntryFromFile(string sourceFile, string targetZip)
+        async void ZipEntryFromFile(string sourceFile, string targetZip, ISender client)
         {
             await Task.Run(() =>
             {
                 using (ZipArchive archive = ZipFile.Open(targetZip, ZipArchiveMode.Update))
                 {
-                    archive.CreateEntryFromFile(sourceFile, System.IO.Path.GetFileName(sourceFile));
+                    archive.CreateEntryFromFile(sourceFile, Path.GetFileName(sourceFile));
                 }
+                client.Send(new GetZipExecuteStatus { Status = "Zip compression completed" });
                 GC.Collect();
             });
         }

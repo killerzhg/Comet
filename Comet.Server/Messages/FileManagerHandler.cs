@@ -42,6 +42,9 @@ namespace Comet.Server.Messages
         /// <param name="transfer">The updated file transfer.</param>
         public delegate void FileTransferUpdatedEventHandler(object sender, FileTransfer transfer);
 
+        public delegate void ZipUpdatedEventHandler(object sender, string Msg);
+
+
         /// <summary>
         /// Raised when drives changed.
         /// </summary>
@@ -68,6 +71,9 @@ namespace Comet.Server.Messages
         /// <see cref="System.Threading.SynchronizationContext"/> chosen when the instance was constructed.
         /// </remarks>
         public event FileTransferUpdatedEventHandler FileTransferUpdated;
+
+        public event ZipUpdatedEventHandler ZipUpdated;
+
 
         /// <summary>
         /// Reports changed remote drives.
@@ -107,6 +113,15 @@ namespace Comet.Server.Messages
                 var handler = FileTransferUpdated;
                 handler?.Invoke(this, (FileTransfer)t);
             }, transfer.Clone());
+        }
+
+        private void OnZipUpdated(string msg)
+        {
+            SynchronizationContext.Post(t =>
+            {
+                var handler = ZipUpdated;
+                handler?.Invoke(this,(string)t);
+            }, msg);
         }
 
         /// <summary>
@@ -156,7 +171,7 @@ namespace Comet.Server.Messages
                                                              message is FileTransferComplete ||
                                                              message is GetDrivesResponse ||
                                                              message is GetDirectoryResponse ||
-                                                             message is SetStatusFileManager;
+                                                             message is SetStatusFileManager||                                                          message is GetZipExecuteStatus;
 
         /// <inheritdoc />
         public override bool CanExecuteFrom(ISender sender) => _client.Equals(sender);
@@ -182,6 +197,9 @@ namespace Comet.Server.Messages
                     Execute(sender, directory);
                     break;
                 case SetStatusFileManager status:
+                    Execute(sender, status);
+                    break;
+                case GetZipExecuteStatus status:
                     Execute(sender, status);
                     break;
             }
@@ -413,6 +431,11 @@ namespace Comet.Server.Messages
         public void RefreshDrives()
         {
             _client.Send(new GetDrives());
+        }
+
+        private void Execute(ISender client, GetZipExecuteStatus message)
+        {
+            OnZipUpdated(message.Status);
         }
 
         private void Execute(ISender client, FileTransferChunk message)

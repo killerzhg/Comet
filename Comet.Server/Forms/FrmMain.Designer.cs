@@ -676,7 +676,7 @@ namespace Comet.Server.Forms
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(1278, 572);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(1278, 653);
             this.tableLayoutPanel.TabIndex = 6;
             // 
             // statusStrip
@@ -685,7 +685,7 @@ namespace Comet.Server.Forms
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.listenToolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 544);
+            this.statusStrip.Location = new System.Drawing.Point(0, 625);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 18, 0);
             this.statusStrip.Size = new System.Drawing.Size(1278, 28);
@@ -771,7 +771,7 @@ namespace Comet.Server.Forms
             this.lstClients.Margin = new System.Windows.Forms.Padding(4);
             this.lstClients.Name = "lstClients";
             this.lstClients.ShowItemToolTips = true;
-            this.lstClients.Size = new System.Drawing.Size(1270, 505);
+            this.lstClients.Size = new System.Drawing.Size(1270, 586);
             this.lstClients.SmallImageList = this.imgFlags;
             this.lstClients.TabIndex = 1;
             this.lstClients.UseCompatibleStateImageBehavior = false;
@@ -828,7 +828,7 @@ namespace Comet.Server.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1278, 572);
+            this.ClientSize = new System.Drawing.Size(1278, 653);
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Black;
