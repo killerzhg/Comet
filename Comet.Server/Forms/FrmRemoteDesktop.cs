@@ -444,14 +444,14 @@ namespace Comet.Server.Forms
         {
             if (_enableKeyboardInput)
             {
-                this.picDesktop.Cursor = Cursors.Default;
+                //this.picDesktop.Cursor = Cursors.Default;
                 btnKeyboard.Image = Properties.Resources.keyboard_delete;
                 toolTipButtons.SetToolTip(btnKeyboard, "Enable keyboard input.");
                 _enableKeyboardInput = false;
             }
             else
             {
-                this.picDesktop.Cursor = Cursors.Hand;
+                //this.picDesktop.Cursor = Cursors.Hand;
                 btnKeyboard.Image = Properties.Resources.keyboard_add;
                 toolTipButtons.SetToolTip(btnKeyboard, "Disable keyboard input.");
                 _enableKeyboardInput = true;
