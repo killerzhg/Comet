@@ -35,8 +35,6 @@
             this.btnOkay = new System.Windows.Forms.Button();
             this.rtxtContent = new System.Windows.Forms.RichTextBox();
             this.lblLicense = new System.Windows.Forms.Label();
-            this.lnkCredits = new System.Windows.Forms.LinkLabel();
-            this.lnkGithubPage = new System.Windows.Forms.LinkLabel();
             this.lblSubTitle = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
             this.SuspendLayout();
@@ -44,7 +42,8 @@
             // picIcon
             // 
             this.picIcon.Image = global::Comet.Server.Properties.Resources.Comet_Server;
-            this.picIcon.Location = new System.Drawing.Point(12, 12);
+            this.picIcon.Location = new System.Drawing.Point(15, 15);
+            this.picIcon.Margin = new System.Windows.Forms.Padding(4);
             this.picIcon.Name = "picIcon";
             this.picIcon.Size = new System.Drawing.Size(64, 64);
             this.picIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -55,18 +54,20 @@
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.Location = new System.Drawing.Point(82, 7);
+            this.lblTitle.Location = new System.Drawing.Point(102, 9);
+            this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(79, 30);
+            this.lblTitle.Size = new System.Drawing.Size(96, 37);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Comet";
             // 
             // lblVersion
             // 
             this.lblVersion.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVersion.Location = new System.Drawing.Point(438, 41);
+            this.lblVersion.Location = new System.Drawing.Point(548, 51);
+            this.lblVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(75, 13);
+            this.lblVersion.Size = new System.Drawing.Size(94, 16);
             this.lblVersion.TabIndex = 2;
             this.lblVersion.Text = "%VERSION%";
             this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -74,9 +75,10 @@
             // btnOkay
             // 
             this.btnOkay.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnOkay.Location = new System.Drawing.Point(438, 370);
+            this.btnOkay.Location = new System.Drawing.Point(548, 467);
+            this.btnOkay.Margin = new System.Windows.Forms.Padding(4);
             this.btnOkay.Name = "btnOkay";
-            this.btnOkay.Size = new System.Drawing.Size(75, 23);
+            this.btnOkay.Size = new System.Drawing.Size(94, 29);
             this.btnOkay.TabIndex = 7;
             this.btnOkay.Text = "&Okay";
             this.btnOkay.UseVisualStyleBackColor = true;
@@ -85,11 +87,12 @@
             // rtxtContent
             // 
             this.rtxtContent.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtxtContent.Location = new System.Drawing.Point(15, 112);
+            this.rtxtContent.Location = new System.Drawing.Point(17, 118);
+            this.rtxtContent.Margin = new System.Windows.Forms.Padding(4);
             this.rtxtContent.Name = "rtxtContent";
             this.rtxtContent.ReadOnly = true;
             this.rtxtContent.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtxtContent.Size = new System.Drawing.Size(498, 252);
+            this.rtxtContent.Size = new System.Drawing.Size(622, 338);
             this.rtxtContent.TabIndex = 6;
             this.rtxtContent.Text = "";
             // 
@@ -97,54 +100,32 @@
             // 
             this.lblLicense.AutoSize = true;
             this.lblLicense.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLicense.Location = new System.Drawing.Point(12, 94);
+            this.lblLicense.Location = new System.Drawing.Point(13, 96);
+            this.lblLicense.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLicense.Name = "lblLicense";
-            this.lblLicense.Size = new System.Drawing.Size(46, 15);
+            this.lblLicense.Size = new System.Drawing.Size(57, 20);
             this.lblLicense.TabIndex = 5;
             this.lblLicense.Text = "License";
-            // 
-            // lnkCredits
-            // 
-            this.lnkCredits.AutoSize = true;
-            this.lnkCredits.Location = new System.Drawing.Point(415, 83);
-            this.lnkCredits.Name = "lnkCredits";
-            this.lnkCredits.Size = new System.Drawing.Size(97, 13);
-            this.lnkCredits.TabIndex = 4;
-            this.lnkCredits.TabStop = true;
-            this.lnkCredits.Text = "3rd-party licenses";
-            this.lnkCredits.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkCredits_LinkClicked);
-            // 
-            // lnkGithubPage
-            // 
-            this.lnkGithubPage.AutoSize = true;
-            this.lnkGithubPage.Location = new System.Drawing.Point(441, 61);
-            this.lnkGithubPage.Name = "lnkGithubPage";
-            this.lnkGithubPage.Size = new System.Drawing.Size(73, 13);
-            this.lnkGithubPage.TabIndex = 3;
-            this.lnkGithubPage.TabStop = true;
-            this.lnkGithubPage.Text = "GitHub page";
-            this.lnkGithubPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGithubPage_LinkClicked);
             // 
             // lblSubTitle
             // 
             this.lblSubTitle.AutoSize = true;
             this.lblSubTitle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubTitle.Location = new System.Drawing.Point(84, 37);
+            this.lblSubTitle.Location = new System.Drawing.Point(105, 46);
+            this.lblSubTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSubTitle.Name = "lblSubTitle";
-            this.lblSubTitle.Size = new System.Drawing.Size(170, 17);
+            this.lblSubTitle.Size = new System.Drawing.Size(222, 23);
             this.lblSubTitle.TabIndex = 1;
             this.lblSubTitle.Text = "Remote Administration Tool";
             // 
             // FrmAbout
             // 
             this.AcceptButton = this.btnOkay;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnOkay;
-            this.ClientSize = new System.Drawing.Size(525, 405);
+            this.ClientSize = new System.Drawing.Size(656, 506);
             this.Controls.Add(this.lblSubTitle);
-            this.Controls.Add(this.lnkGithubPage);
-            this.Controls.Add(this.lnkCredits);
             this.Controls.Add(this.lblLicense);
             this.Controls.Add(this.rtxtContent);
             this.Controls.Add(this.btnOkay);
@@ -154,6 +135,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmAbout";
@@ -173,8 +155,6 @@
         private System.Windows.Forms.Button btnOkay;
         private System.Windows.Forms.RichTextBox rtxtContent;
         private System.Windows.Forms.Label lblLicense;
-        private System.Windows.Forms.LinkLabel lnkCredits;
-        private System.Windows.Forms.LinkLabel lnkGithubPage;
         private System.Windows.Forms.Label lblSubTitle;
     }
 }

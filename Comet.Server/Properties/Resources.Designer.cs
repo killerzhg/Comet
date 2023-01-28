@@ -283,7 +283,7 @@ namespace Comet.Server.Properties {
         /// <summary>
         ///   查找类似 MIT License
         ///
-        ///Copyright (c) 2020 MaxXor
+        ///Copyright (c) 2022
         ///
         ///Permission is hereby granted, free of charge, to any person obtaining a copy
         ///of this software and associated documentation files (the &quot;Software&quot;), to deal
@@ -292,7 +292,7 @@ namespace Comet.Server.Properties {
         ///copies of the Software, and to permit persons to whom the Software is
         ///furnished to do so, subject to the following conditions:
         ///
-        ///The above copyright notice  [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///The above copyright notice and thi [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string License {
             get {
