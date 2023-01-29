@@ -6,8 +6,6 @@ namespace Comet.Server.Forms
 {
     public partial class FrmAbout : Form
     {
-        private readonly string _repositoryUrl = @"https://github.com/killerzhg/Comet";
-
         public FrmAbout()
         {
             InitializeComponent();
