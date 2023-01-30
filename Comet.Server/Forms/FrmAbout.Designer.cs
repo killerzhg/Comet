@@ -29,32 +29,21 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAbout));
-            this.picIcon = new System.Windows.Forms.PictureBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
             this.btnOkay = new System.Windows.Forms.Button();
             this.rtxtContent = new System.Windows.Forms.RichTextBox();
             this.lblLicense = new System.Windows.Forms.Label();
             this.lblSubTitle = new System.Windows.Forms.Label();
+            this.picIcon = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
             this.SuspendLayout();
-            // 
-            // picIcon
-            // 
-            this.picIcon.Image = global::Comet.Server.Properties.Resources.Comet_Server;
-            this.picIcon.Location = new System.Drawing.Point(15, 15);
-            this.picIcon.Margin = new System.Windows.Forms.Padding(4);
-            this.picIcon.Name = "picIcon";
-            this.picIcon.Size = new System.Drawing.Size(64, 64);
-            this.picIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.picIcon.TabIndex = 0;
-            this.picIcon.TabStop = false;
             // 
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.Location = new System.Drawing.Point(102, 9);
+            this.lblTitle.Location = new System.Drawing.Point(90, 9);
             this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(96, 37);
@@ -111,12 +100,23 @@
             // 
             this.lblSubTitle.AutoSize = true;
             this.lblSubTitle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubTitle.Location = new System.Drawing.Point(105, 46);
+            this.lblSubTitle.Location = new System.Drawing.Point(93, 46);
             this.lblSubTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSubTitle.Name = "lblSubTitle";
             this.lblSubTitle.Size = new System.Drawing.Size(222, 23);
             this.lblSubTitle.TabIndex = 1;
             this.lblSubTitle.Text = "Remote Administration Tool";
+            // 
+            // picIcon
+            // 
+            this.picIcon.Image = global::Comet.Server.Properties.Resources.Comet_Server;
+            this.picIcon.Location = new System.Drawing.Point(20, 15);
+            this.picIcon.Margin = new System.Windows.Forms.Padding(4);
+            this.picIcon.Name = "picIcon";
+            this.picIcon.Size = new System.Drawing.Size(55, 50);
+            this.picIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picIcon.TabIndex = 0;
+            this.picIcon.TabStop = false;
             // 
             // FrmAbout
             // 
@@ -148,13 +148,12 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox picIcon;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.Button btnOkay;
         private System.Windows.Forms.RichTextBox rtxtContent;
         private System.Windows.Forms.Label lblLicense;
         private System.Windows.Forms.Label lblSubTitle;
+        private System.Windows.Forms.PictureBox picIcon;
     }
 }
