@@ -71,10 +71,11 @@ namespace Comet.Server.Forms
 
         private void UpdateImage(object sender, Bitmap bmp)
         {
-            if (this.WindowState == FormWindowState.Normal)
-            {
+            if (WindowState == FormWindowState.Minimized)
+                return;
+
                 picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
-            }
+
         }
 
         private void ClientDisconnected(Client client, bool connected)
@@ -88,15 +89,9 @@ namespace Comet.Server.Forms
         private void FrmRemoteWebcam_Load(object sender, EventArgs e)
         {
             this.Text = WindowHelper.GetWindowTitle("Remote Webcam", _connectClient);
-            panelTop.Left = (this.Width / 2) - (panelTop.Width / 2);
-
-            btnHide.Left = (panelTop.Width / 2) - (btnHide.Width / 2);
-
-            btnShow.Location = new Point(377, 0);
-            btnShow.Left = (this.Width / 2) - (btnShow.Width / 2);
-
             _remoteWebcamHandler.RefreshDisplays();
             _remoteWebcamHandler.LocalResolution = picWebcam.Size;
+            OnResize(EventArgs.Empty); // 触发调整大小事件以对齐控件
         }
         // <summary>
         /// Holds the opened Webcam form for each client.
@@ -209,6 +204,14 @@ namespace Comet.Server.Forms
 
         private void FrmRemoteWebcam_Resize(object sender, EventArgs e)
         {
+            if (WindowState == FormWindowState.Minimized)
+                return;
+            panelTop.Left = (this.Width / 2) - (panelTop.Width / 2);
+
+            btnHide.Left = (panelTop.Width / 2) - (btnHide.Width / 2);
+
+            btnShow.Location = new Point(377, 0);
+            btnShow.Left = (this.Width / 2) - (btnShow.Width / 2);
             //_remoteWebcamHandler.LocalResolution = picWebcam.Size;
         }
 

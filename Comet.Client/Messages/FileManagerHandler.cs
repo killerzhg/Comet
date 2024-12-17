@@ -354,10 +354,10 @@ namespace Comet.Client.Messages
                     catch (Exception e)
                     {
                         client.Send(new GetZipExecuteStatus { Status = e.Message });
+                        return;
                     }
                 }
                 client.Send(new GetZipExecuteStatus { Status = "Zip compression completed" });
-                GC.Collect();
             });
         }
 

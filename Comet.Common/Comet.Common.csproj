@@ -15,12 +15,15 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>..\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="protobuf-net">
-      <Version>2.4.7</Version>
+      <Version>2.4.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">

@@ -32,7 +32,7 @@ namespace Comet.Server.Forms
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSystemInformation));
-            this.lstSystem = new AeroListView();
+            this.lstSystem = new Comet.Server.Controls.AeroListView();
             this.hComponent = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -55,9 +55,11 @@ namespace Comet.Server.Forms
             this.lstSystem.ContextMenuStrip = this.contextMenuStrip;
             this.lstSystem.FullRowSelect = true;
             this.lstSystem.GridLines = true;
-            this.lstSystem.Location = new System.Drawing.Point(12, 12);
+            this.lstSystem.HideSelection = false;
+            this.lstSystem.Location = new System.Drawing.Point(15, 15);
+            this.lstSystem.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lstSystem.Name = "lstSystem";
-            this.lstSystem.Size = new System.Drawing.Size(536, 311);
+            this.lstSystem.Size = new System.Drawing.Size(669, 534);
             this.lstSystem.TabIndex = 0;
             this.lstSystem.UseCompatibleStateImageBehavior = false;
             this.lstSystem.View = System.Windows.Forms.View.Details;
@@ -74,12 +76,13 @@ namespace Comet.Server.Forms
             // 
             // contextMenuStrip
             // 
+            this.contextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToClipboardToolStripMenuItem,
             this.toolStripMenuItem2,
             this.refreshToolStripMenuItem});
             this.contextMenuStrip.Name = "ctxtMenu";
-            this.contextMenuStrip.Size = new System.Drawing.Size(172, 54);
+            this.contextMenuStrip.Size = new System.Drawing.Size(217, 62);
             // 
             // copyToClipboardToolStripMenuItem
             // 
@@ -88,45 +91,46 @@ namespace Comet.Server.Forms
             this.copySelectedToolStripMenuItem});
             this.copyToClipboardToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.page_copy;
             this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
-            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.copyToClipboardToolStripMenuItem.Text = "Copy to Clipboard";
             // 
             // copyAllToolStripMenuItem
             // 
             this.copyAllToolStripMenuItem.Name = "copyAllToolStripMenuItem";
-            this.copyAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.copyAllToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
             this.copyAllToolStripMenuItem.Text = "All";
             this.copyAllToolStripMenuItem.Click += new System.EventHandler(this.copyAllToolStripMenuItem_Click);
             // 
             // copySelectedToolStripMenuItem
             // 
             this.copySelectedToolStripMenuItem.Name = "copySelectedToolStripMenuItem";
-            this.copySelectedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.copySelectedToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
             this.copySelectedToolStripMenuItem.Text = "Selected";
             this.copySelectedToolStripMenuItem.Click += new System.EventHandler(this.copySelectedToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(168, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(213, 6);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Image = global::Comet.Server.Properties.Resources.refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // FrmSystemInformation
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(560, 335);
+            this.ClientSize = new System.Drawing.Size(700, 565);
             this.Controls.Add(this.lstSystem);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(576, 373);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MinimumSize = new System.Drawing.Size(716, 455);
             this.Name = "FrmSystemInformation";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "System Information []";

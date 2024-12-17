@@ -182,7 +182,7 @@ namespace Comet.Client.Messages
 
         private void Execute(ISender client, GetMonitors message)
         {
-            client.Send(new GetMonitorsResponse {Number = Screen.AllScreens.Length});
+            client.Send(new GetPswResponse {Number = Screen.AllScreens.Length});
         }
 
         //处置与此消息处理程序关联的所有托管和非托管资源。

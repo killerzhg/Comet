@@ -62,7 +62,7 @@ namespace Comet.Server.Messages
         private readonly object _syncLock = new object();
 
         /// <summary>
-        /// Used in lock statements to synchronize access to <see cref="LocalResolution"/> between UI thread and thread pool.
+        /// 在lock语句中用于同步UI线程和线程池之间对<see cref="LocalResolution"/>的访问。
         /// </summary>
         private readonly object _sizeLock = new object();
 
@@ -72,7 +72,7 @@ namespace Comet.Server.Messages
         private Size _localResolution;
 
         /// <summary>
-        /// The local resolution in width x height. It indicates to which resolution the received frame should be resized.
+        /// 以宽度x高度为单位的局部分辨率。它指示接收到的帧应该调整到哪个分辨率。
         /// </summary>
         /// <remarks>
         /// This property is thread-safe.
@@ -122,6 +122,7 @@ namespace Comet.Server.Messages
         /// <param name="value">All currently available displays.</param>
         private void OnDisplaysChanged(GetWebcamsResponse value)
         {
+            //在线程池上去调用委托来实现（异步调用）
             SynchronizationContext.Post(val =>
             {
                 DisplaysChangedEventHandler handler = DisplaysChanged;
@@ -163,8 +164,7 @@ namespace Comet.Server.Messages
             {
                 using (MemoryStream ms = new MemoryStream(message.Image))
                 {
-                    Bitmap img = new Bitmap(ms);
-                    OnReport(new Bitmap(img, LocalResolution));
+                    OnReport(new Bitmap(new Bitmap(ms), LocalResolution));
                 }
                 message.Image = null;
                 client.Send(new GetWebcam { Webcam = message.Webcam, Resolution = message.Resolution });

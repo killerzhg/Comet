@@ -309,7 +309,7 @@ namespace Comet.Server.Forms
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnRefresh.Image = global::Comet.Server.Properties.Resources.refresh;
             this.btnRefresh.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRefresh.Location = new System.Drawing.Point(855, 9);
+            this.btnRefresh.Location = new System.Drawing.Point(891, 10);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(4);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(28, 28);
@@ -320,7 +320,7 @@ namespace Comet.Server.Forms
             // lblPath
             // 
             this.lblPath.AutoSize = true;
-            this.lblPath.Location = new System.Drawing.Point(349, 15);
+            this.lblPath.Location = new System.Drawing.Point(343, 15);
             this.lblPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPath.Name = "lblPath";
             this.lblPath.Size = new System.Drawing.Size(91, 19);
@@ -332,11 +332,11 @@ namespace Comet.Server.Forms
             this.txtPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPath.Location = new System.Drawing.Point(450, 10);
+            this.txtPath.Location = new System.Drawing.Point(440, 10);
             this.txtPath.Margin = new System.Windows.Forms.Padding(4);
             this.txtPath.Name = "txtPath";
             this.txtPath.ReadOnly = true;
-            this.txtPath.Size = new System.Drawing.Size(403, 26);
+            this.txtPath.Size = new System.Drawing.Size(443, 26);
             this.txtPath.TabIndex = 3;
             this.txtPath.Text = "\\";
             // 
@@ -357,7 +357,7 @@ namespace Comet.Server.Forms
             this.lstDirectory.Location = new System.Drawing.Point(10, 44);
             this.lstDirectory.Margin = new System.Windows.Forms.Padding(4);
             this.lstDirectory.Name = "lstDirectory";
-            this.lstDirectory.Size = new System.Drawing.Size(874, 563);
+            this.lstDirectory.Size = new System.Drawing.Size(909, 563);
             this.lstDirectory.SmallImageList = this.imgListDirectory;
             this.lstDirectory.TabIndex = 2;
             this.lstDirectory.UseCompatibleStateImageBehavior = false;
@@ -412,7 +412,7 @@ namespace Comet.Server.Forms
             this.tabTransfers.Margin = new System.Windows.Forms.Padding(4);
             this.tabTransfers.Name = "tabTransfers";
             this.tabTransfers.Padding = new System.Windows.Forms.Padding(4);
-            this.tabTransfers.Size = new System.Drawing.Size(928, 564);
+            this.tabTransfers.Size = new System.Drawing.Size(928, 619);
             this.tabTransfers.TabIndex = 1;
             this.tabTransfers.Text = "Transfers";
             // 

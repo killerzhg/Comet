@@ -71,24 +71,6 @@ namespace Comet.Common.Helpers
         }
 
         /// <summary>
-        /// Appends text to a log file.
-        /// </summary>
-        /// <param name="filename">The filename of the log.</param>
-        /// <param name="appendText">The text to append.</param>
-        /// <param name="aes">The AES instance.</param>
-        public static void WriteLogFile(string filename, string appendText, Aes256 aes)
-        {
-            appendText = ReadLogFile(filename, aes) + appendText;
-
-            using (FileStream fStream = File.Open(filename, FileMode.Create, FileAccess.Write))
-            {
-                byte[] data = aes.Encrypt(Encoding.UTF8.GetBytes(appendText));
-                fStream.Seek(0, SeekOrigin.Begin);
-                fStream.Write(data, 0, data.Length);
-            }
-        }
-
-        /// <summary>
         /// Reads a log file.
         /// </summary>
         /// <param name="filename">The filename of the log.</param>

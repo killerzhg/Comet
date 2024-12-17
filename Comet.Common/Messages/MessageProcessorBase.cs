@@ -15,12 +15,12 @@ namespace Comet.Common.Messages
     public abstract class MessageProcessorBase<T> : IMessageProcessor, IProgress<T>
     {
         /// <summary>
-        /// The synchronization context chosen upon construction.
+        /// 在构造时选择的同步上下文。(在各种同步模型中提供传播同步上下文的基本功能 )
         /// </summary>
         protected readonly SynchronizationContext SynchronizationContext;
 
         /// <summary>
-        /// A cached delegate used to post invocation to the synchronization context.
+        /// 创建委托，方法是将回调方法传递给SendOrPostCallback 构造函数。您的方法必须具有此处所显示的签名。
         /// </summary>
         private readonly SendOrPostCallback _invokeReportProgressHandlers;
 
@@ -46,12 +46,12 @@ namespace Comet.Common.Messages
         /// <param name="value">The value of the updated progress.</param>
         protected virtual void OnReport(T value)
         {
-            // If there's no handler, don't bother going through the sync context.
-            // Inside the callback, we'll need to check again, in case 
-            // an event handler is removed between now and then.
-            var handler = ProgressChanged;
+            //如果没有处理程序，就不需要遍历同步上下文。
+            //在回调函数中，我们需要再次检查，以防万一删除事件处理程序。
+            ReportProgressEventHandler handler = ProgressChanged;
             if (handler != null)
             {
+                //在线程池上去调用委托来实现（异步调用）
                 SynchronizationContext.Post(_invokeReportProgressHandlers, value);
             }
         }
@@ -70,7 +70,7 @@ namespace Comet.Common.Messages
         }
 
         /// <summary>
-        /// Invokes the progress event callbacks.
+        /// 调用进度事件回调。
         /// </summary>
         /// <param name="state">The progress value.</param>
         private void InvokeReportProgressHandlers(object state)

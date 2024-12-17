@@ -238,6 +238,8 @@ namespace Comet.Server.Forms
             for (int i = 0; i < displays; i++)
                 cbMonitors.Items.Add($"Display {i + 1}");
             cbMonitors.SelectedIndex = 0;
+            StartScreen();
+            TogglePanelVisibility(false);
         }
 
         /// <summary>
@@ -254,7 +256,7 @@ namespace Comet.Server.Forms
         {
             this.Text = WindowHelper.GetWindowTitle("Remote Desktop", _connectClient);
 
-            OnResize(EventArgs.Empty); // trigger resize event to align controls 
+            OnResize(EventArgs.Empty); // 触发调整大小事件以对齐控件
 
             _remoteDesktopHandler.RefreshDisplays();
         }
@@ -286,10 +288,15 @@ namespace Comet.Server.Forms
             _remoteDesktopHandler.LocalResolution = picDesktop.Size;
             panelTop.Left = (this.Width - panelTop.Width) / 2;
             btnShow.Left = (this.Width - btnShow.Width) / 2;
-            btnHide.Left = (panelTop.Width - btnHide.Width) / 2;
+           // btnHide.Left = (panelTop.Width - btnHide.Width) / 2;
         }
 
         private void btnStart_Click(object sender, EventArgs e)
+        {
+            StartScreen();
+        }
+
+        void StartScreen() 
         {
             if (cbMonitors.Items.Count == 0)
             {
@@ -297,7 +304,6 @@ namespace Comet.Server.Forms
                     "Starting failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             SubscribeEvents();
             StartStream();
         }
@@ -428,6 +434,7 @@ namespace Comet.Server.Forms
                 btnMouse.Image = Properties.Resources.mouse_delete;
                 toolTipButtons.SetToolTip(btnMouse, "Enable mouse input.");
                 _enableMouseInput = false;
+                _enableKeyboardInput = false;
             }
             else
             {
@@ -435,28 +442,9 @@ namespace Comet.Server.Forms
                 btnMouse.Image = Properties.Resources.mouse_add;
                 toolTipButtons.SetToolTip(btnMouse, "Disable mouse input.");
                 _enableMouseInput = true;
-            }
-
-            this.ActiveControl = picDesktop;
-        }
-
-        private void btnKeyboard_Click(object sender, EventArgs e)
-        {
-            if (_enableKeyboardInput)
-            {
-                //this.picDesktop.Cursor = Cursors.Default;
-                btnKeyboard.Image = Properties.Resources.keyboard_delete;
-                toolTipButtons.SetToolTip(btnKeyboard, "Enable keyboard input.");
-                _enableKeyboardInput = false;
-            }
-            else
-            {
-                //this.picDesktop.Cursor = Cursors.Hand;
-                btnKeyboard.Image = Properties.Resources.keyboard_add;
-                toolTipButtons.SetToolTip(btnKeyboard, "Disable keyboard input.");
                 _enableKeyboardInput = true;
             }
-
+            TogglePanelVisibility(false);
             this.ActiveControl = picDesktop;
         }
 

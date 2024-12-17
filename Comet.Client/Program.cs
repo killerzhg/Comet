@@ -1,9 +1,12 @@
 ﻿using Comet.Client.IO;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using WindowsFormsApp1;
 
 namespace Comet.Client
 {

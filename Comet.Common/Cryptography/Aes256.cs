@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -106,7 +107,7 @@ namespace Comet.Common.Cryptography
                         byte[] receivedHash = new byte[HmacSha256Length];
                         ms.Read(receivedHash, 0, receivedHash.Length);
 
-                        if (!SafeComparison.AreEqual(hash, receivedHash))
+                        if (!AreEqual(hash, receivedHash))
                             throw new CryptographicException("Invalid message authentication code (MAC).");
                     }
 
@@ -123,6 +124,28 @@ namespace Comet.Common.Cryptography
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Compares two byte arrays for equality.
+        /// </summary>
+        /// <param name="a1">Byte array to compare</param>
+        /// <param name="a2">Byte array to compare</param>
+        /// <returns>True if equal, else false</returns>
+        /// <remarks>
+        /// Assumes that the byte arrays have the same length.
+        /// This method is safe against timing attacks.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        bool AreEqual(byte[] a1, byte[] a2)
+        {
+            bool result = true;
+            for (int i = 0; i < a1.Length; ++i)
+            {
+                if (a1[i] != a2[i])
+                    result = false;
+            }
+            return result;
         }
     }
 }

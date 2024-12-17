@@ -7,7 +7,7 @@
     <InputAssemblies Include="$(TargetDir)protobuf-net.dll"/>
     <InputAssemblies Include="$(TargetDir)Gma.System.MouseKeyHook.dll"/>
     <InputAssemblies Include="$(TargetDir)Comet.Common.dll"/>
-    <InputAssemblies Include="$(TargetDir)BouncyCastle.Crypto.dll"/>
+    <InputAssemblies Include="$(TargetDir)NAudio.dll"/>
   </ItemGroup>
 
   <ILRepack

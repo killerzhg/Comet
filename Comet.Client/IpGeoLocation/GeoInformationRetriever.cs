@@ -1,4 +1,5 @@
 ﻿using Comet.Client.Helper;
+using Quasar.Client.IpGeoLocation;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -81,10 +82,10 @@ namespace Comet.Client.IpGeoLocation
         {
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://tools.keycdn.com/geo.json");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://ipwho.is/");
                 request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0";
                 request.Proxy = null;
-                request.Timeout = 10000;
+                request.Timeout = 5000;
 
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
@@ -94,12 +95,12 @@ namespace Comet.Client.IpGeoLocation
 
                         GeoInformation g = new GeoInformation
                         {
-                            IpAddress = geoInfo.Data.Geo.Ip,
-                            Country = geoInfo.Data.Geo.CountryName,
-                            CountryCode = geoInfo.Data.Geo.CountryCode,
-                            Timezone = geoInfo.Data.Geo.Timezone,
-                            Asn = geoInfo.Data.Geo.Asn.ToString(),
-                            Isp = geoInfo.Data.Geo.Isp
+                            IpAddress = geoInfo.Ip,
+                            Country = geoInfo.Country,
+                            CountryCode = geoInfo.CountryCode,
+                            Timezone = geoInfo.Timezone.UTC,
+                            Asn = geoInfo.Connection.ASN.ToString(),
+                            Isp = geoInfo.Connection.ISP
                         };
 
                         return g;

@@ -106,7 +106,7 @@ namespace Comet.Server.Forms
             this.tableLayoutPanel.RowCount = 2;
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(1182, 633);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(1182, 653);
             this.tableLayoutPanel.TabIndex = 2;
             // 
             // lstTasks
@@ -129,7 +129,7 @@ namespace Comet.Server.Forms
             this.lstTasks.Name = "lstTasks";
             this.lstTasks.ShowGroups = false;
             this.lstTasks.ShowItemToolTips = true;
-            this.lstTasks.Size = new System.Drawing.Size(1174, 597);
+            this.lstTasks.Size = new System.Drawing.Size(1174, 617);
             this.lstTasks.SmallImageList = this.imageList1;
             this.lstTasks.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lstTasks.TabIndex = 0;
@@ -177,7 +177,7 @@ namespace Comet.Server.Forms
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.processesToolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 605);
+            this.statusStrip.Location = new System.Drawing.Point(0, 625);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 18, 0);
             this.statusStrip.Size = new System.Drawing.Size(1182, 28);
@@ -194,7 +194,7 @@ namespace Comet.Server.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1182, 633);
+            this.ClientSize = new System.Drawing.Size(1182, 653);
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

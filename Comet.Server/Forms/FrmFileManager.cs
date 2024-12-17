@@ -436,6 +436,8 @@ namespace Comet.Server.Forms
             frmRs.Show();
             frmRs.Focus();
             frmRs.RemoteShellHandler.SendCommand($"cd \"{path}\"");
+            var driveLetter = Path.GetPathRoot(path);
+            frmRs.RemoteShellHandler.SendCommand($"{driveLetter.Remove(driveLetter.Length - 1)} && cd \"{path}\"");
         }
 
         private void btnOpenDLFolder_Click(object sender, EventArgs e)
