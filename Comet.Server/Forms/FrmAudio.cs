@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Comet.Server.Forms
 {
@@ -32,6 +33,9 @@ namespace Comet.Server.Forms
             RegisterMessageHandler(_audioHandler);
             InitializeComponent();
             _baseDownloadPath = Path.Combine(_connectClient.Value.DownloadDirectory, "Audio Records\\");
+
+            waveInDeviceName.DrawMode = DrawMode.OwnerDrawFixed;
+            waveInDeviceName.DrawItem += new DrawItemEventHandler(waveInDeviceName_DrawItem);
         }
 
         private void RegisterMessageHandler(AudioHandler _audioHandler)
@@ -44,11 +48,15 @@ namespace Comet.Server.Forms
 
         private void DisplaysChanged(object sender, GetAudioNames value)
         {
-            if (value!=null)
+            foreach (var item in value?.WaveInDeviceName)
             {
-                foreach (var item in value.WaveInDeviceName)
+                if (item.EndsWith("M"))
                 {
-                    waveInDeviceName.Items.Add(item);
+                    waveInDeviceName.Items.Add(new ComboBoxItem(item.Replace("@M", ""), Properties.Resources.monitor));
+                }
+                else
+                {
+                    waveInDeviceName.Items.Add(new ComboBoxItem(item.Replace("@S", ""), Properties.Resources.monitor));
                 }
                 waveInDeviceName.SelectedIndex = 0;
             }
@@ -99,17 +107,17 @@ namespace Comet.Server.Forms
 
         private void startListen_Click(object sender, EventArgs e)
         {
-            if (startListen.Text== "Start listening")
+            if (startListen.Text == "Start listening")
             {
-                if (OutDevice.SelectedIndex!=-1 && waveInDeviceName.SelectedIndex != -1)
+                if (OutDevice.SelectedIndex != -1 && waveInDeviceName.SelectedIndex != -1)
                 {
                     //如果index为1则为系统声音
-                    int index = waveInDeviceName.Text.Substring(waveInDeviceName.Text.Length - 2)=="@S"? 1 : 0;
+                    int index = waveInDeviceName.Text.Substring(waveInDeviceName.Text.Length - 2) == "@S" ? 1 : 0;
                     _audioHandler.StartListen(OutDevice.SelectedIndex, index);
                     startListen.Text = "Stop listening";
                     progressBar1.Style = ProgressBarStyle.Marquee;
-                    checkBox1.Enabled= true;
-                    checkBox2.Enabled= true;
+                    checkBox1.Enabled = true;
+                    checkBox2.Enabled = true;
                 }
                 else MessageBox.Show("您没有选择设备");
             }
@@ -156,13 +164,13 @@ namespace Comet.Server.Forms
                 else if (index == 1) //录系统声音
                 {
                     _audioHandler.WaveFileWriter = new WaveFileWriter(_baseDownloadPath + "\\" + DateFormater() + ".wav", WaveFormat.CreateIeeeFloatWaveFormat(48000, 2));
-                } 
+                }
             }
             else
             {
                 _audioHandler.WaveFileWriter.Close();
                 _audioHandler.WaveFileWriter = null;
-            } 
+            }
         }
 
         string DateFormater()
@@ -197,5 +205,37 @@ namespace Comet.Server.Forms
                 _audioHandler.Stop();
             }
         }
+
+        private void waveInDeviceName_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+            if (e.Index >= 0)
+            {
+                var item = (ComboBoxItem)waveInDeviceName.Items[e.Index];
+                // Draw the image
+                e.Graphics.DrawImage(item.Image, new Point(e.Bounds.Left+6, e.Bounds.Top + 6));
+                // Draw the text
+                e.Graphics.DrawString(item.Text, e.Font, Brushes.Black, e.Bounds.Left + item.Image.Width+9, e.Bounds.Top + (e.Bounds.Height - e.Font.Height) / 2);
+            }
+            e.DrawFocusRectangle();
+        }
+
+        public class ComboBoxItem
+        {
+            public string Text { get; set; }
+            public Image Image { get; set; }
+
+            public ComboBoxItem(string text, Image image)
+            {
+                Text = text;
+                Image = image;
+            }
+
+            public override string ToString()
+            {
+                return Text;
+            }
+        }
+
     }
 }

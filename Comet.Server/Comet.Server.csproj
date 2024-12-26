@@ -30,10 +30,15 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\Comet.p12" />
+    <None Remove="Images\DDORes_2011.png" />
+    <None Remove="Resources\DDORes_2011.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Comet.p12">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DDORes_2011.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +330,11 @@
     <PackageReference Include="Vestris.ResourceLib">
       <Version>2.1.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DDORes_2011.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <PropertyGroup />
 </Project>

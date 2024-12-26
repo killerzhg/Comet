@@ -43,7 +43,9 @@ namespace Comet.Server.Forms
             this.lblProxyInfo = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblLoadBalance = new System.Windows.Forms.Label();
-            this.lstConnections = new AeroListView();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.lstConnections = new Comet.Server.Controls.AeroListView();
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -59,9 +61,10 @@ namespace Comet.Server.Forms
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(243, 12);
+            this.btnStart.Location = new System.Drawing.Point(486, 24);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(114, 23);
+            this.btnStart.Size = new System.Drawing.Size(228, 46);
             this.btnStart.TabIndex = 0;
             this.btnStart.Text = "Start Listening";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -70,15 +73,17 @@ namespace Comet.Server.Forms
             // lblLocalServerPort
             // 
             this.lblLocalServerPort.AutoSize = true;
-            this.lblLocalServerPort.Location = new System.Drawing.Point(22, 17);
+            this.lblLocalServerPort.Location = new System.Drawing.Point(44, 34);
+            this.lblLocalServerPort.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblLocalServerPort.Name = "lblLocalServerPort";
-            this.lblLocalServerPort.Size = new System.Drawing.Size(91, 13);
+            this.lblLocalServerPort.Size = new System.Drawing.Size(176, 30);
             this.lblLocalServerPort.TabIndex = 1;
             this.lblLocalServerPort.Text = "Local Server Port";
             // 
             // nudServerPort
             // 
-            this.nudServerPort.Location = new System.Drawing.Point(117, 15);
+            this.nudServerPort.Location = new System.Drawing.Point(234, 30);
+            this.nudServerPort.Margin = new System.Windows.Forms.Padding(6);
             this.nudServerPort.Maximum = new decimal(new int[] {
             65534,
             0,
@@ -90,7 +95,7 @@ namespace Comet.Server.Forms
             0,
             0});
             this.nudServerPort.Name = "nudServerPort";
-            this.nudServerPort.Size = new System.Drawing.Size(120, 22);
+            this.nudServerPort.Size = new System.Drawing.Size(240, 37);
             this.nudServerPort.TabIndex = 2;
             this.nudServerPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.nudServerPort.Value = new decimal(new int[] {
@@ -106,43 +111,47 @@ namespace Comet.Server.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabCtrl.Controls.Add(this.tabPage1);
-            this.tabCtrl.Location = new System.Drawing.Point(26, 115);
+            this.tabCtrl.Location = new System.Drawing.Point(52, 250);
+            this.tabCtrl.Margin = new System.Windows.Forms.Padding(6);
             this.tabCtrl.Name = "tabCtrl";
             this.tabCtrl.SelectedIndex = 0;
-            this.tabCtrl.Size = new System.Drawing.Size(736, 274);
+            this.tabCtrl.Size = new System.Drawing.Size(1472, 663);
             this.tabCtrl.TabIndex = 3;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.lstConnections);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(8, 44);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(728, 248);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(6);
+            this.tabPage1.Size = new System.Drawing.Size(1456, 611);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Open Connections";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // contextMenuStrip
             // 
+            this.contextMenuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.killConnectionToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip1";
-            this.contextMenuStrip.Size = new System.Drawing.Size(156, 26);
+            this.contextMenuStrip.Size = new System.Drawing.Size(261, 42);
             // 
             // killConnectionToolStripMenuItem
             // 
             this.killConnectionToolStripMenuItem.Name = "killConnectionToolStripMenuItem";
-            this.killConnectionToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.killConnectionToolStripMenuItem.Size = new System.Drawing.Size(260, 38);
             this.killConnectionToolStripMenuItem.Text = "Kill Connection";
             this.killConnectionToolStripMenuItem.Click += new System.EventHandler(this.killConnectionToolStripMenuItem_Click);
             // 
             // btnStop
             // 
             this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(363, 12);
+            this.btnStop.Location = new System.Drawing.Point(726, 24);
+            this.btnStop.Margin = new System.Windows.Forms.Padding(6);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(114, 23);
+            this.btnStop.Size = new System.Drawing.Size(228, 46);
             this.btnStop.TabIndex = 4;
             this.btnStop.Text = "Stop Listening";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -151,29 +160,44 @@ namespace Comet.Server.Forms
             // lblProxyInfo
             // 
             this.lblProxyInfo.AutoSize = true;
-            this.lblProxyInfo.Location = new System.Drawing.Point(23, 51);
+            this.lblProxyInfo.Location = new System.Drawing.Point(46, 102);
+            this.lblProxyInfo.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblProxyInfo.Name = "lblProxyInfo";
-            this.lblProxyInfo.Size = new System.Drawing.Size(312, 13);
+            this.lblProxyInfo.Size = new System.Drawing.Size(598, 30);
             this.lblProxyInfo.TabIndex = 5;
             this.lblProxyInfo.Text = "Connect to this SOCKS5 Proxy: 127.0.0.1:3128 (no user/pass)";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 67);
+            this.label1.Location = new System.Drawing.Point(46, 134);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(405, 13);
+            this.label1.Size = new System.Drawing.Size(768, 30);
             this.label1.TabIndex = 6;
             this.label1.Text = "All the DNS Queries will be executed at the remote client to reduce DNS Leaks";
             // 
             // lblLoadBalance
             // 
             this.lblLoadBalance.AutoSize = true;
-            this.lblLoadBalance.Location = new System.Drawing.Point(23, 84);
+            this.lblLoadBalance.Location = new System.Drawing.Point(46, 168);
+            this.lblLoadBalance.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblLoadBalance.Name = "lblLoadBalance";
-            this.lblLoadBalance.Size = new System.Drawing.Size(105, 13);
+            this.lblLoadBalance.Size = new System.Drawing.Size(198, 30);
             this.lblLoadBalance.TabIndex = 7;
             this.lblLoadBalance.Text = "[Load Balance Info]";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(47, 198);
+            this.linkLabel1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(484, 30);
+            this.linkLabel1.TabIndex = 9;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "You are advised to use Proxifier as the proxy tool";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // lstConnections
             // 
@@ -189,9 +213,11 @@ namespace Comet.Server.Forms
             this.lstConnections.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstConnections.FullRowSelect = true;
             this.lstConnections.GridLines = true;
-            this.lstConnections.Location = new System.Drawing.Point(3, 3);
+            this.lstConnections.HideSelection = false;
+            this.lstConnections.Location = new System.Drawing.Point(6, 6);
+            this.lstConnections.Margin = new System.Windows.Forms.Padding(6);
             this.lstConnections.Name = "lstConnections";
-            this.lstConnections.Size = new System.Drawing.Size(722, 242);
+            this.lstConnections.Size = new System.Drawing.Size(1444, 599);
             this.lstConnections.TabIndex = 0;
             this.lstConnections.UseCompatibleStateImageBehavior = false;
             this.lstConnections.View = System.Windows.Forms.View.Details;
@@ -235,9 +261,10 @@ namespace Comet.Server.Forms
             // 
             // FrmReverseProxy
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(777, 402);
+            this.ClientSize = new System.Drawing.Size(1554, 919);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.lblLoadBalance);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblProxyInfo);
@@ -248,6 +275,7 @@ namespace Comet.Server.Forms
             this.Controls.Add(this.btnStart);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "FrmReverseProxy";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Reverse Proxy []";
@@ -283,5 +311,7 @@ namespace Comet.Server.Forms
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblLoadBalance;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

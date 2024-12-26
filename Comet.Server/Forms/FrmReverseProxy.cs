@@ -89,6 +89,7 @@ namespace Comet.Server.Forms
                 lblLoadBalance.Text = "The Load Balancer is not active, only 1 client is used, select multiple clients to activate the load balancer";
             }
             nudServerPort.Value = Settings.ReverseProxyPort;
+            linkLabel1.Links.Add(23, 9, "www.cckyedu.com/software/13717.html");
         }
 
         private void FrmReverseProxy_FormClosing(object sender, FormClosingEventArgs e)
@@ -217,6 +218,11 @@ namespace Comet.Server.Forms
                     }
                 }
             }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Link.LinkData.ToString());
         }
     }
 }

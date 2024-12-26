@@ -10,13 +10,12 @@ namespace Comet.Server
         [STAThread]
         private static void Main()
         {
-            //DateTime now = DateTime.Now.Date;
-            //if (now.Month > 3)
+            //if (DateTime.Now.Date.Month > 3)
             //{
             //    Application.Exit();
             //    return;
-            //} 
-            // enable TLS 1.2
+            //}
+            //enable TLS 1.2
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
 
             Application.EnableVisualStyles();
