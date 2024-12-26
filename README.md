@@ -71,8 +71,8 @@ See [ROADMAP.md](ROADMAP.md)
 See the [wiki](https://github.com/quasar/Quasar/wiki) for usage instructions and other documentation.
 
 ## License
-Quasar is distributed under the [MIT License](LICENSE).  
+Comet is distributed under the [MIT License](LICENSE).  
 Third-party licenses are located [here](Licenses).
 
 ## Thank you!
-I really appreciate all kinds of feedback and contributions. Thanks for using and supporting Quasar!
+I really appreciate all kinds of feedback and contributions. Thanks for using and supporting Comet!
