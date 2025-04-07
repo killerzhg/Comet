@@ -133,11 +133,10 @@ namespace Comet.Server.Forms
 
         private void FrmAudio_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _audioHandler?.Stop();
-            UnregisterMessageHandler();
-            _audioHandler.Dispose();
-            if (checkBox1.Checked)
+            if (startListen.Text == "Stop listening")
             {
+                UnregisterMessageHandler();
+                _audioHandler.Dispose();
                 _connectClient.Send(new SendMicrophoneStop());
             }
         }
