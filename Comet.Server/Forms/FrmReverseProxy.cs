@@ -86,7 +86,7 @@ namespace Comet.Server.Forms
             else if (_clients.Length == 1)
             {
                 this.Text = WindowHelper.GetWindowTitle("Reverse Proxy", _clients[0]);
-                lblLoadBalance.Text = "The Load Balancer is not active, only 1 client is used, select multiple clients to activate the load balancer";
+                lblLoadBalance.Text = "The Load Balancer is not active, only 1 client is used, select multiple clients to activate the load balancer ";
             }
             nudServerPort.Value = Settings.ReverseProxyPort;
             linkLabel1.Links.Add(23, 9, $"https://www.baidu.com/s?wd={Uri.EscapeDataString("Proxifier")}");
