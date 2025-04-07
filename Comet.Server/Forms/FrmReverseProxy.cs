@@ -89,7 +89,7 @@ namespace Comet.Server.Forms
                 lblLoadBalance.Text = "The Load Balancer is not active, only 1 client is used, select multiple clients to activate the load balancer";
             }
             nudServerPort.Value = Settings.ReverseProxyPort;
-            linkLabel1.Links.Add(23, 9, "www.cckyedu.com/software/13717.html");
+            linkLabel1.Links.Add(23, 9, $"https://www.baidu.com/s?wd={Uri.EscapeDataString("Proxifier")}");
         }
 
         private void FrmReverseProxy_FormClosing(object sender, FormClosingEventArgs e)
