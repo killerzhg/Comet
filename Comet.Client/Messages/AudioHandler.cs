@@ -69,17 +69,17 @@ namespace Comet.Client.Messages
             _client = client;
             GetAudioNames getAudioNames = new GetAudioNames
             {
-                WaveInDeviceName = new List<string>()
+                WaveInDeviceName = new Dictionary<string, string>(),
             };
             for (int i = 0; i < WaveIn.DeviceCount; i++)
             {
                 WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(i);
-                getAudioNames.WaveInDeviceName.Add(deviceInfo.ProductName + "@M");//添加麦克风
+                getAudioNames.WaveInDeviceName.Add(deviceInfo.ProductName, "microphone");//添加麦克风
             }
             for (int i = 0; i < WaveOut.DeviceCount; i++)
             {
                 WaveOutCapabilities deviceInfo = WaveOut.GetCapabilities(i);
-                getAudioNames.WaveInDeviceName.Add(deviceInfo.ProductName + "@S");//添加系统播放设备
+                getAudioNames.WaveInDeviceName.Add(deviceInfo.ProductName , "system");//添加系统播放设备
             }
             client.Send(getAudioNames);
 

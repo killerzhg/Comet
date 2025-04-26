@@ -12,7 +12,7 @@ namespace Comet.Common.Messages
     public class GetAudioNames : IMessage
     {
         [ProtoMember(1)]
-        public List<string> WaveInDeviceName { get; set; }
+        public Dictionary<string, string> WaveInDeviceName { get; set; }
 
         [ProtoMember(2)]
         public bool SystemEnable { get; set; }
