@@ -34,9 +34,6 @@
     <None Remove="Resources\DDORes_2011.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Comet.p12">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\DDORes_2011.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
