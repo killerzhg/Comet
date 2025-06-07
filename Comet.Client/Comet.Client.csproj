@@ -33,6 +33,12 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="opus.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="opus.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>..\NAudio.dll</HintPath>
     </Reference>

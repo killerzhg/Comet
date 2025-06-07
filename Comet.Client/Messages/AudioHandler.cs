@@ -1,21 +1,28 @@
 ﻿using AForge.Video.DirectShow;
 using Comet.Common.Messages;
 using Comet.Common.Networking;
+using Comet.Common.Utilities;
 using Comet.Common.Video;
+using Concentus.Enums;
+using Concentus.Structs;
 using Microsoft.Win32;
+using NAudio.Codecs;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudioDemo.NetworkChatDemo;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Comet.Common.Utilities;
-using NAudio.Codecs;
-using System.Diagnostics;
 
 namespace Comet.Client.Messages
 {
@@ -28,6 +35,7 @@ namespace Comet.Client.Messages
         internal BufferedWaveProvider BufferedWaveProvider;
         private readonly G722CodecState encoderState = new G722CodecState(64000, G722Flags.None);
         private readonly G722Codec codec = new G722Codec();
+        private List<byte> sysPcmBuffer = new List<byte>();
 
         public override bool CanExecute(IMessage message) => message is GetAudioNames||
                                                              message is GetAudioResponse||
@@ -99,6 +107,7 @@ namespace Comet.Client.Messages
             }
         }
 
+        OpusEncoder encoder;
         private void Execute(ISender client, GetAudioResponse message)
         {
             G722CodecState encoderState;
@@ -106,8 +115,12 @@ namespace Comet.Client.Messages
             switch (message.IsSystem)
             {
                 case true:
-                    
+                    //ExtractEmbeddedDll("opus.dll
                     capture = new WasapiLoopbackCapture();
+                    Console.WriteLine($"默认采样率: {capture.WaveFormat.SampleRate} Hz");
+                    Console.WriteLine($"声道数: {capture.WaveFormat.Channels}");
+                    Console.WriteLine($"位深度: {capture.WaveFormat.BitsPerSample} bits");
+                    encoder = new OpusEncoder(capture.WaveFormat.SampleRate, capture.WaveFormat.Channels, OpusApplication.OPUS_APPLICATION_VOIP);
                     capture.DataAvailable += WaveDataAvailableSys;
                     capture.RecordingStopped += SystemWaveStop;
                     capture.StartRecording();
@@ -122,6 +135,39 @@ namespace Comet.Client.Messages
                     microphone.RecordingStopped += MicWaveStop;
                     microphone.StartRecording();
                     break;
+            }
+        }
+
+        /// <summary>
+        /// 从嵌入资源中提取DLL并保存到指定路径
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="IOException"></exception>
+        static void ExtractEmbeddedDll(string resourceName)
+        {
+            // 获取当前程序集
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            // 资源名称格式：默认命名空间.文件名
+            // 例如：项目默认命名空间是"MyApp"，则资源名为"MyApp.MyNative.dll"
+            string fullResourceName = assembly.GetManifestResourceNames()
+                .FirstOrDefault(name => name.EndsWith(resourceName));
+
+            if (fullResourceName == null)
+            {
+                throw new FileNotFoundException($"未找到嵌入资源: {resourceName}");
+            }
+
+            // 读取资源流并写入文件
+            using (Stream stream = assembly.GetManifestResourceStream(fullResourceName))
+            using (FileStream fileStream = new FileStream(resourceName, FileMode.Create))
+            {
+                if (stream == null)
+                {
+                    throw new IOException("无法读取嵌入资源");
+                }
+                stream.CopyTo(fileStream);
             }
         }
 
@@ -168,14 +214,36 @@ namespace Comet.Client.Messages
         {
             if (e.Buffer.Length > 0 && e.BytesRecorded > 0)
             {
-                _client.Send(new GetAudioResponse
+                int samples = e.BytesRecorded / 4;
+                float[] floatBuffer = new float[samples];
+                Buffer.BlockCopy(e.Buffer, 0, floatBuffer, 0, e.BytesRecorded);
+
+                sysPcmFloatBuffer.AddRange(floatBuffer);
+
+                int frameSize = 960;
+                int channels = capture.WaveFormat.Channels;
+                int frameSamples = frameSize * channels;
+
+                while (sysPcmFloatBuffer.Count >= frameSamples)
                 {
-                    Buffer = EncodeSys(e.Buffer, 0, e.BytesRecorded),
-                    BytesRecorded = e.BytesRecorded,
-                    IsSystem = true
-                });
+                    var frame = sysPcmFloatBuffer.Take(frameSamples).ToArray();
+                    sysPcmFloatBuffer.RemoveRange(0, frameSamples);
+
+                    var encoded = new byte[1000];
+                    int encodedBytes = encoder.Encode(frame, frameSize, encoded, encoded.Length);
+                    _client.Send(new GetAudioResponse
+                    {
+                        Buffer = encoded.Take(encodedBytes).ToArray(),
+                        BytesRecorded = encodedBytes,
+                        IsSystem = true
+                    });
+                }
             }
         }
+
+        // 声明缓冲区
+        private List<float> sysPcmFloatBuffer = new List<float>();
+
         byte[] EncodeMicro(byte[] data, int offset, int length)
         {
             if (offset != 0)

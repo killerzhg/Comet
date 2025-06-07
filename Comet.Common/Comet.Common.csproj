@@ -15,8 +15,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Concentus\Concentus.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>..\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="OpusSharp.Core">
+      <HintPath>OpusSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.ServiceModel" />
@@ -25,6 +31,7 @@
     <PackageReference Include="protobuf-net">
       <Version>2.4.8</Version>
     </PackageReference>
+    <PackageReference Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Win32.Registry">
