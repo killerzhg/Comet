@@ -1,4 +1,5 @@
 ﻿using AForge.Video.DirectShow;
+using Comet.Common.Helpers;
 using Comet.Common.Messages;
 using Comet.Common.Networking;
 using Comet.Common.Utilities;
@@ -113,10 +114,10 @@ namespace Comet.Client.Messages
                     //ExtractEmbeddedDll("opus.dll)
                     capture?.StopRecording();
                     capture = new WasapiLoopbackCapture();
-                    Console.WriteLine($"默认采样率: {capture.WaveFormat.SampleRate} Hz");
-                    Console.WriteLine($"声道数: {capture.WaveFormat.Channels}");
-                    Console.WriteLine($"位深度: {capture.WaveFormat.BitsPerSample} bits");
-                    encoder = new OpusEncoder(capture.WaveFormat.SampleRate, capture.WaveFormat.Channels, OpusApplication.OPUS_APPLICATION_VOIP);
+                    if (!PlatformHelper.FullName.Contains("7")) //win7
+                    {
+                        encoder = new OpusEncoder(capture.WaveFormat.SampleRate, capture.WaveFormat.Channels, OpusApplication.OPUS_APPLICATION_VOIP);
+                    }
                     capture.DataAvailable += WaveDataAvailableSys;
                     capture.RecordingStopped += SystemWaveStop;
                     capture.StartRecording();
@@ -194,7 +195,8 @@ namespace Comet.Client.Messages
                 _client.Send(new GetAudioResponse
                 {
                     Buffer = EncodeMicro(e.Buffer, 0, e.BytesRecorded),
-                    BytesRecorded = e.BytesRecorded
+                    BytesRecorded = e.BytesRecorded,
+                    Codec = 1
                 });
             }
         }
@@ -202,28 +204,42 @@ namespace Comet.Client.Messages
         {
             if (e.Buffer.Length > 0 && e.BytesRecorded > 0)
             {
-                int samples = e.BytesRecorded / 4;
-                float[] floatBuffer = new float[samples];
-                Buffer.BlockCopy(e.Buffer, 0, floatBuffer, 0, e.BytesRecorded);
-
-                sysPcmFloatBuffer.AddRange(floatBuffer);
-
-                int frameSize = 960;
-                int channels = capture.WaveFormat.Channels;
-                int frameSamples = frameSize * channels;
-
-                while (sysPcmFloatBuffer.Count >= frameSamples)
+                if (!PlatformHelper.FullName.Contains("7")) //
                 {
-                    var frame = sysPcmFloatBuffer.Take(frameSamples).ToArray();
-                    sysPcmFloatBuffer.RemoveRange(0, frameSamples);
+                    int samples = e.BytesRecorded / 4;
+                    float[] floatBuffer = new float[samples];
+                    Buffer.BlockCopy(e.Buffer, 0, floatBuffer, 0, e.BytesRecorded);
 
-                    var encoded = new byte[1000];
-                    int encodedBytes = encoder.Encode(frame, frameSize, encoded, encoded.Length);
+                    sysPcmFloatBuffer.AddRange(floatBuffer);
+
+                    int frameSize = 960;
+                    int channels = capture.WaveFormat.Channels;
+                    int frameSamples = frameSize * channels;
+
+                    while (sysPcmFloatBuffer.Count >= frameSamples)
+                    {
+                        var frame = sysPcmFloatBuffer.Take(frameSamples).ToArray();
+                        sysPcmFloatBuffer.RemoveRange(0, frameSamples);
+
+                        var encoded = new byte[1000];
+                        int encodedBytes = encoder.Encode(frame, frameSize, encoded, encoded.Length);
+                        _client.Send(new GetAudioResponse
+                        {
+                            Buffer = encoded.Take(encodedBytes).ToArray(),
+                            BytesRecorded = encodedBytes,
+                            IsSystem = true,
+                            Codec = 1
+                        });
+                    }
+                } 
+                else //win7编码 win7不支持opus编码
+                {
                     _client.Send(new GetAudioResponse
                     {
-                        Buffer = encoded.Take(encodedBytes).ToArray(),
-                        BytesRecorded = encodedBytes,
-                        IsSystem = true
+                        Buffer = EncodeSys(e.Buffer, 0, e.BytesRecorded),
+                        BytesRecorded = e.BytesRecorded,
+                        IsSystem = true,
+                        Codec = 0
                     });
                 }
             }

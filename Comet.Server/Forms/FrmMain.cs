@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Comet.Server.Forms
 {
@@ -757,20 +758,35 @@ namespace Comet.Server.Forms
 
         private void lstClients_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            //GetWebcams();
-            foreach (Client c in GetSelectedClients())
-            {
-                var frmRd = FrmRemoteDesktop.CreateNewOrGetExisting(c);
-                frmRd.Show();
-                frmRd.Focus();
-            }
+            StartRomoteDesktop();
         }
 
         private void remoteDesktopToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            StartRomoteDesktop();
+        }
+        void StartRomoteDesktop()
+        {
+            FrmRemoteDesktop frmRd;
             foreach (Client c in GetSelectedClients())
             {
-                var frmRd = FrmRemoteDesktop.CreateNewOrGetExisting(c);
+                if (lstClients.SelectedItems.Count > 0 && lstClients.SelectedItems[0].SubItems.Count > 7)
+                {
+                    string value = lstClients.SelectedItems[0].SubItems[7].Text;
+                    if (value.Contains("7"))
+                    {
+                        frmRd = FrmRemoteDesktop.CreateNewOrGetExisting(c, true);
+                    }
+                    else
+                    {
+                        frmRd = FrmRemoteDesktop.CreateNewOrGetExisting(c, false);
+                    }
+                }
+                else
+                {
+                    frmRd = FrmRemoteDesktop.CreateNewOrGetExisting(c, false);
+                }
+
                 frmRd.Show();
                 frmRd.Focus();
             }

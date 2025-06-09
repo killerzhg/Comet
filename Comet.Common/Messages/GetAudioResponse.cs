@@ -18,6 +18,12 @@ namespace Comet.Common.Messages
 
         [ProtoMember(3)]
         public bool IsSystem { get; set; }
-        
+
+        /// <summary>
+        /// 0不编码 1编码
+        /// </summary>
+        [ProtoMember(4)]
+        public int Codec { get; set; }
+
     }
 }

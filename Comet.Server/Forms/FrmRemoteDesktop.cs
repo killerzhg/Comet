@@ -12,12 +12,14 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Comet.Server.Forms
 {
     public partial class FrmRemoteDesktop : Form
     {
 
+        static bool win7 = false;
         private readonly AudioHandler _audioHandler;
         /// <summary>
         /// States whether remote mouse input is enabled.
@@ -66,8 +68,9 @@ namespace Comet.Server.Forms
         /// <returns>
         /// Returns a new remote desktop form for the client if there is none currently open, otherwise creates a new one.
         /// </returns>
-        public static FrmRemoteDesktop CreateNewOrGetExisting(Client client)
+        public static FrmRemoteDesktop CreateNewOrGetExisting(Client client,bool isWin7)
         {
+            win7 = isWin7;
             if (OpenedForms.ContainsKey(client))
             {
                 return OpenedForms[client];
@@ -321,7 +324,7 @@ namespace Comet.Server.Forms
             StartStream();
             if (checkBox1.Checked)
             {
-                _audioHandler?.StartListen(0, 1);
+                _audioHandler?.StartListen(0, true, win7);
             }
         }
 
@@ -482,7 +485,7 @@ namespace Comet.Server.Forms
             Configs.SetConfig("UseAudio", checkBox1.Checked.ToString());
             if (checkBox1.Checked)
             {
-                _audioHandler?.StartListen(0, 1);
+                _audioHandler?.StartListen(0, true,win7);
             }
             else
             {

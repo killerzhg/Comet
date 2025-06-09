@@ -113,17 +113,7 @@ namespace Comet.Server.Forms
             {
                 if (OutDevice.SelectedIndex != -1 && waveInDeviceName.SelectedIndex != -1)
                 {
-                    //如果index为1则为系统声音
-                    int index = -1;
-                    foreach (var item in audioNames.WaveInDeviceName)
-                    {
-                        if (item.Key == waveInDeviceName.Text)
-                        {
-                            index = item.Value == "microphone" ? 0 : 1;
-                            break;
-                        }
-                    }
-                    _audioHandler.StartListen(OutDevice.SelectedIndex, index);
+                    _audioHandler.StartListen(OutDevice.SelectedIndex, false);
                     startListen.Text = "Stop listening";
                     progressBar1.Style = ProgressBarStyle.Marquee;
                     checkBox1.Enabled = true;

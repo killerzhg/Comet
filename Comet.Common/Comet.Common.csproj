@@ -21,9 +21,6 @@
     <Reference Include="NAudio">
       <HintPath>..\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="OpusSharp.Core">
-      <HintPath>OpusSharp.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.ServiceModel" />
   </ItemGroup>

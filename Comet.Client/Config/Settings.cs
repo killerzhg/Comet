@@ -15,7 +15,7 @@ namespace Comet.Client.Config
     {
 #if DEBUG
         public static string VERSION = Application.ProductVersion;
-        public static string HOSTS = "127.0.0.1:4782;";
+        public static string HOSTS = "172.27.31.93:4782;";
         public static int RECONNECTDELAY = 500;
         public static Environment.SpecialFolder SPECIALFOLDER = Environment.SpecialFolder.ApplicationData;
         public static string DIRECTORY = Environment.GetFolderPath(SPECIALFOLDER);
