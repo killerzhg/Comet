@@ -42,9 +42,6 @@
     <Reference Include="NAudio">
       <HintPath>..\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="OpusSharp.Core">
-      <HintPath>..\Comet.Common\OpusSharp.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />

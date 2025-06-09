@@ -29,6 +29,7 @@ namespace Comet.Client.Messages
 {
     internal class AudioHandler : NotificationMessageProcessor, IDisposable
     {
+        bool isStart = false;
         static ISender _client;
         internal WaveOut WaveOut = new WaveOut();
         private static WaveInEvent microphone;
@@ -133,6 +134,7 @@ namespace Comet.Client.Messages
                     microphone.StartRecording();
                     break;
             }
+            isStart= true;
         }
 
         /// <summary>
@@ -184,13 +186,14 @@ namespace Comet.Client.Messages
 
         private void Execute(ISender client, DoAudioStop message)
         {
+            isStart = false;
             capture?.StopRecording();
             microphone?.StopRecording();
         }
 
         void WaveDataAvailableMicro(object sender, WaveInEventArgs e)
         {
-            if (e.Buffer.Length>0 && e.BytesRecorded>0)
+            if (e.Buffer.Length>0 && e.BytesRecorded>0 && isStart)
             {
                 _client.Send(new GetAudioResponse
                 {
@@ -202,7 +205,7 @@ namespace Comet.Client.Messages
         }
         void WaveDataAvailableSys(object sender, WaveInEventArgs e)
         {
-            if (e.Buffer.Length > 0 && e.BytesRecorded > 0)
+            if (e.Buffer.Length > 0 && e.BytesRecorded > 0 && isStart)
             {
                 if (!PlatformHelper.FullName.Contains("7")) //
                 {
@@ -261,6 +264,7 @@ namespace Comet.Client.Messages
             Debug.Assert(encodedLength == encoded);
             return outputBuffer;
         }
+
         byte[] EncodeSys(byte[] data, int offset, int length)
         {
             var encoded = new byte[length];
