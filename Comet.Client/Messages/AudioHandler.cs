@@ -177,6 +177,7 @@ namespace Comet.Client.Messages
             WaveOut.DeviceNumber = 0;
             WaveOut?.Init(BufferedWaveProvider);
             WaveOut?.Play();
+            1
         }
 
         void Execute(ISender client, SendMicrophoneData message)
