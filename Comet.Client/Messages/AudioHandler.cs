@@ -105,6 +105,7 @@ namespace Comet.Client.Messages
         }
 
         OpusEncoder encoder;
+        string osVersion = PlatformHelper.FullName;
         private void Execute(ISender client, GetAudioResponse message)
         {
             if (_client == null) _client = client;
@@ -115,7 +116,7 @@ namespace Comet.Client.Messages
                     //ExtractEmbeddedDll("opus.dll)
                     capture?.StopRecording();
                     capture = new WasapiLoopbackCapture();
-                    if (!PlatformHelper.FullName.Contains("7")) //win7
+                    if (!osVersion.Contains("7")) //win7
                     {
                         encoder = new OpusEncoder(capture.WaveFormat.SampleRate, capture.WaveFormat.Channels, OpusApplication.OPUS_APPLICATION_VOIP);
                     }
@@ -177,7 +178,6 @@ namespace Comet.Client.Messages
             WaveOut.DeviceNumber = 0;
             WaveOut?.Init(BufferedWaveProvider);
             WaveOut?.Play();
-            1
         }
 
         void Execute(ISender client, SendMicrophoneData message)
@@ -208,7 +208,7 @@ namespace Comet.Client.Messages
         {
             if (e.Buffer.Length > 0 && e.BytesRecorded > 0 && isStart)
             {
-                if (!PlatformHelper.FullName.Contains("7")) //
+                if (!osVersion.Contains("7")) //
                 {
                     int samples = e.BytesRecorded / 4;
                     float[] floatBuffer = new float[samples];
