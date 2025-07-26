@@ -93,7 +93,7 @@ namespace Comet.Server.Forms
                 return;
             if (faceDetection)
             {
-                await Task.Run(() => FaceDetection(bmp));
+                FaceDetection(bmp);
             }
             else
             {
