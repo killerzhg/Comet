@@ -446,7 +446,6 @@ namespace Comet.Server.Forms
                     // 将检测结果显示到pictureBox1
                     picWebcam.Image = BitmapConverter.ToBitmap(detectMat);
                 }
-                detectBitmap.Dispose();
             }
         }
 
