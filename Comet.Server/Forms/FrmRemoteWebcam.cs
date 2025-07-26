@@ -1,19 +1,24 @@
-﻿using Mono.Cecil.Cil;
-using Comet.Common.Messages;
+﻿using Comet.Common.Messages;
 using Comet.Common.Video;
 using Comet.Server.Helper;
 using Comet.Server.Messages;
 using Comet.Server.Networking;
 using Comet.Server.Utilities;
+using Mono.Cecil.Cil;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Comet.Server.Forms
 {
@@ -43,7 +48,7 @@ namespace Comet.Server.Forms
         {
             _connectClient.ClientState += ClientDisconnected;
             _remoteWebcamHandler.DisplaysChanged += DisplaysChanged;
-            _remoteWebcamHandler.ProgressChanged += UpdateImage;
+            _remoteWebcamHandler.ProgressChanged += UpdateImageAsync;
             MessageHandler.Register(_remoteWebcamHandler);
         }
 
@@ -54,7 +59,7 @@ namespace Comet.Server.Forms
         {
             MessageHandler.Unregister(_remoteWebcamHandler);
             _remoteWebcamHandler.DisplaysChanged -= DisplaysChanged;
-            _remoteWebcamHandler.ProgressChanged -= UpdateImage;
+            _remoteWebcamHandler.ProgressChanged -= UpdateImageAsync;
             _connectClient.ClientState -= ClientDisconnected;
         }
 
@@ -69,13 +74,120 @@ namespace Comet.Server.Forms
             cbWebcams.SelectedIndex = 0;
         }
 
-        private void UpdateImage(object sender, Bitmap bmp)
+        //Record
+        private VideoWriter videoWriter;
+        private SemaphoreSlim fileLock;
+        private bool isProcessing = false;
+        bool record = false;
+        private Task recordTask;
+
+        private async void UpdateImageAsync(object sender, Bitmap bmp)
         {
             if (WindowState == FormWindowState.Minimized)
                 return;
 
-                picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
+            picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
 
+            if (record)
+            {
+                int imgWidth = bmp.Size.Width;
+                int imgHeight = bmp.Size.Height;
+                if (videoWriter == null)
+                {
+                    string mp4_file = Path.Combine(new string[]
+                    {
+                            Directory.GetCurrentDirectory(),
+                            @"Record\Webcam",
+                            DateTime.Now.ToString("yyyyMMdd_HHmmss")+".mp4",
+                    });
+
+                    videoWriter = new VideoWriter(mp4_file, FourCC.MP4V, 10, new OpenCvSharp.Size(imgWidth, imgHeight));
+                    fileLock = new SemaphoreSlim(1, 1);
+                }
+
+                recordTask = Task.Run(async () =>
+                {
+                    await fileLock.WaitAsync();
+                    try
+                    {
+                        System.Drawing.Image imgCopy = null;
+                        try
+                        {
+                            lock (bmp)
+                            {
+                                imgCopy = new Bitmap(bmp);
+                            }
+
+                            try
+                            {
+                                if (imgCopy == null)
+                                    return;
+
+                                using (var frame = ImageToMat(imgCopy))
+                                {
+                                    if (frame.Width != imgWidth || frame.Height != imgHeight)
+                                        Cv2.Resize(frame, frame, new OpenCvSharp.Size(imgWidth, imgHeight));
+
+                                    Cv2.PutText(
+                                        frame,
+                                        "*",
+                                        new OpenCvSharp.Point(30, 30),
+                                        HersheyFonts.HersheySimplex,
+                                        1.0,
+                                        Scalar.White,
+                                        2,
+                                        LineTypes.AntiAlias
+                                    );
+
+                                    if (videoWriter.IsOpened())
+                                    {
+                                        Invoke(new Action(() =>
+                                        {
+                                            videoWriter.Write(frame);
+                                        }));
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                            finally
+                            {
+                                if (imgCopy != null)
+                                    imgCopy.Dispose();
+                            }
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                    finally
+                    {
+                        fileLock.Release();
+                    }
+                    
+                });
+            }
+        }
+        private Mat ImageToMat(System.Drawing.Image img)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                return Mat.ImDecode(ms.ToArray(), ImreadModes.Color);
+            }
         }
 
         private void ClientDisconnected(Client client, bool connected)
@@ -92,6 +204,10 @@ namespace Comet.Server.Forms
             _remoteWebcamHandler.RefreshDisplays();
             _remoteWebcamHandler.LocalResolution = picWebcam.Size;
             OnResize(EventArgs.Empty); // 触发调整大小事件以对齐控件
+            if (!Directory.Exists(@"Record\Webcam"))
+            {
+                Directory.CreateDirectory(@"Record\Webcam");
+            }
         }
         // <summary>
         /// Holds the opened Webcam form for each client.
@@ -108,15 +224,75 @@ namespace Comet.Server.Forms
             OpenedForms.Add(client, f);
             return f;
         }
-
-        private void FrmRemoteWebcam_FormClosing(object sender, FormClosingEventArgs e)
+        private async void recordCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            var checkBox = sender as CheckBox;
+            if (checkBox != null)
+            {
+                if (checkBox.Checked)
+                {
+                    // 选中时的逻辑
+                    record = true;
+                }
+                else
+                {
+                    // 未选中时的逻辑
+                    record = false;
+                    if (videoWriter != null)
+                    {
+                        if (videoWriter.IsOpened())
+                        {
+                            videoWriter.Release();
+                            if (videoWriter != null)
+                            {
+                                //等待录制任务完成
+                                if (recordTask != null)
+                                {
+                                    try
+                                    {
+                                        await recordTask;
+                                        videoWriter = null;
+                                    }
+                                    catch { }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private async void FrmRemoteWebcam_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            record = false;
             // all cleanup logic goes here
             if (_remoteWebcamHandler.IsStarted) StopStream();
             UnregisterMessageHandler();
             _remoteWebcamHandler.Dispose();
             picWebcam.Image?.Dispose();
             _connectClient.Send(new DoWebcamStop());
+
+            if (recordCheckBox.Checked && videoWriter != null)
+            {
+                if (videoWriter.IsOpened())
+                {
+                    videoWriter.Release();
+                    if (videoWriter != null)
+                    {
+                        //等待录制任务完成
+                        if (recordTask != null)
+                        {
+                            try
+                            {
+                                await recordTask;
+                                videoWriter = null;
+                            }
+                            catch { }
+                        }
+                    }
+                }
+            }
+
         }
 
         /// <summary>
@@ -171,7 +347,7 @@ namespace Comet.Server.Forms
                 Webcam = cbWebcams.SelectedIndex,
                 Resolution = cbResolutions.SelectedIndex
             });
-            HideWin();
+            recordCheckBox.Enabled = true;
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -179,6 +355,7 @@ namespace Comet.Server.Forms
             ToggleControls(true);
             this.ActiveControl = picWebcam;
             _connectClient.Send(new DoWebcamStop());
+            recordCheckBox.Enabled = false;
         }
 
         public void ToggleControls(bool state)
@@ -210,7 +387,7 @@ namespace Comet.Server.Forms
 
             btnHide.Left = (panelTop.Width / 2) - (btnHide.Width / 2);
 
-            btnShow.Location = new Point(377, 0);
+            btnShow.Location = new System.Drawing.Point(377, 0);
             btnShow.Left = (this.Width / 2) - (btnShow.Width / 2);
             //_remoteWebcamHandler.LocalResolution = picWebcam.Size;
         }
