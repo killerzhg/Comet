@@ -121,72 +121,24 @@ namespace Comet.Server.Forms
                     await fileLock.WaitAsync();
                     try
                     {
-                        System.Drawing.Image imgCopy = null;
-                        try
+                        using (var frame = ImageToMat(bmp))
                         {
-                            lock (bmp)
-                            {
-                                imgCopy = new Bitmap(bmp);
-                            }
+                            if (frame.Width != imgWidth || frame.Height != imgHeight)
+                                Cv2.Resize(frame, frame, new OpenCvSharp.Size(imgWidth, imgHeight));
 
-                            try
-                            {
-                                if (imgCopy == null)
-                                    return;
-
-                                using (var frame = ImageToMat(imgCopy))
-                                {
-                                    if (frame.Width != imgWidth || frame.Height != imgHeight)
-                                        Cv2.Resize(frame, frame, new OpenCvSharp.Size(imgWidth, imgHeight));
-
-                                    Cv2.PutText(
-                                        frame,
-                                        "*",
-                                        new OpenCvSharp.Point(30, 30),
-                                        HersheyFonts.HersheySimplex,
-                                        1.0,
-                                        Scalar.White,
-                                        2,
-                                        LineTypes.AntiAlias
-                                    );
-
-                                    if (videoWriter.IsOpened())
-                                    {
-                                        Invoke(new Action(() =>
-                                        {
-                                            videoWriter.Write(frame);
-                                        }));
-                                    }
-                                    else
-                                    {
-
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-
-                            }
-                            finally
-                            {
-                                if (imgCopy != null)
-                                    imgCopy.Dispose();
-                            }
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-
+                            videoWriter.Write(frame);
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
 
                     }
                     finally
                     {
+                        if (bmp != null)
+                            bmp.Dispose();
                         fileLock.Release();
                     }
-                    
                 });
             }
         }
@@ -251,22 +203,16 @@ namespace Comet.Server.Forms
                     record = false;
                     if (videoWriter != null)
                     {
-                        if (videoWriter.IsOpened())
+                        //等待录制任务完成
+                        if (recordTask != null)
                         {
-                            videoWriter.Release();
-                            if (videoWriter != null)
+                            try
                             {
-                                //等待录制任务完成
-                                if (recordTask != null)
-                                {
-                                    try
-                                    {
-                                        await recordTask;
-                                        videoWriter = null;
-                                    }
-                                    catch { }
-                                }
+                                await recordTask;
+                                videoWriter.Release();
+                                videoWriter = null;
                             }
+                            catch { }
                         }
                     }
                 }
@@ -285,23 +231,17 @@ namespace Comet.Server.Forms
 
             if (recordCheckBox.Checked && videoWriter != null)
             {
-                if (videoWriter.IsOpened())
+                //等待录制任务完成
+                if (recordTask != null)
                 {
-                    videoWriter.Release();
-                    if (videoWriter != null)
+                    try
                     {
-                        //等待录制任务完成
-                        if (recordTask != null)
-                        {
-                            try
-                            {
-                                await recordTask;
-                                videoWriter = null;
-                            }
-                            catch { }
-                        }
+                        await recordTask;
+                        videoWriter.Release();
+                        videoWriter = null;
                     }
-                }
+                    catch { }
+                } 
             }
         }
 
@@ -366,6 +306,7 @@ namespace Comet.Server.Forms
             this.ActiveControl = picWebcam;
             _connectClient.Send(new DoWebcamStop());
             recordCheckBox.Enabled = false;
+            faceDetection = false;
         }
 
         public void ToggleControls(bool state)
