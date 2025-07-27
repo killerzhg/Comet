@@ -395,7 +395,7 @@ namespace Comet.Server.Forms
                 return;
             panelTop.Left = (this.Width / 2) - (panelTop.Width / 2);
 
-            btnHide.Left = (panelTop.Width / 2) - (btnHide.Width / 2);
+            //btnHide.Left = (panelTop.Width / 2) - (btnHide.Width / 2);
 
             btnShow.Location = new System.Drawing.Point(377, 0);
             btnShow.Left = (this.Width / 2) - (btnShow.Width / 2);
@@ -451,18 +451,7 @@ namespace Comet.Server.Forms
 
         private void faceDetectioncheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            var checkBox = sender as CheckBox;
-            if (checkBox != null)
-            {
-                if (checkBox.Checked)
-                {
-                    faceDetection = true;
-                }
-                else
-                {
-                    faceDetection = false;
-                }
-            }
+            faceDetection = ((CheckBox)sender).Checked;
         }
     }
 }
