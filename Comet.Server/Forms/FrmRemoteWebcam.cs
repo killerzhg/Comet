@@ -103,7 +103,7 @@ namespace Comet.Server.Forms
             }
             else
             {
-                picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
+                picWebcam.UpdateImage(bmp, false);
             }
 
             if (record)
@@ -345,7 +345,6 @@ namespace Comet.Server.Forms
             _remoteWebcamHandler.Dispose();
             picWebcam.Image?.Dispose();
             _connectClient.Send(new DoWebcamStop());
-
             StopRecording();
         }
 
@@ -355,13 +354,10 @@ namespace Comet.Server.Forms
         private void StopStream()
         {
             ToggleConfigurationControls(false);
-
             picWebcam.Stop();
             // Unsubscribe from the frame counter. It will be re-created when starting again.
             picWebcam.UnsetFrameUpdatedEvent(frameCounter_FrameUpdated);
-
             this.ActiveControl = picWebcam;
-
             _remoteWebcamHandler.EndReceiveFrames();
         }
 
@@ -371,7 +367,7 @@ namespace Comet.Server.Forms
         /// <param name="e">The new frames per second.</param>
         private void frameCounter_FrameUpdated(FrameUpdatedEventArgs e)
         {
-            this.Text = string.Format("{0} - FPS: {1}", WindowHelper.GetWindowTitle("Remote Webcam", _connectClient), e.CurrentFramesPerSecond.ToString("0.00"));
+            this.Text = string.Format("{0} - FPS: {1}", WindowHelper.GetWindowTitle("Remote Webcam", _connectClient), e.CurrentFramesPerSecond.ToString("0"));//"0"不保留小数点
         }
 
         /// <summary>
@@ -395,6 +391,8 @@ namespace Comet.Server.Forms
                 return;
             }
             ToggleControls(false);
+            picWebcam.Start();
+            picWebcam.SetFrameUpdatedEvent(frameCounter_FrameUpdated);
             this.ActiveControl = picWebcam;
             _connectClient.Send(new GetWebcam
             {
@@ -402,6 +400,7 @@ namespace Comet.Server.Forms
                 Resolution = cbResolutions.SelectedIndex
             });
             recordCheckBox.Enabled = true;
+            
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -487,9 +486,7 @@ namespace Comet.Server.Forms
                     {
                         Cv2.Rectangle(detectMat, rect, Scalar.Red, 2);
                     }
-
-                    // 将检测结果显示到pictureBox1
-                    picWebcam.Image = BitmapConverter.ToBitmap(detectMat);
+                    picWebcam.UpdateImage(BitmapConverter.ToBitmap(detectMat), false);
                 }
             }
         }
