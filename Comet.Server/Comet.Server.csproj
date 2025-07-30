@@ -319,6 +319,7 @@
     <ProjectReference Include="..\Comet.Common\Comet.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.7" />
     <PackageReference Include="Mono.Cecil">
       <Version>0.11.4</Version>
     </PackageReference>

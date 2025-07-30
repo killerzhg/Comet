@@ -4,6 +4,7 @@ using Comet.Server.Helper;
 using Comet.Server.Messages;
 using Comet.Server.Networking;
 using Comet.Server.Utilities;
+using Microsoft.Extensions.ObjectPool;
 using Mono.Cecil.Cil;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -80,10 +82,13 @@ namespace Comet.Server.Forms
 
         //Record
         private VideoWriter videoWriter;
-        private SemaphoreSlim fileLock;
-        private bool isProcessing = false;
         bool record = false;
         bool faceDetection = false;
+        Stopwatch stopwatch = new Stopwatch();
+        private readonly Queue<Mat> frameQueue = new Queue<Mat>();
+        private readonly object queueLock = new object();
+        private Task videoWriteTask;
+        private CancellationTokenSource cancellationTokenSource;
 
         private Task recordTask;
 
@@ -91,6 +96,7 @@ namespace Comet.Server.Forms
         {
             if (WindowState == FormWindowState.Minimized)
                 return;
+
             if (faceDetection)
             {
                 FaceDetection(bmp);
@@ -99,47 +105,177 @@ namespace Comet.Server.Forms
             {
                 picWebcam.Image = new Bitmap(bmp, picWebcam.Width, picWebcam.Height);
             }
+
             if (record)
             {
                 int imgWidth = bmp.Size.Width;
                 int imgHeight = bmp.Size.Height;
+
                 if (videoWriter == null)
                 {
-                    string mp4_file = Path.Combine(new string[]
-                    {
-                            Directory.GetCurrentDirectory(),
-                            @"Record\Webcam",
-                            DateTime.Now.ToString("yyyyMMdd_HHmmss")+".mp4",
-                    });
-
-                    videoWriter = new VideoWriter(mp4_file, FourCC.MP4V, 10, new OpenCvSharp.Size(imgWidth, imgHeight));
-                    fileLock = new SemaphoreSlim(1, 1);
+                    InitializeVideoWriter(imgWidth, imgHeight);
                 }
 
-                recordTask = Task.Run(async () =>
+                // 异步处理帧，避免阻塞UI
+                await ProcessFrameAsync(bmp, imgWidth, imgHeight);
+            }
+        }
+
+        private void InitializeVideoWriter(int width, int height)
+        {
+            string mp4_file = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                @"Record\Webcam",
+                DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".mp4"
+            );
+
+            // 使用更高效的编码器
+            videoWriter = new VideoWriter(mp4_file, FourCC.MP4V, 20, new OpenCvSharp.Size(width, height));
+
+            cancellationTokenSource = new CancellationTokenSource();
+
+            // 启动后台写入任务
+            videoWriteTask = Task.Run(() => VideoWriteWorker(cancellationTokenSource.Token));
+        }
+
+        private async Task ProcessFrameAsync(Bitmap bmp, int imgWidth, int imgHeight)
+        {
+            await Task.Run(() =>
+            {
+                try
                 {
-                    await fileLock.WaitAsync();
+                    using (var frame = ImageToMat(bmp))
+                    {
+                        if (frame.Width != imgWidth || frame.Height != imgHeight)
+                        {
+                            Cv2.Resize(frame, frame, new OpenCvSharp.Size(imgWidth, imgHeight));
+                        }
+
+                        // 将帧添加到队列而不是直接写入
+                        lock (queueLock)
+                        {
+                            if (frameQueue.Count < 30) // 限制队列大小，避免内存溢出
+                            {
+                                frameQueue.Enqueue(frame.Clone());
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 记录错误
+                    Log($"ProcessFrame error: {ex.Message}");
+                }
+                finally
+                {
+                    bmp?.Dispose();
+                }
+            });
+        }
+
+        private void VideoWriteWorker(CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                Mat frameToWrite = null;
+
+                lock (queueLock)
+                {
+                    if (frameQueue.Count > 0)
+                    {
+                        frameToWrite = frameQueue.Dequeue();
+                    }
+                }
+
+                if (frameToWrite != null)
+                {
                     try
                     {
-                        using (var frame = ImageToMat(bmp))
-                        {
-                            if (frame.Width != imgWidth || frame.Height != imgHeight)
-                                Cv2.Resize(frame, frame, new OpenCvSharp.Size(imgWidth, imgHeight));
+                        stopwatch.Restart();
+                        videoWriter.Write(frameToWrite);
+                        stopwatch.Stop();
 
-                            videoWriter.Write(frame);
-                        }
+                        Log($"Write time: {stopwatch.ElapsedMilliseconds}ms, Queue size: {frameQueue.Count}");
                     }
                     catch (Exception ex)
                     {
-
+                        Log($"VideoWrite error: {ex.Message}");
                     }
                     finally
                     {
-                        if (bmp != null)
-                            bmp.Dispose();
-                        fileLock.Release();
+                        frameToWrite.Dispose();
                     }
-                });
+                }
+                else
+                {
+                    // 没有帧时短暂休眠
+                    Thread.Sleep(1);
+                }
+            }
+        }
+
+        // 停止录制时的清理
+        private void StopRecording()
+        {
+            record = false;
+
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                videoWriteTask?.Wait(5000); // 等待最多5秒
+            }
+
+            // 清空队列
+            lock (queueLock)
+            {
+                while (frameQueue.Count > 0)
+                {
+                    var frame = frameQueue.Dequeue();
+                    try
+                    {
+                        videoWriter?.Write(frame);
+                    }
+                    finally
+                    {
+                        frame.Dispose();
+                    }
+                }
+            }
+
+            videoWriter?.Release();
+            videoWriter = null;
+        }
+
+        // 进一步优化：使用内存池
+        private readonly ObjectPool<Mat> matPool = new DefaultObjectPool<Mat>(new MatPoolPolicy());
+
+        private class MatPoolPolicy : IPooledObjectPolicy<Mat>
+        {
+            public Mat Create() => new Mat();
+
+            public bool Return(Mat obj)
+            {
+                if (obj != null && !obj.IsDisposed)
+                {
+                    obj.SetTo(Scalar.All(0)); // 清空内容
+                    return true;
+                }
+                return false;
+            }
+        }
+        public static void Log(string message)
+        {
+            try
+            {
+                using (StreamWriter sw = File.AppendText("1.log"))
+                {
+                    sw.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}\r\n");
+                }
+            }
+            catch (Exception ex)
+            {
+                // 处理日志写入失败的情况
+                Console.WriteLine($"无法写入日志: {ex.Message}");
             }
         }
         private Mat ImageToMat(System.Drawing.Image img)
@@ -187,35 +323,16 @@ namespace Comet.Server.Forms
             OpenedForms.Add(client, f);
             return f;
         }
-        private async void recordCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void recordCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            var checkBox = sender as CheckBox;
-            if (checkBox != null)
+            if (((CheckBox)sender).Checked)
             {
-                if (checkBox.Checked)
-                {
-                    // 选中时的逻辑
-                    record = true;
-                }
-                else
-                {
-                    // 未选中时的逻辑
-                    record = false;
-                    if (videoWriter != null)
-                    {
-                        //等待录制任务完成
-                        if (recordTask != null)
-                        {
-                            try
-                            {
-                                await recordTask;
-                                videoWriter.Release();
-                                videoWriter = null;
-                            }
-                            catch { }
-                        }
-                    }
-                }
+                record = true; 
+            }
+            else
+            {
+                record = false;
+                StopRecording();
             }
         }
 
@@ -229,20 +346,7 @@ namespace Comet.Server.Forms
             picWebcam.Image?.Dispose();
             _connectClient.Send(new DoWebcamStop());
 
-            if (recordCheckBox.Checked && videoWriter != null)
-            {
-                //等待录制任务完成
-                if (recordTask != null)
-                {
-                    try
-                    {
-                        await recordTask;
-                        videoWriter.Release();
-                        videoWriter = null;
-                    }
-                    catch { }
-                } 
-            }
+            StopRecording();
         }
 
         /// <summary>
