@@ -28,11 +28,24 @@ namespace Comet.Server.Forms
     public partial class FrmRemoteWebcam : Form
     {
         /// <summary>
-        /// The client which can be used for the task manager.
+        /// 可用于任务管理器的客户端程序。
         /// </summary>
         private readonly Client _connectClient;
         Dictionary<string, List<Resolution>> _webcams = null;
         private readonly CascadeClassifier cascadeClassifier;
+        //Record
+        private VideoWriter videoWriter;
+        bool record = false;
+        bool faceDetection = false;
+        Stopwatch stopwatch = new Stopwatch();
+        private readonly object queueLock = new object();
+        private Task videoWriteTask;
+        private CancellationTokenSource cancellationTokenSource;
+        // 添加帧率统计和动态调整
+        private DateTime recordStartTime;
+        private int frameCount = 0;
+        private double actualFps = 0;
+        private readonly object fpsLock = new object();
 
         public bool IsStarted { get; private set; }
 
@@ -80,30 +93,18 @@ namespace Comet.Server.Forms
             cbWebcams.SelectedIndex = 0;
         }
 
-        //Record
-        private VideoWriter videoWriter;
-        bool record = false;
-        bool faceDetection = false;
-        Stopwatch stopwatch = new Stopwatch();
-        private readonly Queue<Mat> frameQueue = new Queue<Mat>();
-        private readonly object queueLock = new object();
-        private Task videoWriteTask;
-        private CancellationTokenSource cancellationTokenSource;
-
-        private Task recordTask;
-
         private async void UpdateImageAsync(object sender, Bitmap bmp)
         {
-            if (WindowState == FormWindowState.Minimized)
-                return;
-
-            if (faceDetection)
+            if (WindowState != FormWindowState.Minimized)
             {
-                FaceDetection(bmp);
-            }
-            else
-            {
-                picWebcam.UpdateImage(bmp, false);
+                if (faceDetection)
+                {
+                    FaceDetection(bmp);
+                }
+                else
+                {
+                    picWebcam.UpdateImage(bmp, true);
+                }
             }
 
             if (record)
@@ -121,20 +122,21 @@ namespace Comet.Server.Forms
             }
         }
 
+
+
         private void InitializeVideoWriter(int width, int height)
         {
             string mp4_file = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                @"Record\Webcam",
-                DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".mp4"
-            );
+            Directory.GetCurrentDirectory(),
+            @"Record\Webcam",
+            DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".mp4");
+            // 先用较低的帧率，后续动态调整
+            videoWriter = new VideoWriter(mp4_file, FourCC.XVID, 10, new OpenCvSharp.Size(width, height));
 
-            // 使用更高效的编码器
-            videoWriter = new VideoWriter(mp4_file, FourCC.MP4V, 20, new OpenCvSharp.Size(width, height));
+            recordStartTime = DateTime.Now;
+            frameCount = 0;
 
             cancellationTokenSource = new CancellationTokenSource();
-
-            // 启动后台写入任务
             videoWriteTask = Task.Run(() => VideoWriteWorker(cancellationTokenSource.Token));
         }
 
@@ -151,19 +153,39 @@ namespace Comet.Server.Forms
                             Cv2.Resize(frame, frame, new OpenCvSharp.Size(imgWidth, imgHeight));
                         }
 
-                        // 将帧添加到队列而不是直接写入
+                        // 计算实际帧率
+                        lock (fpsLock)
+                        {
+                            frameCount++;
+                            var elapsed = (DateTime.Now - recordStartTime).TotalSeconds;
+                            if (elapsed > 0)
+                            {
+                                actualFps = frameCount / elapsed;
+                            }
+                        }
+
+                        // 使用更大的队列，并添加时间戳
                         lock (queueLock)
                         {
-                            if (frameQueue.Count < 30) // 限制队列大小，避免内存溢出
+                            // 增加队列大小，减少丢帧
+                            if (frameQueue.Count < 100)
                             {
-                                frameQueue.Enqueue(frame.Clone());
+                                var timestampedFrame = new TimestampedFrame
+                                {
+                                    Frame = frame.Clone(),
+                                    Timestamp = DateTime.Now
+                                };
+                                frameQueue.Enqueue(timestampedFrame);
+                            }
+                            else
+                            {
+                                Log($"Frame dropped, queue full. Actual FPS: {actualFps:F2}");
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // 记录错误
                     Log($"ProcessFrame error: {ex.Message}");
                 }
                 finally
@@ -173,11 +195,23 @@ namespace Comet.Server.Forms
             });
         }
 
+        // 修改队列为带时间戳的帧
+        private readonly Queue<TimestampedFrame> frameQueue = new Queue<TimestampedFrame>();
+
+        // 创建带时间戳的帧结构
+        private class TimestampedFrame
+        {
+            public Mat Frame { get; set; }
+            public DateTime Timestamp { get; set; }
+        }
+
         private void VideoWriteWorker(CancellationToken cancellationToken)
         {
+            DateTime lastFrameTime = DateTime.Now;
+
             while (!cancellationToken.IsCancellationRequested)
             {
-                Mat frameToWrite = null;
+                TimestampedFrame frameToWrite = null;
 
                 lock (queueLock)
                 {
@@ -192,10 +226,23 @@ namespace Comet.Server.Forms
                     try
                     {
                         stopwatch.Restart();
-                        videoWriter.Write(frameToWrite);
-                        stopwatch.Stop();
 
-                        Log($"Write time: {stopwatch.ElapsedMilliseconds}ms, Queue size: {frameQueue.Count}");
+                        // 计算帧间隔，确保写入频率正确
+                        var timeSinceLastFrame = (frameToWrite.Timestamp - lastFrameTime).TotalMilliseconds;
+
+                        // 如果间隔太短，可能需要跳过一些帧来匹配目标帧率
+                        if (timeSinceLastFrame >= 50) // 20fps = 50ms间隔
+                        {
+                            videoWriter.Write(frameToWrite.Frame);
+                            lastFrameTime = frameToWrite.Timestamp;
+
+                            stopwatch.Stop();
+                            Log($"Write time: {stopwatch.ElapsedMilliseconds}ms, Queue size: {frameQueue.Count}, Actual FPS: {actualFps:F2}");
+                        }
+                        else
+                        {
+                            Log($"Frame skipped, interval too short: {timeSinceLastFrame}ms");
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -203,13 +250,12 @@ namespace Comet.Server.Forms
                     }
                     finally
                     {
-                        frameToWrite.Dispose();
+                        frameToWrite.Frame?.Dispose();
                     }
                 }
                 else
                 {
-                    // 没有帧时短暂休眠
-                    Thread.Sleep(1);
+                    Thread.Sleep(10); // 增加休眠时间，减少CPU占用
                 }
             }
         }
@@ -219,31 +265,37 @@ namespace Comet.Server.Forms
         {
             record = false;
 
+            Log($"Recording stopped. Total frames: {frameCount}, Duration: {(DateTime.Now - recordStartTime).TotalSeconds:F2}s, Average FPS: {actualFps:F2}");
+
             if (cancellationTokenSource != null)
             {
                 cancellationTokenSource.Cancel();
-                videoWriteTask?.Wait(5000); // 等待最多5秒
+                videoWriteTask?.Wait(10000); // 增加等待时间
             }
 
-            // 清空队列
+            // 清空队列时写入剩余帧
             lock (queueLock)
             {
+                Log($"Flushing remaining {frameQueue.Count} frames");
                 while (frameQueue.Count > 0)
                 {
-                    var frame = frameQueue.Dequeue();
+                    var frameToWrite = frameQueue.Dequeue();
                     try
                     {
-                        videoWriter?.Write(frame);
+                        videoWriter?.Write(frameToWrite.Frame);
                     }
                     finally
                     {
-                        frame.Dispose();
+                        frameToWrite.Frame?.Dispose();
                     }
                 }
             }
 
             videoWriter?.Release();
             videoWriter = null;
+
+            cancellationTokenSource?.Dispose();
+            cancellationTokenSource = null;
         }
 
         // 进一步优化：使用内存池
@@ -486,7 +538,7 @@ namespace Comet.Server.Forms
                     {
                         Cv2.Rectangle(detectMat, rect, Scalar.Red, 2);
                     }
-                    picWebcam.UpdateImage(BitmapConverter.ToBitmap(detectMat), false);
+                    picWebcam.UpdateImage(BitmapConverter.ToBitmap(detectMat), true);
                 }
             }
         }
