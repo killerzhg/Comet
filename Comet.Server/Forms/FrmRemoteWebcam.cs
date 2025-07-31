@@ -27,9 +27,6 @@ namespace Comet.Server.Forms
 {
     public partial class FrmRemoteWebcam : Form
     {
-        /// <summary>
-        /// 可用于任务管理器的客户端程序。
-        /// </summary>
         private readonly Client _connectClient;
         Dictionary<string, List<Resolution>> _webcams = null;
         private readonly CascadeClassifier cascadeClassifier;
