@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using static CS_SQLite3.CSSQLite;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Comet.Client.Recovery.Browsers

