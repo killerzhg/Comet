@@ -61,18 +61,8 @@ namespace Comet.Client.Recovery.Browsers
                         username = (string)row["username_value"].ToString();
                         crypt_password = row["password_value"].ToString();
                         byte[] passwordBytes = Convert.FromBase64String(crypt_password);
-                        try
-                        {
-                            //老版本解密
-                            password = Encoding.UTF8.GetString(ProtectedData.Unprotect(passwordBytes, null, DataProtectionScope.CurrentUser));
-
-
-                        }
-                        catch (Exception) //如果异常了就用新加密方式尝试
-                        {
-                            byte[] masterKey = GetMasterKey(localStatePath);
-                            password = DecryptWithKey(passwordBytes, masterKey);
-                        }
+                        byte[] masterKey = GetMasterKey(localStatePath);
+                        password = DecryptWithKey(passwordBytes, masterKey);
                         if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(username))
                         {
                             result.Add(new SaveUser
