@@ -194,6 +194,10 @@ namespace Comet.Server.Forms
         {
             ToggleConfigurationControls(true);
 
+            ////// 仅启动时设置一次本地期望分辨率（而不是在 Resize 里反复设置）
+            ////if (_remoteDesktopHandler.LocalResolution == Size.Empty)
+            ////    _remoteDesktopHandler.LocalResolution = picDesktop.Size;
+
             picDesktop.Start();
             // Subscribe to the new frame counter.
             picDesktop.SetFrameUpdatedEvent(frameCounter_FrameUpdated);
@@ -301,7 +305,7 @@ namespace Comet.Server.Forms
             if (WindowState == FormWindowState.Minimized)
                 return;
 
-            _remoteDesktopHandler.LocalResolution = picDesktop.Size;
+            //_remoteDesktopHandler.LocalResolution = picDesktop.Size;
             panelTop.Left = (this.Width - panelTop.Width) / 2;
             btnShow.Left = (this.Width - btnShow.Width) / 2;
            // btnHide.Left = (panelTop.Width - btnHide.Width) / 2;

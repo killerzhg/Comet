@@ -199,8 +199,16 @@ namespace Comet.Server.Messages
         {
             lock (_syncLock)
             {
-                if (!IsStarted)
+                if (!IsStarted) 
+                {
+                    
                     return;
+                }
+                else
+                {
+                    LocalResolution = new Size(message.Resolution.Width, message.Resolution.Height);
+                }
+                    
 
                 if (_codec == null || _codec.ImageQuality != message.Quality || _codec.Monitor != message.Monitor || _codec.Resolution != message.Resolution)
                 {

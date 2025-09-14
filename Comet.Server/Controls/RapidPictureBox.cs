@@ -167,7 +167,37 @@ namespace Comet.Server.Controls
             {
                 if (GetImageSafe != null)
                 {
-                    pe.Graphics.DrawImage(GetImageSafe, Location);
+                    Rectangle destRect = this.ClientRectangle;
+                    switch (this.SizeMode)
+                    {
+                        case PictureBoxSizeMode.Zoom:
+                            Size imgSize = GetImageSafe.Size;
+                            float ratio = Math.Min((float)destRect.Width / imgSize.Width, (float)destRect.Height / imgSize.Height);
+                            int w = (int)(imgSize.Width * ratio);
+                            int h = (int)(imgSize.Height * ratio);
+                            int x = (destRect.Width - w) / 2;
+                            int y = (destRect.Height - h) / 2;
+                            destRect = new Rectangle(x, y, w, h);
+                            break;
+                        case PictureBoxSizeMode.StretchImage:
+                            // 已是 ClientRectangle，无需处理
+                            break;
+                        case PictureBoxSizeMode.CenterImage:
+                            Size imgSize2 = GetImageSafe.Size;
+                            int cx = (destRect.Width - imgSize2.Width) / 2;
+                            int cy = (destRect.Height - imgSize2.Height) / 2;
+                            destRect = new Rectangle(cx, cy, imgSize2.Width, imgSize2.Height);
+                            break;
+                        case PictureBoxSizeMode.Normal:
+                        default:
+                            destRect = new Rectangle(0, 0, GetImageSafe.Width, GetImageSafe.Height);
+                            break;
+                    }
+                    pe.Graphics.DrawImage(GetImageSafe, destRect);
+                }
+                else
+                {
+                    base.OnPaint(pe);
                 }
             }
         }
