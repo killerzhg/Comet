@@ -11,7 +11,6 @@
 	  <InputAssemblies Include="$(TargetDir)System.Memory.dll"/>
 	  <InputAssemblies Include="$(TargetDir)System.Numerics.Vectors.dll"/>
 	  <InputAssemblies Include="$(TargetDir)System.Runtime.CompilerServices.Unsafe.dll"/>
-	  <InputAssemblies Include="$(TargetDir)System.Data.SQLite.dll"/>
   </ItemGroup>
 
   <ILRepack
