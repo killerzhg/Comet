@@ -33,6 +33,11 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="SQLite\**" />
+    <EmbeddedResource Remove="SQLite\**" />
+    <None Remove="SQLite\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>..\dll\NAudio.dll</HintPath>
     </Reference>

