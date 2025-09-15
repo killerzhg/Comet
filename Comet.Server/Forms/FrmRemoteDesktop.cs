@@ -396,8 +396,15 @@ namespace Comet.Server.Forms
         {
             if (picDesktop.Image != null && _enableMouseInput && this.ContainsFocus)
             {
-                _remoteDesktopHandler.SendMouseEvent(e.Delta == 120 ? MouseAction.ScrollUp : MouseAction.ScrollDown,
-                    false, 0, 0, cbMonitors.SelectedIndex);
+                int deltaUnit = SystemInformation.MouseWheelScrollDelta; // 通常是120
+                int steps = Math.Max(1, Math.Abs(e.Delta) / Math.Max(1, deltaUnit));
+
+                var action = e.Delta > 0 ? MouseAction.ScrollUp : MouseAction.ScrollDown;
+
+                for (int i = 0; i < steps; i++)
+                {
+                    _remoteDesktopHandler.SendMouseEvent(action, false, 0, 0, cbMonitors.SelectedIndex);
+                }
             }
         }
 
