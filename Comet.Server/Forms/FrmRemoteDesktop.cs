@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Comet.Server.Controls; // 新增：使用 RapidPictureBox
 
 namespace Comet.Server.Forms
 {
@@ -353,7 +354,10 @@ namespace Comet.Server.Forms
 
                 int selectedDisplayIndex = cbMonitors.SelectedIndex;
 
-                _remoteDesktopHandler.SendMouseEvent(action, true, e.X, e.Y, selectedDisplayIndex);
+                // 将控件坐标转换为图像像素坐标（与 message.Resolution 对齐）
+                Point imgPt = (picDesktop as RapidPictureBox)?.TranslateToImage(e.Location) ?? e.Location;
+
+                _remoteDesktopHandler.SendMouseEvent(action, true, imgPt.X, imgPt.Y, selectedDisplayIndex);
             }
         }
 
@@ -370,7 +374,9 @@ namespace Comet.Server.Forms
 
                 int selectedDisplayIndex = cbMonitors.SelectedIndex;
 
-                _remoteDesktopHandler.SendMouseEvent(action, false, e.X, e.Y, selectedDisplayIndex);
+                Point imgPt = (picDesktop as RapidPictureBox)?.TranslateToImage(e.Location) ?? e.Location;
+
+                _remoteDesktopHandler.SendMouseEvent(action, false, imgPt.X, imgPt.Y, selectedDisplayIndex);
             }
         }
 
@@ -380,7 +386,9 @@ namespace Comet.Server.Forms
             {
                 int selectedDisplayIndex = cbMonitors.SelectedIndex;
 
-                _remoteDesktopHandler.SendMouseEvent(MouseAction.MoveCursor, false, e.X, e.Y, selectedDisplayIndex);
+                Point imgPt = (picDesktop as RapidPictureBox)?.TranslateToImage(e.Location) ?? e.Location;
+
+                _remoteDesktopHandler.SendMouseEvent(MouseAction.MoveCursor, false, imgPt.X, imgPt.Y, selectedDisplayIndex);
             }
         }
 

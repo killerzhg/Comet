@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Comet.Server.Utilities;
+using System.Drawing.Drawing2D;
 
 namespace Comet.Server.Controls
 {
@@ -200,6 +201,75 @@ namespace Comet.Server.Controls
                     base.OnPaint(pe);
                 }
             }
+        }
+
+        /// <summary>
+        /// 将控件坐标转换为图像像素坐标（基于当前 SizeMode 和 Image.Size）。
+        /// 超出图像区域时会夹取到边界。
+        /// </summary>
+        public Point TranslateToImage(Point p)
+        {
+            Image img;
+            lock (_imageLock)
+            {
+                img = GetImageSafe;
+            }
+            if (img == null) return Point.Empty;
+
+            var imgSize = img.Size;
+            var client = this.ClientRectangle;
+
+            int xi = 0, yi = 0;
+
+            switch (this.SizeMode)
+            {
+                case PictureBoxSizeMode.StretchImage:
+                    {
+                        if (client.Width == 0 || client.Height == 0) return Point.Empty;
+                        float sx = (float)imgSize.Width / client.Width;
+                        float sy = (float)imgSize.Height / client.Height;
+                        xi = (int)(p.X * sx);
+                        yi = (int)(p.Y * sy);
+                        break;
+                    }
+                case PictureBoxSizeMode.Zoom:
+                    {
+                        if (client.Width == 0 || client.Height == 0) return Point.Empty;
+                        float rw = (float)client.Width / imgSize.Width;
+                        float rh = (float)client.Height / imgSize.Height;
+                        float ratio = Math.Min(rw, rh);
+                        int drawW = (int)(imgSize.Width * ratio);
+                        int drawH = (int)(imgSize.Height * ratio);
+                        int ox = (client.Width - drawW) / 2;
+                        int oy = (client.Height - drawH) / 2;
+                        xi = (int)((p.X - ox) / ratio);
+                        yi = (int)((p.Y - oy) / ratio);
+                        break;
+                    }
+                case PictureBoxSizeMode.CenterImage:
+                    {
+                        int ox = (client.Width - imgSize.Width) / 2;
+                        int oy = (client.Height - imgSize.Height) / 2;
+                        xi = p.X - ox;
+                        yi = p.Y - oy;
+                        break;
+                    }
+                case PictureBoxSizeMode.Normal:
+                default:
+                    {
+                        xi = p.X;
+                        yi = p.Y;
+                        break;
+                    }
+            }
+
+            // 边界夹取
+            if (xi < 0) xi = 0;
+            if (yi < 0) yi = 0;
+            if (xi >= imgSize.Width) xi = imgSize.Width - 1;
+            if (yi >= imgSize.Height) yi = imgSize.Height - 1;
+
+            return new Point(xi, yi);
         }
 
         private void UpdateScreenSize(int newWidth, int newHeight)
