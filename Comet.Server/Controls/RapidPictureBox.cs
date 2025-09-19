@@ -152,6 +152,7 @@ namespace Comet.Server.Controls
             this.SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
         }
 
+
         protected override CreateParams CreateParams
         {
             get

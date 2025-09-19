@@ -5,15 +5,14 @@ using Comet.Server.Helper;
 using Comet.Server.Messages;
 using Comet.Server.Networking;
 using Comet.Server.Utilities;
-using Gma.System.MouseKeyHook;
 using Open.Nat;
 using RFTEST.Function;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Comet.Server.Controls; // 新增：使用 RapidPictureBox
+using System.Runtime.InteropServices;
 
 namespace Comet.Server.Forms
 {
@@ -31,16 +30,6 @@ namespace Comet.Server.Forms
         /// States whether remote keyboard input is enabled.
         /// </summary>
         private bool _enableKeyboardInput;
-
-        /// <summary>
-        /// Holds the state of the local keyboard hooks.
-        /// </summary>
-        private IKeyboardMouseEvents _keyboardHook;
-
-        /// <summary>
-        /// Holds the state of the local mouse hooks.
-        /// </summary>
-        private IKeyboardMouseEvents _mouseHook;
 
         /// <summary>
         /// A list of pressed keys for synchronization between key down & -up events.
@@ -79,8 +68,6 @@ namespace Comet.Server.Forms
             FrmRemoteDesktop r = new FrmRemoteDesktop(client);
             r.Disposed += (sender, args) => OpenedForms.Remove(client);
             OpenedForms.Add(client, r);
-
-            
             var useAudio = Configs.GetConfig("UseAudio");
             if (!string.IsNullOrEmpty(useAudio))
             {
@@ -102,6 +89,7 @@ namespace Comet.Server.Forms
             MessageHandler.Register(_audioHandler);
             RegisterMessageHandler();
             InitializeComponent();
+            picDesktop.MouseWheel += OnMouseWheelMove;
         }
 
         /// <summary>
@@ -144,22 +132,9 @@ namespace Comet.Server.Forms
         /// </summary>
         private void SubscribeEvents()
         {
-            // TODO: Check Hook.GlobalEvents vs Hook.AppEvents below
-            // TODO: Maybe replace library with .NET events like on Linux
-            if (PlatformHelper.RunningOnMono) // Mono/Linux
-            {
-                this.KeyDown += OnKeyDown;
-                this.KeyUp += OnKeyUp;
-            }
-            else // Windows
-            {
-                _keyboardHook = Hook.GlobalEvents();
-                _keyboardHook.KeyDown += OnKeyDown;
-                _keyboardHook.KeyUp += OnKeyUp;
-
-                _mouseHook = Hook.AppEvents();
-                _mouseHook.MouseWheel += OnMouseWheelMove;
-            }
+            // 如需窗体级按键先处理
+            this.KeyPreview = true;
+            InstallKeyboardHook();
         }
 
         /// <summary>
@@ -167,25 +142,121 @@ namespace Comet.Server.Forms
         /// </summary>
         private void UnsubscribeEvents()
         {
-            if (PlatformHelper.RunningOnMono) // Mono/Linux
+            UninstallKeyboardHook();
+        }
+
+        // =================== Win32 全局键盘钩子实现 ===================
+
+        // 常量与结构
+        private const int WH_KEYBOARD_LL = 13;
+        private const int WM_KEYDOWN = 0x0100;
+        private const int WM_KEYUP = 0x0101;
+        private const int WM_SYSKEYDOWN = 0x0104;
+        private const int WM_SYSKEYUP = 0x0105;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct KBDLLHOOKSTRUCT
+        {
+            public uint vkCode;
+            public uint scanCode;
+            public uint flags;
+            public uint time;
+            public IntPtr dwExtraInfo;
+        }
+
+        // P/Invoke
+        private delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hMod, uint dwThreadId);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        private IntPtr _kbHook = IntPtr.Zero;
+        private HookProc _kbProc; // 防止被GC
+
+        private void InstallKeyboardHook()
+        {
+            if (_kbHook != IntPtr.Zero) return;
+            _kbProc = KeyboardHookCallback;
+
+            using (var curProcess = System.Diagnostics.Process.GetCurrentProcess())
+            using (var curModule = curProcess.MainModule)
             {
-                this.KeyDown -= OnKeyDown;
-                this.KeyUp -= OnKeyUp;
+                IntPtr hMod = GetModuleHandle(curModule.ModuleName);
+                _kbHook = SetWindowsHookEx(WH_KEYBOARD_LL, _kbProc, hMod, 0);
             }
-            else // Windows
+        }
+
+        private void UninstallKeyboardHook()
+        {
+            if (_kbHook == IntPtr.Zero) return;
+            UnhookWindowsHookEx(_kbHook);
+            _kbHook = IntPtr.Zero;
+            _kbProc = null;
+        }
+
+        private IntPtr KeyboardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0 && lParam != IntPtr.Zero)
             {
-                if (_keyboardHook != null)
+                var info = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
+                var key = (Keys)info.vkCode;
+
+                switch ((int)wParam)
                 {
-                    _keyboardHook.KeyDown -= OnKeyDown;
-                    _keyboardHook.KeyUp -= OnKeyUp;
-                    _keyboardHook.Dispose();
-                }
-                if (_mouseHook != null)
-                {
-                    _mouseHook.MouseWheel -= OnMouseWheelMove;
-                    _mouseHook.Dispose();
+                    case WM_KEYDOWN:
+                    case WM_SYSKEYDOWN:
+                        if (ProcessKeyDownFromHook(key))
+                            return (IntPtr)1; // 拦截本地
+                        break;
+
+                    case WM_KEYUP:
+                    case WM_SYSKEYUP:
+                        if (ProcessKeyUpFromHook(key))
+                            return (IntPtr)1; // 拦截本地
+                        break;
                 }
             }
+            return CallNextHookEx(_kbHook, nCode, wParam, lParam);
+        }
+
+        // 将现有 OnKeyDown/OnKeyUp 逻辑抽取为可供钩子回调复用的方法
+        private bool ProcessKeyDownFromHook(Keys key)
+        {
+            // 不满足条件则放行
+            if (picDesktop.Image == null || !_enableKeyboardInput || !this.ContainsFocus)
+                return false;
+
+            //if (IsLockKey(key))
+            //    return false;
+
+            //if (_keysPressed.Contains(key))
+                //return true; 
+
+            _keysPressed.Add(key);
+            _remoteDesktopHandler.SendKeyboardEvent((byte)key, true);
+            return true; // 非锁定键拦截本地
+        }
+
+        private bool ProcessKeyUpFromHook(Keys key)
+        {
+            if (picDesktop.Image == null || !_enableKeyboardInput || !this.ContainsFocus)
+                return false;
+
+            if (IsLockKey(key))
+                return false;
+
+            _keysPressed.Remove(key);
+            _remoteDesktopHandler.SendKeyboardEvent((byte)key, false);
+            return true;
         }
 
         /// <summary>
@@ -405,35 +476,6 @@ namespace Comet.Server.Forms
                 {
                     _remoteDesktopHandler.SendMouseEvent(action, false, 0, 0, cbMonitors.SelectedIndex);
                 }
-            }
-        }
-
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (picDesktop.Image != null && _enableKeyboardInput && this.ContainsFocus)
-            {
-                if (!IsLockKey(e.KeyCode))
-                    e.Handled = true;
-
-                if (_keysPressed.Contains(e.KeyCode))
-                    return;
-
-                _keysPressed.Add(e.KeyCode);
-
-                _remoteDesktopHandler.SendKeyboardEvent((byte)e.KeyCode, true);
-            }
-        }
-
-        private void OnKeyUp(object sender, KeyEventArgs e)
-        {
-            if (picDesktop.Image != null && _enableKeyboardInput && this.ContainsFocus)
-            {
-                if (!IsLockKey(e.KeyCode))
-                    e.Handled = true;
-
-                _keysPressed.Remove(e.KeyCode);
-
-                _remoteDesktopHandler.SendKeyboardEvent((byte)e.KeyCode, false);
             }
         }
 
