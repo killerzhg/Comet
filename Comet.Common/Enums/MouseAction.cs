@@ -9,6 +9,8 @@
         MoveCursor,
         ScrollUp,
         ScrollDown,
+        Enter,
+        Leave,
         None
     }
 }

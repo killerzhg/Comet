@@ -55,7 +55,7 @@ namespace Comet.Server.Forms
             // btnStart
             // 
             this.btnStart.Location = new System.Drawing.Point(22, 13);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(102, 34);
             this.btnStart.TabIndex = 1;
@@ -68,7 +68,7 @@ namespace Comet.Server.Forms
             // 
             this.btnStop.Enabled = false;
             this.btnStop.Location = new System.Drawing.Point(124, 13);
-            this.btnStop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(102, 34);
             this.btnStop.TabIndex = 2;
@@ -80,7 +80,7 @@ namespace Comet.Server.Forms
             // barQuality
             // 
             this.barQuality.Location = new System.Drawing.Point(310, 48);
-            this.barQuality.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barQuality.Margin = new System.Windows.Forms.Padding(4);
             this.barQuality.Maximum = 100;
             this.barQuality.Minimum = 1;
             this.barQuality.Name = "barQuality";
@@ -114,7 +114,7 @@ namespace Comet.Server.Forms
             // 
             this.btnMouse.Image = global::Comet.Server.Properties.Resources.mouse_delete;
             this.btnMouse.Location = new System.Drawing.Point(218, 4);
-            this.btnMouse.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnMouse.Margin = new System.Windows.Forms.Padding(4);
             this.btnMouse.Name = "btnMouse";
             this.btnMouse.Size = new System.Drawing.Size(102, 34);
             this.btnMouse.TabIndex = 6;
@@ -134,7 +134,7 @@ namespace Comet.Server.Forms
             this.panelTop.Controls.Add(this.lblQuality);
             this.panelTop.Controls.Add(this.barQuality);
             this.panelTop.Location = new System.Drawing.Point(284, -2);
-            this.panelTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelTop.Margin = new System.Windows.Forms.Padding(4);
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(590, 90);
             this.panelTop.TabIndex = 7;
@@ -145,7 +145,7 @@ namespace Comet.Server.Forms
             this.flowLayoutPanel1.Controls.Add(this.checkBox1);
             this.flowLayoutPanel1.Controls.Add(this.btnMouse);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(245, 8);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(358, 46);
             this.flowLayoutPanel1.TabIndex = 10;
@@ -153,7 +153,7 @@ namespace Comet.Server.Forms
             // btnHide
             // 
             this.btnHide.Location = new System.Drawing.Point(4, 4);
-            this.btnHide.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnHide.Margin = new System.Windows.Forms.Padding(4);
             this.btnHide.Name = "btnHide";
             this.btnHide.Size = new System.Drawing.Size(102, 34);
             this.btnHide.TabIndex = 7;
@@ -168,7 +168,7 @@ namespace Comet.Server.Forms
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox1.Location = new System.Drawing.Point(112, 2);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(2);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Padding = new System.Windows.Forms.Padding(15, 8, 4, 4);
             this.checkBox1.Size = new System.Drawing.Size(100, 39);
@@ -182,7 +182,7 @@ namespace Comet.Server.Forms
             this.cbMonitors.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbMonitors.FormattingEnabled = true;
             this.cbMonitors.Location = new System.Drawing.Point(22, 50);
-            this.cbMonitors.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbMonitors.Margin = new System.Windows.Forms.Padding(4);
             this.cbMonitors.Name = "cbMonitors";
             this.cbMonitors.Size = new System.Drawing.Size(204, 31);
             this.cbMonitors.TabIndex = 8;
@@ -191,7 +191,7 @@ namespace Comet.Server.Forms
             // btnShow
             // 
             this.btnShow.Location = new System.Drawing.Point(882, 0);
-            this.btnShow.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnShow.Margin = new System.Windows.Forms.Padding(4);
             this.btnShow.Name = "btnShow";
             this.btnShow.Size = new System.Drawing.Size(82, 28);
             this.btnShow.TabIndex = 8;
@@ -217,6 +217,8 @@ namespace Comet.Server.Forms
             this.picDesktop.TabIndex = 0;
             this.picDesktop.TabStop = false;
             this.picDesktop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picDesktop_MouseDown);
+            this.picDesktop.MouseEnter += new System.EventHandler(this.picDesktop_MouseEnter);
+            this.picDesktop.MouseLeave += new System.EventHandler(this.picDesktop_MouseLeave);
             this.picDesktop.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picDesktop_MouseMove);
             this.picDesktop.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picDesktop_MouseUp);
             // 
@@ -231,7 +233,7 @@ namespace Comet.Server.Forms
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(949, 688);
             this.Name = "FrmRemoteDesktop";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

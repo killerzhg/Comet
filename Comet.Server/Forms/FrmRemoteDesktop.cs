@@ -232,7 +232,7 @@ namespace Comet.Server.Forms
         private bool ProcessKeyDownFromHook(Keys key)
         {
             // 不满足条件则放行
-            if (picDesktop.Image == null || !_enableKeyboardInput || !this.ContainsFocus)
+            if (picDesktop.Image == null || !_enableKeyboardInput || !this.ContainsFocus || !picDesktop.Focused)
                 return false;
 
             //if (IsLockKey(key))
@@ -242,17 +242,18 @@ namespace Comet.Server.Forms
                 //return true; 
 
             _keysPressed.Add(key);
+
             _remoteDesktopHandler.SendKeyboardEvent((byte)key, true);
             return true; // 非锁定键拦截本地
         }
 
         private bool ProcessKeyUpFromHook(Keys key)
         {
-            if (picDesktop.Image == null || !_enableKeyboardInput || !this.ContainsFocus)
+            if (picDesktop.Image == null || !_enableKeyboardInput || !this.ContainsFocus || !picDesktop.Focused)
                 return false;
 
-            if (IsLockKey(key))
-                return false;
+            //if (IsLockKey(key))
+            //    return false;
 
             _keysPressed.Remove(key);
             _remoteDesktopHandler.SendKeyboardEvent((byte)key, false);
@@ -554,5 +555,16 @@ namespace Comet.Server.Forms
             }
         }
 
+        private void picDesktop_MouseEnter(object sender, EventArgs e)
+        {
+            if (_enableMouseInput)
+                _remoteDesktopHandler.SendMouseEvent(MouseAction.Enter, false, 0, 0, cbMonitors.SelectedIndex);
+        }
+
+        private void picDesktop_MouseLeave(object sender, EventArgs e)
+        {
+            if (_enableMouseInput)
+                _remoteDesktopHandler.SendMouseEvent(MouseAction.Leave, false, 0, 0, cbMonitors.SelectedIndex);
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace Comet.Client.Messages
     public class RemoteDesktopHandler : NotificationMessageProcessor, IDisposable
     {
         private UnsafeStreamCodec _streamCodec;
+        private bool isShowMouseCursor = false;
 
         public override bool CanExecute(IMessage message) => message is GetDesktop ||
                                                              message is DoMouseEvent ||
@@ -70,7 +71,7 @@ namespace Comet.Client.Messages
             Bitmap desktop = null;
             try
             {
-                desktop = ScreenHelper.CaptureScreen(message.DisplayIndex);
+                desktop = ScreenHelper.CaptureScreen(message.DisplayIndex, isShowMouseCursor);
                 desktopData = desktop.LockBits(new Rectangle(0, 0, desktop.Width, desktop.Height),
                     ImageLockMode.ReadWrite, desktop.PixelFormat);
 
@@ -164,6 +165,12 @@ namespace Comet.Client.Messages
                         break;
                     case MouseAction.ScrollUp:
                         NativeMethodsHelper.DoMouseScroll(p, false);
+                        break;
+                    case MouseAction.Enter:
+                        isShowMouseCursor = false;
+                        break;
+                    case MouseAction.Leave:
+                        isShowMouseCursor = true;
                         break;
                 }
             }
